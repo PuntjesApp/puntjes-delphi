@@ -1,0 +1,80 @@
+name: Release
+
+# release-please keeps a release PR open from the conventional commits on main. That PR merges itself when CI is
+# green; the merge tags the version and makes the GitHub release, and the assets job attaches the units to it.
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release PR and tag
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app
+        with:
+          client-id: ${{ vars.SDK_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.SDK_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: release
+        with:
+          token: ${{ steps.app.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - name: Let the release PR merge itself when CI is green
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          PR_JSON: ${{ steps.release.outputs.pr }}
+        run: |
+          number=$(printf '%s' "$PR_JSON" | jq -r '.number // empty' 2>/dev/null || true)
+          if [ -z "$number" ]; then
+            echo "release-please opened or updated no release PR in this run."
+            exit 0
+          fi
+          gh pr merge "$number" --repo "$GITHUB_REPOSITORY" --auto --squash
+
+  # Its own job, so "Re-run failed jobs" attaches the assets again: release-please reports a release only once.
+  assets:
+    name: Attach the units to the release
+    needs: release-please
+    if: needs.release-please.outputs.released == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write # gh release upload
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.tag }}
+          persist-credentials: false
+      - name: Check that the tag, version.txt and boss.json name the same version
+        env:
+          TAG: ${{ needs.release-please.outputs.tag }}
+        run: |
+          text=$(cat version.txt)
+          boss=$(jq -r .version boss.json)
+          if [ "$TAG" != "v$text" ] || [ "$TAG" != "v$boss" ]; then
+            echo "::error::The tag is $TAG, version.txt says $text and boss.json says $boss. release-please did not move them all."
+            exit 1
+          fi
+      - name: Upload the zip and the two units
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.release-please.outputs.tag }}
+        run: |
+          zip -r "puntjes-delphi-$TAG.zip" src README.md LICENSE
+          gh release upload "$TAG" "puntjes-delphi-$TAG.zip" src/puntjes.dto.pas src/puntjes.client.pas \
+            --clobber --repo "$GITHUB_REPOSITORY"
