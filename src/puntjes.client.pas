@@ -70,41 +70,72 @@ type
       const Response: TJsonResponse; const ErrorMsg: ShortString);
     procedure OnError9(const Sender: IJsonClient;
       const Response: TJsonResponse; const ErrorMsg: ShortString);
-    procedure OnError10(const Sender: IJsonClient;
-      const Response: TJsonResponse; const ErrorMsg: ShortString);
-    procedure OnError11(const Sender: IJsonClient;
-      const Response: TJsonResponse; const ErrorMsg: ShortString);
-    procedure OnError12(const Sender: IJsonClient;
-      const Response: TJsonResponse; const ErrorMsg: ShortString);
   public
 
     // initialize this Client with an associated HTTP/JSON request
     constructor Create(const aClient: IJsonClient);
 
 
-    // -------------------
-    //  CUSTOMERS METHODS
-    // -------------------
+    // -----------------
+    //  PUNTJES METHODS
+    // -----------------
 
-    // lookupCustomer [get] /customers/lookup
+    //  [get] /health
     //
-    //
-    // Params:
-    // - [query] Identifier
-    // - [query] ExternalId
     //
     // Responses:
     // - 200 (main)
+    // - 500 [EErrorResponse]
+    function GetHealth(): TDtoPuntjes2;
+
+
+    // -------------------------------
+    //  ADJUSTWALLETAPIACTION METHODS
+    // -------------------------------
+
+    // actions.adjustWalletApiAction [post] /customers/{customer}/wallet/adjust
+    //
+    //
+    // Params:
+    // - [path] Customer (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
     // - 404 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function LookupCustomer(const Identifier: RawUtf8 = '';
-      const ExternalId: RawUtf8 = ''): TDtoPuntjes2;
+    function ActionsAdjustWalletApiAction(const Customer: variant;
+      const Payload: TAdjustWalletApiData): TDtoPuntjes5;
 
-    // registerCustomer [post] /customers
+
+    // -------------------------------------
+    //  BULKUPSERTPRODUCTSAPIACTION METHODS
+    // -------------------------------------
+
+    // actions.bulkUpsertProductsApiAction [post] /products/batch
+    //
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsBulkUpsertProductsApiAction(): TDtoPuntjes7;
+
+
+    // ---------------------------------
+    //  CREATECUSTOMERAPIACTION METHODS
+    // ---------------------------------
+
+    // actions.createCustomerApiAction [post] /customers
     //
     //
     // Params:
@@ -116,134 +147,18 @@ type
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
     // - 409 [EErrorResponse]
-    // - 415 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function RegisterCustomer(const Payload: TCreateCustomerData): TDtoPuntjes4;
-
-    // replaceCustomerByExternalId [put] /customers/by-external-id/{externalId}
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 409 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function ReplaceCustomerByExternalId(const ExternalId: variant;
-      const Payload: TUpdateCustomerData): TDtoPuntjes6;
-
-    // updateCustomerByExternalId [patch] /customers/by-external-id/{externalId}
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 409 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function UpdateCustomerByExternalId(const ExternalId: variant;
-      const Payload: TUpdateCustomerData): TDtoPuntjes8;
-
-    // linkCustomerExternalId [post] /customers/link-external-id
-    //
-    //
-    // Params:
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 409 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function LinkCustomerExternalId(const Payload: TLinkExternalIdData): TDtoPuntjes10;
-
-    // sendLoyaltyCardByExternalId [post] /customers/by-external-id/{externalId}/send-card
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 202 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function SendLoyaltyCardByExternalId(const ExternalId: variant;
-      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes12;
-
-    // sendLoyaltyCard [post] /customers/{customer}/send-card
-    //
-    //
-    // Params:
-    // - [path] Customer (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 202 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function SendLoyaltyCard(const Customer: variant;
-      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes14;
-
-    // showCustomer [get] /customers/{customer}
-    //
-    //
-    // Params:
-    // - [path] Customer (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function ShowCustomer(const Customer: variant): TDtoPuntjes16;
+    function ActionsCreateCustomerApiAction(
+      const Payload: TCreateCustomerData): TDtoPuntjes9;
 
 
-    // ----------------------
-    //  TRANSACTIONS METHODS
-    // ----------------------
+    // --------------------------------
+    //  CREATEPRODUCTAPIACTION METHODS
+    // --------------------------------
 
-    // submitTransaction [post] /transactions
+    // actions.createProductApiAction [post] /products
     //
     //
     // Params:
@@ -254,44 +169,93 @@ type
     // - 400 [EErrorResponse]
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
+    // - 409 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function SubmitTransaction(const Payload: TCreateTransactionData): TDtoPuntjes18;
+    function ActionsCreateProductApiAction(
+      const Payload: TCreateProductData): TDtoPuntjes11;
 
-    // listCustomerTransactions [get] /customers/{customer}/transactions
+
+    // -------------------------------
+    //  LISTPRODUCTSAPIACTION METHODS
+    // -------------------------------
+
+    // actions.listProductsApiAction [get] /products
     //
     //
     // Params:
-    // - [path] Customer (required)
-    // - [query] DateFrom
-    // - [query] DateTo
+    // - [query] Status
+    // - [query] Category
+    // - [query] Search
+    // - [query] PerPage
     // - [query] Page
     //
     // Responses:
     // - 200 (main)
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsListProductsApiAction(const Status: TEnumPuntjes2 = ep2None;
+      const Category: RawUtf8 = ''; const Search: RawUtf8 = ''; PerPage: integer = 0;
+      Page: integer = 0): TDtoPuntjes16;
+
+
+    // ------------------------------------------
+    //  CREATEREWARDFROMPRODUCTAPIACTION METHODS
+    // ------------------------------------------
+
+    // actions.createRewardFromProductApiAction [post] /products/{externalId}/reward
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 201 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
     // - 404 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListCustomerTransactions(const Customer: variant;
-      const DateFrom: RawUtf8 = ''; const DateTo: RawUtf8 = '';
-      Page: integer = 0): TDtoPuntjes21;
+    function ActionsCreateRewardFromProductApiAction(const ExternalId: variant;
+      const Payload: TCreateRewardFromProductData): TDtoPuntjes28;
 
 
-    // ----------------
-    //  WALLET METHODS
-    // ----------------
+    // --------------------------------
+    //  DELETEPRODUCTAPIACTION METHODS
+    // --------------------------------
 
-    // showWallet [get] /customers/{customer}/wallet
+    // actions.deleteProductApiAction [delete] /products/{externalId}
     //
     //
     // Params:
-    // - [path] Customer (required)
+    // - [path] ExternalId (required)
+    //
+    // Responses:
+    // - 204 (main)
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    procedure ActionsDeleteProductApiAction(const ExternalId: variant);
+
+
+    // ------------------------------
+    //  SHOWPRODUCTAPIACTION METHODS
+    // ------------------------------
+
+    // actions.showProductApiAction [get] /products/{externalId}
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
     //
     // Responses:
     // - 200 (main)
@@ -300,9 +264,131 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowWallet(const Customer: variant): TDtoPuntjes25;
+    function ActionsShowProductApiAction(const ExternalId: variant): TDtoPuntjes30;
 
-    // listLedgerEntries [get] /customers/{customer}/ledger
+
+    // --------------------------------
+    //  UPDATEPRODUCTAPIACTION METHODS
+    // --------------------------------
+
+    // actions.updateProductApiAction [patch] /products/{externalId}
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsUpdateProductApiAction(const ExternalId: variant;
+      const Payload: TUpdateProductData): TDtoPuntjes32;
+
+
+    // --------------------------------
+    //  UPSERTPRODUCTAPIACTION METHODS
+    // --------------------------------
+
+    // actions.upsertProductApiAction [put] /products/{externalId}
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 201
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsUpsertProductApiAction(const ExternalId: variant;
+      const Payload: TUpsertProductData): TDtoPuntjes34;
+
+
+    // ----------------------------------
+    //  DOWNLOADWALLETPASSACTION METHODS
+    // ----------------------------------
+
+    // actions.downloadWalletPassAction [get] /customers/{customer}/wallet-pass
+    //
+    //
+    // Params:
+    // - [path] Customer (required)
+    // - [query] Platform (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsDownloadWalletPassAction(const Customer: variant;
+      const Platform: TEnumPuntjes12): TDtoPuntjes36;
+
+
+    // --------------------------------------
+    //  LINKCUSTOMEREXTERNALIDACTION METHODS
+    // --------------------------------------
+
+    // actions.linkCustomerExternalIdAction [post] /customers/link-external-id
+    //
+    //
+    // Params:
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 409 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsLinkCustomerExternalIdAction(
+      const Payload: TLinkExternalIdData): TDtoPuntjes38;
+
+
+    // --------------------------------
+    //  LISTCAMPAIGNSAPIACTION METHODS
+    // --------------------------------
+
+    // v1.campaigns.index [get] /campaigns
+    //
+    //
+    // Params:
+    // - [query] Branch
+    // - [query] Page
+    //
+    // Responses:
+    // - 200 (main)
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function V1CampaignsIndex(const Branch: RawUtf8 = '';
+      Page: integer = 0): TDtoPuntjes50;
+
+
+    // ---------------------------------
+    //  LISTLEDGERENTRIESACTION METHODS
+    // ---------------------------------
+
+    // actions.listLedgerEntriesAction [get] /customers/{customer}/ledger
     //
     //
     // Params:
@@ -320,16 +406,22 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListLedgerEntries(const Customer: variant; const DateFrom: RawUtf8 = '';
-      const DateTo: RawUtf8 = ''; const _Type: TEnumPuntjes20 = ep20None;
-      Page: integer = 0): TDtoPuntjes29;
+    function ActionsListLedgerEntriesAction(const Customer: variant;
+      const DateFrom: RawUtf8 = ''; const DateTo: RawUtf8 = '';
+      const _Type: TEnumPuntjes13 = ep13None; Page: integer = 0): TDtoPuntjes72;
 
-    // downloadWalletPass [get] /customers/{customer}/wallet-pass
+
+    // ----------------------------------
+    //  LISTREDEMPTIONSAPIACTION METHODS
+    // ----------------------------------
+
+    // actions.listRedemptionsApiAction [get] /customers/{customer}/redemptions
     //
     //
     // Params:
     // - [path] Customer (required)
-    // - [query] Platform (required)
+    // - [query] Status
+    // - [query] Page
     //
     // Responses:
     // - 200 (main)
@@ -339,35 +431,15 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function DownloadWalletPass(const Customer: variant;
-      const Platform: TEnumPuntjes21): TDtoPuntjes33;
-
-    // adjustWallet [post] /customers/{customer}/wallet/adjust
-    //
-    //
-    // Params:
-    // - [path] Customer (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function AdjustWallet(const Customer: variant;
-      const Payload: TAdjustWalletApiData): TDtoPuntjes35;
+    function ActionsListRedemptionsApiAction(const Customer: variant;
+      const Status: TEnumPuntjes14 = ep14None; Page: integer = 0): TDtoPuntjes94;
 
 
-    // -----------------
-    //  REWARDS METHODS
-    // -----------------
+    // ------------------------------
+    //  LISTREWARDSAPIACTION METHODS
+    // ------------------------------
 
-    // listRewards [get] /rewards
+    // actions.listRewardsApiAction [get] /rewards
     //
     //
     // Params:
@@ -381,20 +453,21 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListRewards(Affordable: boolean = false;
-      const Identifier: RawUtf8 = ''): TDtoPuntjes37;
+    function ActionsListRewardsApiAction(Affordable: boolean = false;
+      const Identifier: RawUtf8 = ''): TDtoPuntjes106;
 
 
-    // ---------------------
-    //  REDEMPTIONS METHODS
-    // ---------------------
+    // -----------------------------------
+    //  LISTTRANSACTIONSAPIACTION METHODS
+    // -----------------------------------
 
-    // listCustomerRedemptions [get] /customers/{customer}/redemptions
+    // actions.listTransactionsApiAction [get] /customers/{customer}/transactions
     //
     //
     // Params:
     // - [path] Customer (required)
-    // - [query] Status
+    // - [query] DateFrom
+    // - [query] DateTo
     // - [query] Page
     //
     // Responses:
@@ -405,28 +478,39 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListCustomerRedemptions(const Customer: variant;
-      const Status: TEnumPuntjes22 = ep22None; Page: integer = 0): TDtoPuntjes41;
+    function ActionsListTransactionsApiAction(const Customer: variant;
+      const DateFrom: RawUtf8 = ''; const DateTo: RawUtf8 = '';
+      Page: integer = 0): TDtoPuntjes118;
 
-    // redeemReward [post] /redemptions
+
+    // ------------------------------
+    //  LOOKUPCUSTOMERACTION METHODS
+    // ------------------------------
+
+    // actions.lookupCustomerAction [get] /customers/lookup
     //
     //
     // Params:
-    // - [body] Payload  (required)
+    // - [query] Identifier
+    // - [query] ExternalId
     //
     // Responses:
-    // - 201 (main)
-    // - 400 [EErrorResponse]
+    // - 200 (main)
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
     // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function RedeemReward(const Payload: TCreateRedemptionData): TDtoPuntjes45;
+    function ActionsLookupCustomerAction(const Identifier: RawUtf8 = '';
+      const ExternalId: RawUtf8 = ''): TDtoPuntjes130;
 
-    // lookupRedemption [get] /redemptions/{code}
+
+    // --------------------------------
+    //  LOOKUPREDEMPTIONACTION METHODS
+    // --------------------------------
+
+    // actions.lookupRedemptionAction [get] /redemptions/{code}
     //
     //
     // Params:
@@ -439,52 +523,14 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function LookupRedemption(const Code: variant): TDtoPuntjes47;
-
-    // verifyRedemption [post] /redemptions/{code}/verify
-    //
-    //
-    // Params:
-    // - [path] Code (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function VerifyRedemption(const Code: variant): TDtoPuntjes49;
+    function ActionsLookupRedemptionAction(const Code: variant): TDtoPuntjes132;
 
 
-    // ------------------
-    //  PRODUCTS METHODS
-    // ------------------
+    // -------------------------------
+    //  REDEEMREWARDAPIACTION METHODS
+    // -------------------------------
 
-    // listProducts [get] /products
-    //
-    //
-    // Params:
-    // - [query] Status
-    // - [query] Category
-    // - [query] Search
-    // - [query] PerPage
-    // - [query] Page
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function ListProducts(const Status: TEnumPuntjes3 = ep3None;
-      const Category: RawUtf8 = ''; const Search: RawUtf8 = ''; PerPage: integer = 0;
-      Page: integer = 0): TDtoPuntjes53;
-
-    // createProduct [post] /products
+    // actions.redeemRewardApiAction [post] /redemptions
     //
     //
     // Params:
@@ -495,66 +541,43 @@ type
     // - 400 [EErrorResponse]
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
-    // - 409 [EErrorResponse]
-    // - 415 [EErrorResponse]
+    // - 404 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function CreateProduct(const Payload: TCreateProductData): TDtoPuntjes53;
+    function ActionsRedeemRewardApiAction(
+      const Payload: TCreateRedemptionData): TDtoPuntjes134;
 
-    // bulkUpsertProducts [post] /products/batch
+
+    // ----------------------------------
+    //  SENDLOYALTYCARDAPIACTION METHODS
+    // ----------------------------------
+
+    // actions.sendLoyaltyCardApiAction [post] /customers/{customer}/send-card
     //
     //
     // Params:
+    // - [path] Customer (required)
     // - [body] Payload  (required)
     //
     // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function BulkUpsertProducts(const Payload: TDtoPuntjes57): TDtoPuntjes53;
-
-    // createRewardFromProduct [post] /products/{externalId}/reward
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 201 (main)
+    // - 202 (main)
     // - 400 [EErrorResponse]
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
     // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function CreateRewardFromProduct(const ExternalId: variant;
-      const Payload: TCreateRewardFromProductData): TDtoPuntjes53;
+    function ActionsSendLoyaltyCardApiAction(const Customer: variant;
+      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes134;
 
-    // showProduct [get] /products/{externalId}
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function ShowProduct(const ExternalId: variant): TDtoPuntjes53;
 
-    // upsertProduct [put] /products/{externalId}
+    // ----------------------------------------------
+    //  SENDLOYALTYCARDBYEXTERNALIDAPIACTION METHODS
+    // ----------------------------------------------
+
+    // actions.sendLoyaltyCardByExternalIdApiAction [post] /customers/by-external-id/{externalId}/send-card
     //
     //
     // Params:
@@ -562,81 +585,23 @@ type
     // - [body] Payload  (required)
     //
     // Responses:
-    // - 200 (main)
-    // - 201
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function UpsertProduct(const ExternalId: variant;
-      const Payload: TUpsertProductData): TDtoPuntjes53;
-
-    // updateProduct [patch] /products/{externalId}
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
+    // - 202 (main)
     // - 400 [EErrorResponse]
     // - 401 [EErrorResponse]
     // - 403 [EErrorResponse]
     // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function UpdateProduct(const ExternalId: variant;
-      const Payload: TUpdateProductData): TDtoPuntjes53;
-
-    // deleteProduct [delete] /products/{externalId}
-    //
-    //
-    // Params:
-    // - [path] ExternalId (required)
-    //
-    // Responses:
-    // - 204 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    procedure DeleteProduct(const ExternalId: variant);
+    function ActionsSendLoyaltyCardByExternalIdApiAction(const ExternalId: variant;
+      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes134;
 
 
-    // -------------------
-    //  CAMPAIGNS METHODS
-    // -------------------
+    // -------------------------------
+    //  SHOWCUSTOMERAPIACTION METHODS
+    // -------------------------------
 
-    // listCampaigns [get] /campaigns
-    //
-    //
-    // Params:
-    // - [query] Branch
-    // - [query] Page
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function ListCampaigns(const Branch: RawUtf8 = ''; Page: integer = 0): TDtoPuntjes53;
-
-
-    // ------------------
-    //  VOUCHERS METHODS
-    // ------------------
-
-    // listCustomerVouchers [get] /customers/{customer}/vouchers
+    // actions.showCustomerApiAction [get] /customers/{customer}
     //
     //
     // Params:
@@ -649,49 +614,14 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListCustomerVouchers(const Customer: variant): TDtoPuntjes53;
-
-    // lookupVoucher [get] /vouchers/{code}
-    //
-    //
-    // Params:
-    // - [path] Code (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function LookupVoucher(const Code: variant): TDtoPuntjes53;
-
-    // verifyVoucher [post] /vouchers/{code}/verify
-    //
-    //
-    // Params:
-    // - [path] Code (required)
-    // - [body] Payload  (required)
-    //
-    // Responses:
-    // - 200 (main)
-    // - 400 [EErrorResponse]
-    // - 401 [EErrorResponse]
-    // - 403 [EErrorResponse]
-    // - 404 [EErrorResponse]
-    // - 415 [EErrorResponse]
-    // - 422 [EErrorResponse]
-    // - 429 [EErrorResponse]
-    // - 500 [EErrorResponse]
-    function VerifyVoucher(const Code: variant;
-      const Payload: TVerifyCampaignVoucherData): TDtoPuntjes53;
+    function ActionsShowCustomerApiAction(const Customer: variant): TDtoPuntjes134;
 
 
-    // --------------------
-    //  STATISTICS METHODS
-    // --------------------
+    // ---------------------------------
+    //  SHOWSTATISTICSAPIACTION METHODS
+    // ---------------------------------
 
-    // showStatistics [get] /statistics
+    // v1.statistics [get] /statistics
     //
     //
     // Params:
@@ -707,15 +637,15 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowStatistics(const Period: TEnumPuntjes23 = ep23None;
-      TopProductsLimit: integer = 0; const Branch: RawUtf8 = ''): TDtoPuntjes53;
+    function V1Statistics(const Period: TEnumPuntjes15 = ep15None;
+      TopProductsLimit: integer = 0; const Branch: RawUtf8 = ''): TDtoPuntjes134;
 
 
-    // ------------
-    //  ME METHODS
-    // ------------
+    // ----------------------------------
+    //  SHOWVENDORBRANDINGACTION METHODS
+    // ----------------------------------
 
-    // showMe [get] /me
+    // actions.showVendorBrandingAction [get] /me
     //
     //
     // Responses:
@@ -724,20 +654,119 @@ type
     // - 403 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowMe(): TDtoPuntjes53;
+    function ActionsShowVendorBrandingAction(): TDtoPuntjes134;
 
 
-    // ----------------
-    //  HEALTH METHODS
-    // ----------------
+    // --------------------------
+    //  SHOWWALLETACTION METHODS
+    // --------------------------
 
-    // checkHealth [get] /health
+    // actions.showWalletAction [get] /customers/{customer}/wallet
     //
+    //
+    // Params:
+    // - [path] Customer (required)
     //
     // Responses:
     // - 200 (main)
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function CheckHealth(): TDtoPuntjes53;
+    function ActionsShowWalletAction(const Customer: variant): TDtoPuntjes134;
+
+
+    // ---------------------------------
+    //  SUBMITTRANSACTIONACTION METHODS
+    // ---------------------------------
+
+    // actions.submitTransactionAction [post] /transactions
+    //
+    //
+    // Params:
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 201 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsSubmitTransactionAction(
+      const Payload: TCreateTransactionData): TDtoPuntjes134;
+
+
+    // ------------------------------------------
+    //  UPDATECUSTOMERBYEXTERNALIDACTION METHODS
+    // ------------------------------------------
+
+    // actions.updateCustomerByExternalIdAction [put] /customers/by-external-id/{externalId}
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsUpdateCustomerByExternalIdAction(const ExternalId: variant;
+      const Payload: TUpdateCustomerData): TDtoPuntjes134;
+
+
+    // ----------------------------------------
+    //  VERIFYCAMPAIGNVOUCHERAPIACTION METHODS
+    // ----------------------------------------
+
+    // actions.verifyCampaignVoucherApiAction [post] /vouchers/{code}/verify
+    //
+    //
+    // Params:
+    // - [path] Code (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsVerifyCampaignVoucherApiAction(const Code: variant;
+      const Payload: TVerifyCampaignVoucherData): TDtoPuntjes134;
+
+
+    // -----------------------------------
+    //  VERIFYREDEMPTIONAPIACTION METHODS
+    // -----------------------------------
+
+    // actions.verifyRedemptionApiAction [post] /redemptions/{code}/verify
+    //
+    //
+    // Params:
+    // - [path] Code (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ActionsVerifyRedemptionApiAction(const Code: variant): TDtoPuntjes134;
 
     // access to the associated HTTP/JSON client instance
     property JsonClient: IJsonClient
@@ -778,16 +807,6 @@ var
   e: EJsonClientClass;
 begin
   case Response.Status of
-    401:
-      e := EErrorResponse;
-    403:
-      e := EErrorResponse;
-    404:
-      e := EErrorResponse;
-    422:
-      e := EErrorResponse;
-    429:
-      e := EErrorResponse;
     500:
       e := EErrorResponse;
   else
@@ -808,9 +827,7 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    409:
-      e := EErrorResponse;
-    415:
+    404:
       e := EErrorResponse;
     422:
       e := EErrorResponse;
@@ -836,12 +853,6 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    404:
-      e := EErrorResponse;
-    409:
-      e := EErrorResponse;
-    415:
-      e := EErrorResponse;
     422:
       e := EErrorResponse;
     429:
@@ -866,9 +877,7 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    404:
-      e := EErrorResponse;
-    415:
+    409:
       e := EErrorResponse;
     422:
       e := EErrorResponse;
@@ -892,7 +901,7 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    404:
+    422:
       e := EErrorResponse;
     429:
       e := EErrorResponse;
@@ -914,7 +923,7 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    422:
+    404:
       e := EErrorResponse;
     429:
       e := EErrorResponse;
@@ -937,8 +946,6 @@ begin
     403:
       e := EErrorResponse;
     404:
-      e := EErrorResponse;
-    415:
       e := EErrorResponse;
     422:
       e := EErrorResponse;
@@ -964,7 +971,9 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    415:
+    404:
+      e := EErrorResponse;
+    409:
       e := EErrorResponse;
     422:
       e := EErrorResponse;
@@ -988,10 +997,6 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
-    404:
-      e := EErrorResponse;
-    415:
-      e := EErrorResponse;
     429:
       e := EErrorResponse;
     500:
@@ -1002,315 +1007,244 @@ begin
   raise e.CreateResp('%.%', [self, ErrorMsg], Response);
 end;
 
-procedure TPuntjesClient.OnError10(const Sender: IJsonClient;
-  const Response: TJsonResponse; const ErrorMsg: ShortString);
-var
-  e: EJsonClientClass;
+function TPuntjesClient.GetHealth(): TDtoPuntjes2;
 begin
-  case Response.Status of
-    400:
-      e := EErrorResponse;
-    401:
-      e := EErrorResponse;
-    403:
-      e := EErrorResponse;
-    422:
-      e := EErrorResponse;
-    429:
-      e := EErrorResponse;
-    500:
-      e := EErrorResponse;
-  else
-    e := EJsonClient;
-  end;
-  raise e.CreateResp('%.%', [self, ErrorMsg], Response);
-end;
-
-procedure TPuntjesClient.OnError11(const Sender: IJsonClient;
-  const Response: TJsonResponse; const ErrorMsg: ShortString);
-var
-  e: EJsonClientClass;
-begin
-  case Response.Status of
-    401:
-      e := EErrorResponse;
-    403:
-      e := EErrorResponse;
-    429:
-      e := EErrorResponse;
-    500:
-      e := EErrorResponse;
-  else
-    e := EJsonClient;
-  end;
-  raise e.CreateResp('%.%', [self, ErrorMsg], Response);
-end;
-
-procedure TPuntjesClient.OnError12(const Sender: IJsonClient;
-  const Response: TJsonResponse; const ErrorMsg: ShortString);
-var
-  e: EJsonClientClass;
-begin
-  case Response.Status of
-    500:
-      e := EErrorResponse;
-  else
-    e := EJsonClient;
-  end;
-  raise e.CreateResp('%.%', [self, ErrorMsg], Response);
-end;
-
-function TPuntjesClient.LookupCustomer(const Identifier: RawUtf8;
-  const ExternalId: RawUtf8): TDtoPuntjes2;
-begin
-  fClient.Request('GET', '/customers/lookup', [], [
-    'identifier', Identifier,
-    'external_id', ExternalId], [],
+  fClient.Request('GET', '/health', [], [], [],
     result, TypeInfo(TDtoPuntjes2), OnError1);
 end;
 
-function TPuntjesClient.RegisterCustomer(
-  const Payload: TCreateCustomerData): TDtoPuntjes4;
+function TPuntjesClient.ActionsAdjustWalletApiAction(const Customer: variant;
+  const Payload: TAdjustWalletApiData): TDtoPuntjes5;
+begin
+  fClient.Request('POST', '/customers/%/wallet/adjust', [Customer], [], [],
+    Payload, result, TypeInfo(TAdjustWalletApiData), TypeInfo(TDtoPuntjes5), OnError2);
+end;
+
+function TPuntjesClient.ActionsBulkUpsertProductsApiAction(): TDtoPuntjes7;
+begin
+  fClient.Request('POST', '/products/batch', [], [], [],
+    result, TypeInfo(TDtoPuntjes7), OnError3);
+end;
+
+function TPuntjesClient.ActionsCreateCustomerApiAction(
+  const Payload: TCreateCustomerData): TDtoPuntjes9;
 begin
   fClient.Request('POST', '/customers', [], [], [],
-    Payload, result, TypeInfo(TCreateCustomerData), TypeInfo(TDtoPuntjes4), OnError2);
+    Payload, result, TypeInfo(TCreateCustomerData), TypeInfo(TDtoPuntjes9), OnError4);
 end;
 
-function TPuntjesClient.ReplaceCustomerByExternalId(const ExternalId: variant;
-  const Payload: TUpdateCustomerData): TDtoPuntjes6;
+function TPuntjesClient.ActionsCreateProductApiAction(
+  const Payload: TCreateProductData): TDtoPuntjes11;
 begin
-  fClient.Request('PUT', '/customers/by-external-id/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TDtoPuntjes6), OnError3);
+  fClient.Request('POST', '/products', [], [], [],
+    Payload, result, TypeInfo(TCreateProductData), TypeInfo(TDtoPuntjes11), OnError4);
 end;
 
-function TPuntjesClient.UpdateCustomerByExternalId(const ExternalId: variant;
-  const Payload: TUpdateCustomerData): TDtoPuntjes8;
+function TPuntjesClient.ActionsListProductsApiAction(const Status: TEnumPuntjes2;
+  const Category: RawUtf8; const Search: RawUtf8; PerPage: integer;
+  Page: integer): TDtoPuntjes16;
 begin
-  fClient.Request('PATCH', '/customers/by-external-id/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TDtoPuntjes8), OnError3);
-end;
-
-function TPuntjesClient.LinkCustomerExternalId(
-  const Payload: TLinkExternalIdData): TDtoPuntjes10;
-begin
-  fClient.Request('POST', '/customers/link-external-id', [], [], [],
-    Payload, result, TypeInfo(TLinkExternalIdData), TypeInfo(TDtoPuntjes10), OnError3);
-end;
-
-function TPuntjesClient.SendLoyaltyCardByExternalId(const ExternalId: variant;
-  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes12;
-begin
-  fClient.Request('POST', '/customers/by-external-id/%/send-card', [ExternalId], [], [],
-    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes12), OnError4);
-end;
-
-function TPuntjesClient.SendLoyaltyCard(const Customer: variant;
-  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes14;
-begin
-  fClient.Request('POST', '/customers/%/send-card', [Customer], [], [],
-    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes14), OnError4);
-end;
-
-function TPuntjesClient.ShowCustomer(const Customer: variant): TDtoPuntjes16;
-begin
-  fClient.Request('GET', '/customers/%', [Customer], [], [],
+  fClient.Request('GET', '/products', [], [
+    'status', _TEnumPuntjes2[Status],
+    'category', Category,
+    'search', Search,
+    'per_page', PerPage,
+    'page', Page], [],
     result, TypeInfo(TDtoPuntjes16), OnError5);
 end;
 
-function TPuntjesClient.SubmitTransaction(
-  const Payload: TCreateTransactionData): TDtoPuntjes18;
+function TPuntjesClient.ActionsCreateRewardFromProductApiAction(
+  const ExternalId: variant;
+  const Payload: TCreateRewardFromProductData): TDtoPuntjes28;
 begin
-  fClient.Request('POST', '/transactions', [], [], [],
-    Payload, result, TypeInfo(TCreateTransactionData), TypeInfo(TDtoPuntjes18), OnError4);
+  fClient.Request('POST', '/products/%/reward', [ExternalId], [], [],
+    Payload, result, TypeInfo(TCreateRewardFromProductData), TypeInfo(TDtoPuntjes28), OnError2);
 end;
 
-function TPuntjesClient.ListCustomerTransactions(const Customer: variant;
-  const DateFrom: RawUtf8; const DateTo: RawUtf8; Page: integer): TDtoPuntjes21;
+procedure TPuntjesClient.ActionsDeleteProductApiAction(const ExternalId: variant);
+begin
+  fClient.Request('DELETE', '/products/%', [ExternalId], [], [], OnError6);
+end;
+
+function TPuntjesClient.ActionsShowProductApiAction(
+  const ExternalId: variant): TDtoPuntjes30;
+begin
+  fClient.Request('GET', '/products/%', [ExternalId], [], [],
+    result, TypeInfo(TDtoPuntjes30), OnError6);
+end;
+
+function TPuntjesClient.ActionsUpdateProductApiAction(const ExternalId: variant;
+  const Payload: TUpdateProductData): TDtoPuntjes32;
+begin
+  fClient.Request('PATCH', '/products/%', [ExternalId], [], [],
+    Payload, result, TypeInfo(TUpdateProductData), TypeInfo(TDtoPuntjes32), OnError2);
+end;
+
+function TPuntjesClient.ActionsUpsertProductApiAction(const ExternalId: variant;
+  const Payload: TUpsertProductData): TDtoPuntjes34;
+begin
+  fClient.Request('PUT', '/products/%', [ExternalId], [], [],
+    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TDtoPuntjes34), OnError3);
+end;
+
+function TPuntjesClient.ActionsDownloadWalletPassAction(const Customer: variant;
+  const Platform: TEnumPuntjes12): TDtoPuntjes36;
+begin
+  fClient.Request('GET', '/customers/%/wallet-pass', [Customer], [
+    'platform', _TEnumPuntjes12[Platform]], [],
+    result, TypeInfo(TDtoPuntjes36), OnError7);
+end;
+
+function TPuntjesClient.ActionsLinkCustomerExternalIdAction(
+  const Payload: TLinkExternalIdData): TDtoPuntjes38;
+begin
+  fClient.Request('POST', '/customers/link-external-id', [], [], [],
+    Payload, result, TypeInfo(TLinkExternalIdData), TypeInfo(TDtoPuntjes38), OnError8);
+end;
+
+function TPuntjesClient.V1CampaignsIndex(const Branch: RawUtf8;
+  Page: integer): TDtoPuntjes50;
+begin
+  fClient.Request('GET', '/campaigns', [], [
+    'branch', Branch,
+    'page', Page], [],
+    result, TypeInfo(TDtoPuntjes50), OnError5);
+end;
+
+function TPuntjesClient.ActionsListLedgerEntriesAction(const Customer: variant;
+  const DateFrom: RawUtf8; const DateTo: RawUtf8; const _Type: TEnumPuntjes13;
+  Page: integer): TDtoPuntjes72;
+begin
+  fClient.Request('GET', '/customers/%/ledger', [Customer], [
+    'date_from', DateFrom,
+    'date_to', DateTo,
+    'type', _TEnumPuntjes13[_Type],
+    'page', Page], [],
+    result, TypeInfo(TDtoPuntjes72), OnError7);
+end;
+
+function TPuntjesClient.ActionsListRedemptionsApiAction(const Customer: variant;
+  const Status: TEnumPuntjes14; Page: integer): TDtoPuntjes94;
+begin
+  fClient.Request('GET', '/customers/%/redemptions', [Customer], [
+    'status', _TEnumPuntjes14[Status],
+    'page', Page], [],
+    result, TypeInfo(TDtoPuntjes94), OnError7);
+end;
+
+function TPuntjesClient.ActionsListRewardsApiAction(Affordable: boolean;
+  const Identifier: RawUtf8): TDtoPuntjes106;
+begin
+  fClient.Request('GET', '/rewards', [], [
+    'affordable', Affordable,
+    'identifier', Identifier], [],
+    result, TypeInfo(TDtoPuntjes106), OnError5);
+end;
+
+function TPuntjesClient.ActionsListTransactionsApiAction(const Customer: variant;
+  const DateFrom: RawUtf8; const DateTo: RawUtf8; Page: integer): TDtoPuntjes118;
 begin
   fClient.Request('GET', '/customers/%/transactions', [Customer], [
     'date_from', DateFrom,
     'date_to', DateTo,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes21), OnError1);
+    result, TypeInfo(TDtoPuntjes118), OnError7);
 end;
 
-function TPuntjesClient.ShowWallet(const Customer: variant): TDtoPuntjes25;
+function TPuntjesClient.ActionsLookupCustomerAction(const Identifier: RawUtf8;
+  const ExternalId: RawUtf8): TDtoPuntjes130;
 begin
-  fClient.Request('GET', '/customers/%/wallet', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes25), OnError5);
+  fClient.Request('GET', '/customers/lookup', [], [
+    'identifier', Identifier,
+    'external_id', ExternalId], [],
+    result, TypeInfo(TDtoPuntjes130), OnError7);
 end;
 
-function TPuntjesClient.ListLedgerEntries(const Customer: variant;
-  const DateFrom: RawUtf8; const DateTo: RawUtf8; const _Type: TEnumPuntjes20;
-  Page: integer): TDtoPuntjes29;
-begin
-  fClient.Request('GET', '/customers/%/ledger', [Customer], [
-    'date_from', DateFrom,
-    'date_to', DateTo,
-    'type', _TEnumPuntjes20[_Type],
-    'page', Page], [],
-    result, TypeInfo(TDtoPuntjes29), OnError1);
-end;
-
-function TPuntjesClient.DownloadWalletPass(const Customer: variant;
-  const Platform: TEnumPuntjes21): TDtoPuntjes33;
-begin
-  fClient.Request('GET', '/customers/%/wallet-pass', [Customer], [
-    'platform', _TEnumPuntjes21[Platform]], [],
-    result, TypeInfo(TDtoPuntjes33), OnError1);
-end;
-
-function TPuntjesClient.AdjustWallet(const Customer: variant;
-  const Payload: TAdjustWalletApiData): TDtoPuntjes35;
-begin
-  fClient.Request('POST', '/customers/%/wallet/adjust', [Customer], [], [],
-    Payload, result, TypeInfo(TAdjustWalletApiData), TypeInfo(TDtoPuntjes35), OnError4);
-end;
-
-function TPuntjesClient.ListRewards(Affordable: boolean;
-  const Identifier: RawUtf8): TDtoPuntjes37;
-begin
-  fClient.Request('GET', '/rewards', [], [
-    'affordable', Affordable,
-    'identifier', Identifier], [],
-    result, TypeInfo(TDtoPuntjes37), OnError6);
-end;
-
-function TPuntjesClient.ListCustomerRedemptions(const Customer: variant;
-  const Status: TEnumPuntjes22; Page: integer): TDtoPuntjes41;
-begin
-  fClient.Request('GET', '/customers/%/redemptions', [Customer], [
-    'status', _TEnumPuntjes22[Status],
-    'page', Page], [],
-    result, TypeInfo(TDtoPuntjes41), OnError1);
-end;
-
-function TPuntjesClient.RedeemReward(
-  const Payload: TCreateRedemptionData): TDtoPuntjes45;
-begin
-  fClient.Request('POST', '/redemptions', [], [], [],
-    Payload, result, TypeInfo(TCreateRedemptionData), TypeInfo(TDtoPuntjes45), OnError4);
-end;
-
-function TPuntjesClient.LookupRedemption(const Code: variant): TDtoPuntjes47;
+function TPuntjesClient.ActionsLookupRedemptionAction(
+  const Code: variant): TDtoPuntjes132;
 begin
   fClient.Request('GET', '/redemptions/%', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes47), OnError5);
+    result, TypeInfo(TDtoPuntjes132), OnError6);
 end;
 
-function TPuntjesClient.VerifyRedemption(const Code: variant): TDtoPuntjes49;
+function TPuntjesClient.ActionsRedeemRewardApiAction(
+  const Payload: TCreateRedemptionData): TDtoPuntjes134;
 begin
-  fClient.Request('POST', '/redemptions/%/verify', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes49), OnError7);
+  fClient.Request('POST', '/redemptions', [], [], [],
+    Payload, result, TypeInfo(TCreateRedemptionData), TypeInfo(TDtoPuntjes134), OnError2);
 end;
 
-function TPuntjesClient.ListProducts(const Status: TEnumPuntjes3;
-  const Category: RawUtf8; const Search: RawUtf8; PerPage: integer;
-  Page: integer): TDtoPuntjes53;
+function TPuntjesClient.ActionsSendLoyaltyCardApiAction(const Customer: variant;
+  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes134;
 begin
-  fClient.Request('GET', '/products', [], [
-    'status', _TEnumPuntjes3[Status],
-    'category', Category,
-    'search', Search,
-    'per_page', PerPage,
-    'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError6);
+  fClient.Request('POST', '/customers/%/send-card', [Customer], [], [],
+    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes134), OnError2);
 end;
 
-function TPuntjesClient.CreateProduct(
-  const Payload: TCreateProductData): TDtoPuntjes53;
+function TPuntjesClient.ActionsSendLoyaltyCardByExternalIdApiAction(
+  const ExternalId: variant;
+  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes134;
 begin
-  fClient.Request('POST', '/products', [], [], [],
-    Payload, result, TypeInfo(TCreateProductData), TypeInfo(TDtoPuntjes53), OnError2);
+  fClient.Request('POST', '/customers/by-external-id/%/send-card', [ExternalId], [], [],
+    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes134), OnError2);
 end;
 
-function TPuntjesClient.BulkUpsertProducts(
-  const Payload: TDtoPuntjes57): TDtoPuntjes53;
+function TPuntjesClient.ActionsShowCustomerApiAction(
+  const Customer: variant): TDtoPuntjes134;
 begin
-  fClient.Request('POST', '/products/batch', [], [], [],
-    Payload, result, TypeInfo(TDtoPuntjes57), TypeInfo(TDtoPuntjes53), OnError8);
+  fClient.Request('GET', '/customers/%', [Customer], [], [],
+    result, TypeInfo(TDtoPuntjes134), OnError6);
 end;
 
-function TPuntjesClient.CreateRewardFromProduct(const ExternalId: variant;
-  const Payload: TCreateRewardFromProductData): TDtoPuntjes53;
-begin
-  fClient.Request('POST', '/products/%/reward', [ExternalId], [], [],
-    Payload, result, TypeInfo(TCreateRewardFromProductData), TypeInfo(TDtoPuntjes53), OnError4);
-end;
-
-function TPuntjesClient.ShowProduct(const ExternalId: variant): TDtoPuntjes53;
-begin
-  fClient.Request('GET', '/products/%', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
-end;
-
-function TPuntjesClient.UpsertProduct(const ExternalId: variant;
-  const Payload: TUpsertProductData): TDtoPuntjes53;
-begin
-  fClient.Request('PUT', '/products/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TDtoPuntjes53), OnError8);
-end;
-
-function TPuntjesClient.UpdateProduct(const ExternalId: variant;
-  const Payload: TUpdateProductData): TDtoPuntjes53;
-begin
-  fClient.Request('PATCH', '/products/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateProductData), TypeInfo(TDtoPuntjes53), OnError4);
-end;
-
-procedure TPuntjesClient.DeleteProduct(const ExternalId: variant);
-begin
-  fClient.Request('DELETE', '/products/%', [ExternalId], [], [], OnError9);
-end;
-
-function TPuntjesClient.ListCampaigns(const Branch: RawUtf8;
-  Page: integer): TDtoPuntjes53;
-begin
-  fClient.Request('GET', '/campaigns', [], [
-    'branch', Branch,
-    'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError6);
-end;
-
-function TPuntjesClient.ListCustomerVouchers(const Customer: variant): TDtoPuntjes53;
-begin
-  fClient.Request('GET', '/customers/%/vouchers', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
-end;
-
-function TPuntjesClient.LookupVoucher(const Code: variant): TDtoPuntjes53;
-begin
-  fClient.Request('GET', '/vouchers/%', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
-end;
-
-function TPuntjesClient.VerifyVoucher(const Code: variant;
-  const Payload: TVerifyCampaignVoucherData): TDtoPuntjes53;
-begin
-  fClient.Request('POST', '/vouchers/%/verify', [Code], [], [],
-    Payload, result, TypeInfo(TVerifyCampaignVoucherData), TypeInfo(TDtoPuntjes53), OnError4);
-end;
-
-function TPuntjesClient.ShowStatistics(const Period: TEnumPuntjes23;
-  TopProductsLimit: integer; const Branch: RawUtf8): TDtoPuntjes53;
+function TPuntjesClient.V1Statistics(const Period: TEnumPuntjes15;
+  TopProductsLimit: integer; const Branch: RawUtf8): TDtoPuntjes134;
 begin
   fClient.Request('GET', '/statistics', [], [
-    'period', _TEnumPuntjes23[Period],
+    'period', _TEnumPuntjes15[Period],
     'top_products_limit', TopProductsLimit,
     'branch', Branch], [],
-    result, TypeInfo(TDtoPuntjes53), OnError10);
+    result, TypeInfo(TDtoPuntjes134), OnError3);
 end;
 
-function TPuntjesClient.ShowMe(): TDtoPuntjes53;
+function TPuntjesClient.ActionsShowVendorBrandingAction(): TDtoPuntjes134;
 begin
   fClient.Request('GET', '/me', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError11);
+    result, TypeInfo(TDtoPuntjes134), OnError9);
 end;
 
-function TPuntjesClient.CheckHealth(): TDtoPuntjes53;
+function TPuntjesClient.ActionsShowWalletAction(
+  const Customer: variant): TDtoPuntjes134;
 begin
-  fClient.Request('GET', '/health', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError12);
+  fClient.Request('GET', '/customers/%/wallet', [Customer], [], [],
+    result, TypeInfo(TDtoPuntjes134), OnError6);
+end;
+
+function TPuntjesClient.ActionsSubmitTransactionAction(
+  const Payload: TCreateTransactionData): TDtoPuntjes134;
+begin
+  fClient.Request('POST', '/transactions', [], [], [],
+    Payload, result, TypeInfo(TCreateTransactionData), TypeInfo(TDtoPuntjes134), OnError2);
+end;
+
+function TPuntjesClient.ActionsUpdateCustomerByExternalIdAction(
+  const ExternalId: variant; const Payload: TUpdateCustomerData): TDtoPuntjes134;
+begin
+  fClient.Request('PUT', '/customers/by-external-id/%', [ExternalId], [], [],
+    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TDtoPuntjes134), OnError2);
+end;
+
+function TPuntjesClient.ActionsVerifyCampaignVoucherApiAction(const Code: variant;
+  const Payload: TVerifyCampaignVoucherData): TDtoPuntjes134;
+begin
+  fClient.Request('POST', '/vouchers/%/verify', [Code], [], [],
+    Payload, result, TypeInfo(TVerifyCampaignVoucherData), TypeInfo(TDtoPuntjes134), OnError2);
+end;
+
+function TPuntjesClient.ActionsVerifyRedemptionApiAction(
+  const Code: variant): TDtoPuntjes134;
+begin
+  fClient.Request('POST', '/redemptions/%/verify', [Code], [], [],
+    result, TypeInfo(TDtoPuntjes134), OnError7);
 end;
 
 

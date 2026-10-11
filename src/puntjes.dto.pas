@@ -26,71 +26,45 @@ type
 
 { ************ Enumerations and Sets }
 
-  // Which shape this is.
   TEnumPuntjes1 = (
-    epNone, epAnniversary);
+    epNone, epEmail, epLoyaltyCard);
   TEnumPuntjes2 = (
-    ep2None, ep2Email, ep2LoyaltyCard);
+    ep2None, ep2Active, ep2Archived, ep2Inactive);
   TEnumPuntjes3 = (
-    ep3None, ep3Active, ep3Archived, ep3Inactive);
-  TEnumPuntjes4 = (
-    ep4None, ep4Active, ep4Inactive);
-  // Which shape this is.
-  TEnumPuntjes5 = (
-    ep5None, ep5DateRange);
-  // Which shape this is.
-  TEnumPuntjes6 = (
-    ep6None, ep6DaysOfWeek);
+    ep3None, ep3Active, ep3Inactive);
   // Always `discount` for this shape.
-  TEnumPuntjes7 = (
-    ep7None, ep7Discount);
+  TEnumPuntjes4 = (
+    ep4None, ep4Discount);
   // Which of the two `discount_value` is.
-  TEnumPuntjes8 = (
-    ep8None, ep8FixedAmount, ep8Percentage);
-  // Deprecated: read `type`, which carries the same value. Always `fixed` for this
-  // shape.
-  TEnumPuntjes9 = (
-    ep9None, ep9Fixed);
+  TEnumPuntjes5 = (
+    ep5None, ep5FixedAmount, ep5Percentage);
+  // Always `fixed` for this shape.
+  TEnumPuntjes6 = (
+    ep6None, ep6Fixed);
   // Always `free_product` for this shape.
-  TEnumPuntjes10 = (
-    ep10None, ep10FreeProduct);
-  // Which shape this is.
-  TEnumPuntjes11 = (
-    ep11None, ep11Moment);
-  // Which shape this is.
-  TEnumPuntjes12 = (
-    ep12None, ep12NthPurchase);
-  // Deprecated: read `type`, which carries the same value. Always `percentage`
-  // for this shape.
-  TEnumPuntjes13 = (
-    ep13None, ep13Percentage);
+  TEnumPuntjes7 = (
+    ep7None, ep7FreeProduct);
+  // Always `percentage` for this shape.
+  TEnumPuntjes8 = (
+    ep8None, ep8Percentage);
   // Always `points` for this shape.
-  TEnumPuntjes14 = (
-    ep14None, ep14Points);
-  // Which shape this is.
-  TEnumPuntjes15 = (
-    ep15None, ep15SpecificDates);
+  TEnumPuntjes9 = (
+    ep9None, ep9Points);
   // Multiply the points earned, or add a fixed number. Absent reads as `multiplier`.
-  TEnumPuntjes16 = (
-    ep16None, ep16FixedPoints, ep16Multiplier);
+  TEnumPuntjes10 = (
+    ep10None, ep10FixedPoints, ep10Multiplier);
   // `whole` and `whole_purchase` both mean the whole purchase. Absent reads as
   // `whole`.
-  TEnumPuntjes17 = (
-    ep17None, ep17Products, ep17Whole, ep17WholePurchase);
-  // Which shape this is.
-  TEnumPuntjes18 = (
-    ep18None, ep18Transaction);
-  // Which shape this is.
-  TEnumPuntjes19 = (
-    ep19None, ep19WinBack);
-  TEnumPuntjes20 = (
-    ep20None, ep20Adjust, ep20Earn, ep20Expire, ep20Redeem);
-  TEnumPuntjes21 = (
-    ep21None, ep21Apple, ep21Google);
-  TEnumPuntjes22 = (
-    ep22None, ep22Cancelled, ep22Expired, ep22Used, ep22Valid);
-  TEnumPuntjes23 = (
-    ep23None, ep2330d, ep237d, ep2390d, ep23Today);
+  TEnumPuntjes11 = (
+    ep11None, ep11Products, ep11Whole, ep11WholePurchase);
+  TEnumPuntjes12 = (
+    ep12None, ep12Apple, ep12Google);
+  TEnumPuntjes13 = (
+    ep13None, ep13Adjust, ep13Earn, ep13Expire, ep13Redeem);
+  TEnumPuntjes14 = (
+    ep14None, ep14Expired, ep14Used, ep14Valid);
+  TEnumPuntjes15 = (
+    ep15None, ep1530d, ep157d, ep1590d, ep15Today);
 
 
 { ************ Data Transfert Objects }
@@ -106,14 +80,12 @@ type
   TAnniversaryCampaignConfigData = packed record
     // How many years after joining the gift is sent.
     Years: integer;
-    // What the customer gets. Its `type` says which shape this is.
+    // What the customer gets. Which shape this holds follows gift.type.
     Gift: variant;
     // Whether customers who passed the mark before the campaign started also get it.
     Backfill: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes1;
   end;
   PAnniversaryCampaignConfigData = ^TAnniversaryCampaignConfigData;
 
@@ -183,12 +155,12 @@ type
     Name: RawUtf8;
     Family: RawUtf8;
     Moment: variant;
-    // Its `type` says which shape this is.
+    // Which shape this holds follows family and, for a customer moment, moment.
     Config: variant;
     Version: integer;
     Multiplier: variant;
     RecurrenceType: variant;
-    // Its `type` says which shape this is.
+    // Which shape this holds follows recurrence_type.
     RecurrenceConfig: variant;
     ScheduleSummary: RawUtf8;
     StartsAt: RawUtf8;
@@ -211,27 +183,10 @@ type
   end;
   PCampaignProductRuleData = ^TCampaignProductRuleData;
 
-  // from #/components/schemas/CampaignVoucherLookupData
-  TCampaignVoucherLookupData = packed record
-    VoucherCode: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
-    Discount: variant;
-    ValidUntil: variant;
-    // When the bon was spent, or null while it is not.
-    ConsumedAt: variant;
-    CampaignId: integer;
-    Kind: RawUtf8;
-    // What to hand over, for a free-product bon.
-    Products: variant;
-    // `valid`, `used` or `expired`.
-    Status: RawUtf8;
-  end;
-  PCampaignVoucherLookupData = ^TCampaignVoucherLookupData;
-
   // from #/components/schemas/CampaignVoucherVerificationData
   TCampaignVoucherVerificationData = packed record
     VoucherCode: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
+    // How much comes off, for a discount bon. Which shape this holds follows discount.kind.
     Discount: variant;
     ValidUntil: variant;
     ConsumedAt: RawUtf8;
@@ -293,7 +248,7 @@ type
 
   // from #/components/schemas/CreateIdentifierData
   TCreateIdentifierData = packed record
-    _Type: TEnumPuntjes2;
+    _Type: TEnumPuntjes1;
     Value: RawUtf8;
     IsPrimary: boolean;
   end;
@@ -325,11 +280,10 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TEnumPuntjes2;
     Metadata: variant;
   end;
   PCreateProductData = ^TCreateProductData;
-  TCreateProductDataDynArray = array of TCreateProductData;
 
   // from #/components/schemas/CreateRedemptionData
   TCreateRedemptionData = packed record
@@ -346,13 +300,11 @@ type
     Name: variant;
     Description: variant;
     TotalStock: variant;
-    Status: TEnumPuntjes4;
+    Status: TEnumPuntjes3;
     AvailableFrom: variant;
     AvailableUntil: variant;
     CodeValidForHours: variant;
     PaymentAmount: variant;
-    IdempotencyKey: variant;
-    MaxRedemptionsPerCustomer: variant;
   end;
   PCreateRewardFromProductData = ^TCreateRewardFromProductData;
 
@@ -428,110 +380,25 @@ type
   end;
   PCustomerData = ^TCustomerData;
 
-  // from #/components/schemas/CustomerDetailData
-  TCustomerDetailData = packed record
-    Id: integer;
-    FirstName: variant;
-    LastName: variant;
-    Email: variant;
-    Phone: variant;
-    ExternalId: variant;
-    DateOfBirth: variant;
-    CustomerSince: variant;
-    Locale: variant;
-    Status: TCustomerStatusData;
-    Identifiers: TCustomerIdentifierDataDynArray;
-    MarketingConsent: boolean;
-    MarketingConsentGrantedAt: variant;
-    MarketingConsentGrantedSource: variant;
-    MarketingConsentWithdrawnAt: variant;
-    MarketingConsentWithdrawnSource: variant;
-    MarketingConsentStatementVersion: variant;
-    MarketingConsentRecordedBy: variant;
-    MarketingConsentRecordedByClientId: variant;
-    LoyaltyCardCode: variant;
-    DeactivatedAt: variant;
-    AnonymizedAt: variant;
-    CreatedAt: variant;
-    UpdatedAt: variant;
-    // `true` for a deactivated customer; the key is absent for any other customer.
-    IsDeactivated: boolean;
-  end;
-  PCustomerDetailData = ^TCustomerDetailData;
-
-  // from #/components/schemas/CustomerLookupData
-  TCustomerLookupData = packed record
-    Id: integer;
-    FirstName: variant;
-    LastName: variant;
-    Email: variant;
-    Phone: variant;
-    ExternalId: variant;
-    DateOfBirth: variant;
-    CustomerSince: variant;
-    Locale: variant;
-    Status: TCustomerStatusData;
-    Identifiers: TCustomerIdentifierDataDynArray;
-    MarketingConsent: boolean;
-    MarketingConsentGrantedAt: variant;
-    MarketingConsentGrantedSource: variant;
-    MarketingConsentWithdrawnAt: variant;
-    MarketingConsentWithdrawnSource: variant;
-    MarketingConsentStatementVersion: variant;
-    MarketingConsentRecordedBy: variant;
-    MarketingConsentRecordedByClientId: variant;
-    LoyaltyCardCode: variant;
-    DeactivatedAt: variant;
-    AnonymizedAt: variant;
-    CreatedAt: variant;
-    UpdatedAt: variant;
-    // The points balance of the customer's wallet, `0` when the customer has no wallet.
-    WalletBalance: integer;
-    // `true` for a deactivated customer; the key is absent for any other customer.
-    IsDeactivated: boolean;
-  end;
-  PCustomerLookupData = ^TCustomerLookupData;
-
-  // from #/components/schemas/CustomerVoucherData
-  TCustomerVoucherData = packed record
-    VoucherCode: RawUtf8;
-    CampaignId: integer;
-    Kind: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
-    Discount: variant;
-    // What to hand over, for a free-product bon.
-    Products: variant;
-    // The last day the bon can be spent, or null when it does not run out.
-    ValidUntil: variant;
-    // The branches that take the bon; null means every branch.
-    Branches: variant;
-  end;
-  PCustomerVoucherData = ^TCustomerVoucherData;
-  TCustomerVoucherDataDynArray = array of TCustomerVoucherData;
-
   TDateRangeRecurrenceData = packed record
     // The first day it runs, as `MM-DD`.
     ActiveFrom: RawUtf8;
     // The last day it runs, as `MM-DD`. Earlier than `active_from` wraps over new
     // year.
     ActiveUntil: RawUtf8;
-    // Which shape this is.
-    _Type: TEnumPuntjes5;
   end;
   PDateRangeRecurrenceData = ^TDateRangeRecurrenceData;
 
   TDaysOfWeekRecurrenceData = packed record
     // The days it runs, 0 for Sunday through 6 for Saturday.
     Days: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes6;
   end;
   PDaysOfWeekRecurrenceData = ^TDaysOfWeekRecurrenceData;
 
   TDiscountGiftData = packed record
     // Always `discount` for this shape.
-    _Type: TEnumPuntjes7;
-    // How much comes off. Its `type` says which shape this is.
+    _Type: TEnumPuntjes4;
+    // How much comes off. Which shape this holds follows discount.kind.
     Discount: variant;
     // How many days the customer has to use it.
     ValidityDays: variant;
@@ -544,12 +411,10 @@ type
     // How much comes off: a percentage, or an amount in cents.
     DiscountValue: integer;
     // Which of the two `discount_value` is.
-    DiscountType: TEnumPuntjes8;
+    DiscountType: TEnumPuntjes5;
     // The item number of the one product the discount is for; null when it counts
     // on the whole purchase.
     ProductReference: variant;
-    // Which shape this is.
-    _Type: TEnumPuntjes7;
   end;
   PDiscountRedemptionData = ^TDiscountRedemptionData;
 
@@ -591,15 +456,12 @@ type
   PErrorResponse = ^TErrorResponse;
 
   TFixedDiscountData = packed record
-    // Deprecated: read `type`, which carries the same value. Always `fixed` for this
-    // shape.
-    Kind: TEnumPuntjes9;
+    // Always `fixed` for this shape.
+    Kind: TEnumPuntjes6;
     // How much to take off, in cents.
     AmountCents: integer;
     // The one product the discount is for; leave it out for the whole purchase.
     ProductId: variant;
-    // Which shape this is.
-    _Type: TEnumPuntjes9;
   end;
   PFixedDiscountData = ^TFixedDiscountData;
 
@@ -617,7 +479,7 @@ type
 
   TFreeProductGiftData = packed record
     // Always `free_product` for this shape.
-    _Type: TEnumPuntjes10;
+    _Type: TEnumPuntjes7;
     // The products the customer gets.
     Products: TGiftProductDataDynArray;
     // A line the customer reads with the gift.
@@ -631,8 +493,6 @@ type
     // What the till collects on top of the points, in cents; `0` when the points
     // cover it.
     PaymentAmount: integer;
-    // Which shape this is.
-    _Type: TEnumPuntjes10;
   end;
   PFreeProductRedemptionData = ^TFreeProductRedemptionData;
 
@@ -697,63 +557,38 @@ type
   PLoyaltyStatisticsData = ^TLoyaltyStatisticsData;
 
   TMomentCampaignConfigData = packed record
-    // What the customer gets. Its `type` says which shape this is.
+    // What the customer gets. Which shape this holds follows gift.type.
     Gift: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes11;
   end;
   PMomentCampaignConfigData = ^TMomentCampaignConfigData;
 
   TNthPurchaseCampaignConfigData = packed record
     // Which purchase triggers the gift. 3 means every third one.
     EveryN: integer;
-    // What the customer gets. Its `type` says which shape this is.
+    // What the customer gets. Which shape this holds follows gift.type.
     Gift: variant;
     // The smallest purchase that counts, in cents.
     MinAmount: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes12;
   end;
   PNthPurchaseCampaignConfigData = ^TNthPurchaseCampaignConfigData;
 
-  // from #/components/schemas/PaginationLinks
-  TPaginationLinks = packed record
-    First: variant;
-    Last: variant;
-    Prev: variant;
-    Next: variant;
-  end;
-  PPaginationLinks = ^TPaginationLinks;
-
-  // from #/components/schemas/PaginationMeta
-  TPaginationMeta = packed record
-    CurrentPage: integer;
-    LastPage: integer;
-    PerPage: integer;
-    Total: integer;
-  end;
-  PPaginationMeta = ^TPaginationMeta;
-
   TPercentageDiscountData = packed record
-    // Deprecated: read `type`, which carries the same value. Always `percentage`
-    // for this shape.
-    Kind: TEnumPuntjes13;
+    // Always `percentage` for this shape.
+    Kind: TEnumPuntjes8;
     // How many percent to take off, 1 to 100.
     Percentage: integer;
     // The one product the discount is for; leave it out for the whole purchase.
     ProductId: variant;
-    // Which shape this is.
-    _Type: TEnumPuntjes13;
   end;
   PPercentageDiscountData = ^TPercentageDiscountData;
 
   TPointsGiftData = packed record
     // Always `points` for this shape.
-    _Type: TEnumPuntjes14;
+    _Type: TEnumPuntjes9;
     // How many points the customer gets.
     Points: integer;
     // A line the customer reads with the gift.
@@ -777,8 +612,8 @@ type
     RemainingBalance: integer;
     RedeemedAt: RawUtf8;
     ExpiresAt: variant;
-    // What the counter needs, shaped by the reward's type. Its `type` says which
-    // shape this is.
+    // What the counter needs, shaped by the reward's type. Which shape this holds
+    // follows reward.type.
     TypeSpecificData: variant;
   end;
   PRedemptionCreatedData = ^TRedemptionCreatedData;
@@ -800,8 +635,8 @@ type
     RedeemedAt: RawUtf8;
     VerifiedAt: variant;
     ExpiresAt: variant;
-    // What the counter needs, shaped by the reward's type. Its `type` says which
-    // shape this is.
+    // What the counter needs, shaped by the reward's type. Which shape this holds
+    // follows reward.type.
     TypeSpecificData: variant;
   end;
   PRedemptionLookupData = ^TRedemptionLookupData;
@@ -815,8 +650,8 @@ type
     Reward: TRedemptionRewardData;
     PointsDeducted: integer;
     VerifiedAt: RawUtf8;
-    // What the counter needs, shaped by the reward's type. Its `type` says which
-    // shape this is.
+    // What the counter needs, shaped by the reward's type. Which shape this holds
+    // follows reward.type.
     TypeSpecificData: variant;
   end;
   PRedemptionVerificationData = ^TRedemptionVerificationData;
@@ -839,18 +674,6 @@ type
     // The item number the reward is for. Read type first: null is the whole purchase
     // for a discount, no item number for a free product.
     ProductReference: variant;
-    // True when the reward has no stock limit; remaining_stock is then 0.
-    IsUnlimited: boolean;
-    // `percentage` or `fixed_amount` for a discount, null for a free product.
-    DiscountType: variant;
-    // A percentage as a whole number (10 is 10%), a fixed amount in cents; null for
-    // a free product.
-    DiscountValue: variant;
-    // How many times one customer can redeem this reward; null means no limit.
-    MaxRedemptionsPerCustomer: variant;
-    // How many times the customer named by identifier redeemed this reward, cancelled
-    // ones left out; null when no identifier was sent or it matched nobody.
-    CustomerRedemptions: variant;
   end;
   PRewardCatalogItemData = ^TRewardCatalogItemData;
   TRewardCatalogItemDataDynArray = array of TRewardCatalogItemData;
@@ -883,9 +706,6 @@ type
     CodeValidForHours: variant;
     CreatedAt: variant;
     UpdatedAt: variant;
-    // True when the reward has no stock limit; remaining_stock is then 0.
-    IsUnlimited: boolean;
-    MaxRedemptionsPerCustomer: variant;
   end;
   PRewardData = ^TRewardData;
 
@@ -906,8 +726,6 @@ type
   TSpecificDatesRecurrenceData = packed record
     // The days it runs, each as `YYYY-MM-DD`.
     Dates: TRawUtf8DynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes15;
   end;
   PSpecificDatesRecurrenceData = ^TSpecificDatesRecurrenceData;
 
@@ -931,10 +749,10 @@ type
 
   TTransactionCampaignConfigData = packed record
     // Multiply the points earned, or add a fixed number. Absent reads as `multiplier`.
-    RewardType: TEnumPuntjes16;
+    RewardType: TEnumPuntjes10;
     // `whole` and `whole_purchase` both mean the whole purchase. Absent reads as
     // `whole`.
-    Scope: TEnumPuntjes17;
+    Scope: TEnumPuntjes11;
     // Whether it pays out beside another campaign. Older rows carry `combineerbaar`.
     Stackable: boolean;
     // The points added, when `reward_type` is `fixed_points`.
@@ -945,8 +763,6 @@ type
     Products: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes18;
   end;
   PTransactionCampaignConfigData = ^TTransactionCampaignConfigData;
 
@@ -1002,7 +818,7 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TEnumPuntjes2;
     Metadata: variant;
   end;
   PUpdateProductData = ^TUpdateProductData;
@@ -1015,7 +831,7 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TEnumPuntjes2;
     Metadata: variant;
   end;
   PUpsertProductData = ^TUpsertProductData;
@@ -1032,47 +848,28 @@ type
   // from #/components/schemas/VerifyCampaignVoucherData
   TVerifyCampaignVoucherData = packed record
     Branch: variant;
-    IdempotencyKey: variant;
   end;
   PVerifyCampaignVoucherData = ^TVerifyCampaignVoucherData;
 
   TVoucherFixedDiscountData = packed record
-    // Deprecated: read `type`, which carries the same value. Always `fixed` for this
-    // shape.
-    Kind: TEnumPuntjes9;
+    // Always `fixed` for this shape.
+    Kind: TEnumPuntjes6;
     // How much to take off, in cents.
     AmountCents: integer;
     // The item number of the one product the discount is for; null for the whole
     // purchase.
     ProductReference: variant;
-    // Which shape this is.
-    _Type: TEnumPuntjes9;
   end;
   PVoucherFixedDiscountData = ^TVoucherFixedDiscountData;
 
-  TVoucherGiftProductData = packed record
-    // The product this refers to, or null when the gift named no catalogue product.
-    Id: variant;
-    // The product name as it was when the bon was issued.
-    Name: RawUtf8;
-    // How many of this product the customer gets.
-    Quantity: integer;
-    // The item number when the bon was issued, or null when it had none.
-    ProductReference: variant;
-  end;
-  PVoucherGiftProductData = ^TVoucherGiftProductData;
-
   TVoucherPercentageDiscountData = packed record
-    // Deprecated: read `type`, which carries the same value. Always `percentage`
-    // for this shape.
-    Kind: TEnumPuntjes13;
+    // Always `percentage` for this shape.
+    Kind: TEnumPuntjes8;
     // How many percent to take off, 1 to 100.
     Percentage: integer;
     // The item number of the one product the discount is for; null for the whole
     // purchase.
     ProductReference: variant;
-    // Which shape this is.
-    _Type: TEnumPuntjes13;
   end;
   PVoucherPercentageDiscountData = ^TVoucherPercentageDiscountData;
 
@@ -1090,237 +887,525 @@ type
   TWinBackCampaignConfigData = packed record
     // How many months without a purchase before the gift is sent.
     Months: integer;
-    // What the customer gets. Its `type` says which shape this is.
+    // What the customer gets. Which shape this holds follows gift.type.
     Gift: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
-    // Which shape this is.
-    _Type: TEnumPuntjes19;
   end;
   PWinBackCampaignConfigData = ^TWinBackCampaignConfigData;
 
+  TDtoPuntjes3 = packed record
+    Status: RawUtf8;
+  end;
+  PDtoPuntjes3 = ^TDtoPuntjes3;
+
   TDtoPuntjes2 = packed record
-    Data: TCustomerLookupData;
+    Data: TDtoPuntjes3;
   end;
   PDtoPuntjes2 = ^TDtoPuntjes2;
 
-  TDtoPuntjes4 = packed record
+  TDtoPuntjes5 = packed record
+    Data: TLedgerEntryData;
+  end;
+  PDtoPuntjes5 = ^TDtoPuntjes5;
+
+  TDtoPuntjes7 = packed record
+    Data: TBulkUpsertResponseData;
+  end;
+  PDtoPuntjes7 = ^TDtoPuntjes7;
+
+  TDtoPuntjes9 = packed record
     Data: TCustomerData;
   end;
-  PDtoPuntjes4 = ^TDtoPuntjes4;
+  PDtoPuntjes9 = ^TDtoPuntjes9;
 
-  TDtoPuntjes6 = packed record
-    Data: TCustomerData;
+  TDtoPuntjes11 = packed record
+    Data: TProductData;
   end;
-  PDtoPuntjes6 = ^TDtoPuntjes6;
-
-  TDtoPuntjes8 = packed record
-    Data: TCustomerData;
-  end;
-  PDtoPuntjes8 = ^TDtoPuntjes8;
-
-  TDtoPuntjes10 = packed record
-    Data: TCustomerData;
-  end;
-  PDtoPuntjes10 = ^TDtoPuntjes10;
-
-  TDtoPuntjes12 = packed record
-    Data: TSendLoyaltyCardResultData;
-  end;
-  PDtoPuntjes12 = ^TDtoPuntjes12;
+  PDtoPuntjes11 = ^TDtoPuntjes11;
 
   TDtoPuntjes14 = packed record
-    Data: TSendLoyaltyCardResultData;
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
   PDtoPuntjes14 = ^TDtoPuntjes14;
 
+  TDtoPuntjes15 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes15 = ^TDtoPuntjes15;
+
+  TDtoPuntjes13 = packed record
+    Data: TProductDataDynArray;
+    Links: TDtoPuntjes14;
+    Meta: TDtoPuntjes15;
+  end;
+  PDtoPuntjes13 = ^TDtoPuntjes13;
+
+  TDtoPuntjes24 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes24 = ^TDtoPuntjes24;
+
+  TDtoPuntjes26 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes26 = ^TDtoPuntjes26;
+
+  TDtoPuntjes22 = packed record
+    Data: TProductDataDynArray;
+    Links: TDtoPuntjes24;
+    Meta: TDtoPuntjes26;
+  end;
+  PDtoPuntjes22 = ^TDtoPuntjes22;
+
   TDtoPuntjes16 = packed record
-    Data: TCustomerDetailData;
+    Data: TDtoPuntjes22;
   end;
   PDtoPuntjes16 = ^TDtoPuntjes16;
 
-  TDtoPuntjes18 = packed record
-    Data: TTransactionData;
+  TDtoPuntjes19 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
-  PDtoPuntjes18 = ^TDtoPuntjes18;
-
-  TDtoPuntjes20 = packed record
-    Data: TTransactionDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
-  end;
-  PDtoPuntjes20 = ^TDtoPuntjes20;
-
-  TDtoPuntjes23 = packed record
-    Data: TTransactionDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
-  end;
-  PDtoPuntjes23 = ^TDtoPuntjes23;
+  PDtoPuntjes19 = ^TDtoPuntjes19;
 
   TDtoPuntjes21 = packed record
-    Data: TDtoPuntjes23;
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
   end;
   PDtoPuntjes21 = ^TDtoPuntjes21;
 
-  TDtoPuntjes25 = packed record
-    Data: TWalletData;
-  end;
-  PDtoPuntjes25 = ^TDtoPuntjes25;
-
   TDtoPuntjes28 = packed record
-    Data: TLedgerEntryDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+    Data: TRewardData;
   end;
   PDtoPuntjes28 = ^TDtoPuntjes28;
 
-  TDtoPuntjes31 = packed record
-    Data: TLedgerEntryDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  TDtoPuntjes30 = packed record
+    Data: TProductData;
   end;
-  PDtoPuntjes31 = ^TDtoPuntjes31;
+  PDtoPuntjes30 = ^TDtoPuntjes30;
 
-  TDtoPuntjes29 = packed record
-    Data: TDtoPuntjes31;
+  TDtoPuntjes32 = packed record
+    Data: TProductData;
   end;
-  PDtoPuntjes29 = ^TDtoPuntjes29;
+  PDtoPuntjes32 = ^TDtoPuntjes32;
 
-  TDtoPuntjes33 = packed record
+  TDtoPuntjes34 = packed record
+    Data: TProductData;
+  end;
+  PDtoPuntjes34 = ^TDtoPuntjes34;
+
+  TDtoPuntjes36 = packed record
     Data: TGoogleWalletPassData;
   end;
-  PDtoPuntjes33 = ^TDtoPuntjes33;
+  PDtoPuntjes36 = ^TDtoPuntjes36;
 
-  TDtoPuntjes35 = packed record
-    Data: TLedgerEntryData;
+  TDtoPuntjes38 = packed record
+    Data: TCustomerData;
   end;
-  PDtoPuntjes35 = ^TDtoPuntjes35;
+  PDtoPuntjes38 = ^TDtoPuntjes38;
 
-  TDtoPuntjes37 = packed record
-    Data: TRewardCatalogItemDataDynArray;
+  TDtoPuntjes42 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
-  PDtoPuntjes37 = ^TDtoPuntjes37;
+  PDtoPuntjes42 = ^TDtoPuntjes42;
 
-  TDtoPuntjes40 = packed record
-    Data: TRedemptionLookupDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  TDtoPuntjes44 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
   end;
-  PDtoPuntjes40 = ^TDtoPuntjes40;
-
-  TDtoPuntjes43 = packed record
-    Data: TRedemptionLookupDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
-  end;
-  PDtoPuntjes43 = ^TDtoPuntjes43;
-
-  TDtoPuntjes41 = packed record
-    Data: TDtoPuntjes43;
-  end;
-  PDtoPuntjes41 = ^TDtoPuntjes41;
-
-  TDtoPuntjes45 = packed record
-    Data: TRedemptionCreatedData;
-  end;
-  PDtoPuntjes45 = ^TDtoPuntjes45;
+  PDtoPuntjes44 = ^TDtoPuntjes44;
 
   TDtoPuntjes47 = packed record
-    Data: TRedemptionLookupData;
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
   PDtoPuntjes47 = ^TDtoPuntjes47;
 
   TDtoPuntjes49 = packed record
-    Data: TRedemptionVerificationData;
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
   end;
   PDtoPuntjes49 = ^TDtoPuntjes49;
 
-  TDtoPuntjes52 = packed record
-    Data: TProductDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  TDtoPuntjes45 = packed record
+    Data: TCampaignListDataDynArray;
+    Links: TDtoPuntjes47;
+    Meta: TDtoPuntjes49;
   end;
-  PDtoPuntjes52 = ^TDtoPuntjes52;
+  PDtoPuntjes45 = ^TDtoPuntjes45;
 
-  TDtoPuntjes55 = packed record
-    Data: TProductDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  TDtoPuntjes58 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
-  PDtoPuntjes55 = ^TDtoPuntjes55;
+  PDtoPuntjes58 = ^TDtoPuntjes58;
+
+  TDtoPuntjes60 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes60 = ^TDtoPuntjes60;
+
+  TDtoPuntjes56 = packed record
+    Data: TCampaignListDataDynArray;
+    Links: TDtoPuntjes58;
+    Meta: TDtoPuntjes60;
+  end;
+  PDtoPuntjes56 = ^TDtoPuntjes56;
+
+  TDtoPuntjes50 = packed record
+    Data: TDtoPuntjes56;
+  end;
+  PDtoPuntjes50 = ^TDtoPuntjes50;
 
   TDtoPuntjes53 = packed record
-    Data: TDtoPuntjes55;
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
   PDtoPuntjes53 = ^TDtoPuntjes53;
 
-  TDtoPuntjes57 = packed record
-    Products: TCreateProductDataDynArray;
+  TDtoPuntjes55 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
   end;
-  PDtoPuntjes57 = ^TDtoPuntjes57;
+  PDtoPuntjes55 = ^TDtoPuntjes55;
 
-  TDtoPuntjes65 = packed record
-    Data: TCampaignListDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  TDtoPuntjes64 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
   end;
-  PDtoPuntjes65 = ^TDtoPuntjes65;
+  PDtoPuntjes64 = ^TDtoPuntjes64;
+
+  TDtoPuntjes66 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes66 = ^TDtoPuntjes66;
+
+  TDtoPuntjes69 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes69 = ^TDtoPuntjes69;
+
+  TDtoPuntjes71 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes71 = ^TDtoPuntjes71;
+
+  TDtoPuntjes67 = packed record
+    Data: TLedgerEntryDataDynArray;
+    Links: TDtoPuntjes69;
+    Meta: TDtoPuntjes71;
+  end;
+  PDtoPuntjes67 = ^TDtoPuntjes67;
+
+  TDtoPuntjes80 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes80 = ^TDtoPuntjes80;
+
+  TDtoPuntjes82 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes82 = ^TDtoPuntjes82;
+
+  TDtoPuntjes78 = packed record
+    Data: TLedgerEntryDataDynArray;
+    Links: TDtoPuntjes80;
+    Meta: TDtoPuntjes82;
+  end;
+  PDtoPuntjes78 = ^TDtoPuntjes78;
 
   TDtoPuntjes72 = packed record
-    Status: RawUtf8;
+    Data: TDtoPuntjes78;
   end;
   PDtoPuntjes72 = ^TDtoPuntjes72;
+
+  TDtoPuntjes75 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes75 = ^TDtoPuntjes75;
+
+  TDtoPuntjes77 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes77 = ^TDtoPuntjes77;
+
+  TDtoPuntjes86 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes86 = ^TDtoPuntjes86;
+
+  TDtoPuntjes88 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes88 = ^TDtoPuntjes88;
+
+  TDtoPuntjes91 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes91 = ^TDtoPuntjes91;
+
+  TDtoPuntjes93 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes93 = ^TDtoPuntjes93;
+
+  TDtoPuntjes89 = packed record
+    Data: TRedemptionLookupDataDynArray;
+    Links: TDtoPuntjes91;
+    Meta: TDtoPuntjes93;
+  end;
+  PDtoPuntjes89 = ^TDtoPuntjes89;
+
+  TDtoPuntjes102 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes102 = ^TDtoPuntjes102;
+
+  TDtoPuntjes104 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes104 = ^TDtoPuntjes104;
+
+  TDtoPuntjes100 = packed record
+    Data: TRedemptionLookupDataDynArray;
+    Links: TDtoPuntjes102;
+    Meta: TDtoPuntjes104;
+  end;
+  PDtoPuntjes100 = ^TDtoPuntjes100;
+
+  TDtoPuntjes94 = packed record
+    Data: TDtoPuntjes100;
+  end;
+  PDtoPuntjes94 = ^TDtoPuntjes94;
+
+  TDtoPuntjes97 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes97 = ^TDtoPuntjes97;
+
+  TDtoPuntjes99 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes99 = ^TDtoPuntjes99;
+
+  TDtoPuntjes106 = packed record
+    Data: TRewardCatalogItemDataDynArray;
+  end;
+  PDtoPuntjes106 = ^TDtoPuntjes106;
+
+  TDtoPuntjes110 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes110 = ^TDtoPuntjes110;
+
+  TDtoPuntjes112 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes112 = ^TDtoPuntjes112;
+
+  TDtoPuntjes115 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes115 = ^TDtoPuntjes115;
+
+  TDtoPuntjes117 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes117 = ^TDtoPuntjes117;
+
+  TDtoPuntjes113 = packed record
+    Data: TTransactionDataDynArray;
+    Links: TDtoPuntjes115;
+    Meta: TDtoPuntjes117;
+  end;
+  PDtoPuntjes113 = ^TDtoPuntjes113;
+
+  TDtoPuntjes126 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes126 = ^TDtoPuntjes126;
+
+  TDtoPuntjes128 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes128 = ^TDtoPuntjes128;
+
+  TDtoPuntjes124 = packed record
+    Data: TTransactionDataDynArray;
+    Links: TDtoPuntjes126;
+    Meta: TDtoPuntjes128;
+  end;
+  PDtoPuntjes124 = ^TDtoPuntjes124;
+
+  TDtoPuntjes118 = packed record
+    Data: TDtoPuntjes124;
+  end;
+  PDtoPuntjes118 = ^TDtoPuntjes118;
+
+  TDtoPuntjes121 = packed record
+    First: variant;
+    Last: variant;
+    Prev: variant;
+    Next: variant;
+  end;
+  PDtoPuntjes121 = ^TDtoPuntjes121;
+
+  TDtoPuntjes123 = packed record
+    CurrentPage: integer;
+    LastPage: integer;
+    PerPage: integer;
+    Total: integer;
+  end;
+  PDtoPuntjes123 = ^TDtoPuntjes123;
+
+  TDtoPuntjes130 = packed record
+    Data: TCustomerData;
+  end;
+  PDtoPuntjes130 = ^TDtoPuntjes130;
+
+  TDtoPuntjes132 = packed record
+    Data: TRedemptionLookupData;
+  end;
+  PDtoPuntjes132 = ^TDtoPuntjes132;
+
+  TDtoPuntjes134 = packed record
+    Data: TRedemptionCreatedData;
+  end;
+  PDtoPuntjes134 = ^TDtoPuntjes134;
 
 
 
 const
   // define how enums/sets are actually transmitted as JSON array of string
   _TEnumPuntjes1: array[TEnumPuntjes1] of RawUtf8 = (
-    '', 'anniversary');
-  _TEnumPuntjes2: array[TEnumPuntjes2] of RawUtf8 = (
     '', 'email', 'loyalty_card');
-  _TEnumPuntjes3: array[TEnumPuntjes3] of RawUtf8 = (
+  _TEnumPuntjes2: array[TEnumPuntjes2] of RawUtf8 = (
     '', 'active', 'archived', 'inactive');
-  _TEnumPuntjes4: array[TEnumPuntjes4] of RawUtf8 = (
+  _TEnumPuntjes3: array[TEnumPuntjes3] of RawUtf8 = (
     '', 'active', 'inactive');
-  _TEnumPuntjes5: array[TEnumPuntjes5] of RawUtf8 = (
-    '', 'date_range');
-  _TEnumPuntjes6: array[TEnumPuntjes6] of RawUtf8 = (
-    '', 'days_of_week');
-  _TEnumPuntjes7: array[TEnumPuntjes7] of RawUtf8 = (
+  _TEnumPuntjes4: array[TEnumPuntjes4] of RawUtf8 = (
     '', 'discount');
-  _TEnumPuntjes8: array[TEnumPuntjes8] of RawUtf8 = (
+  _TEnumPuntjes5: array[TEnumPuntjes5] of RawUtf8 = (
     '', 'fixed_amount', 'percentage');
-  _TEnumPuntjes9: array[TEnumPuntjes9] of RawUtf8 = (
+  _TEnumPuntjes6: array[TEnumPuntjes6] of RawUtf8 = (
     '', 'fixed');
-  _TEnumPuntjes10: array[TEnumPuntjes10] of RawUtf8 = (
+  _TEnumPuntjes7: array[TEnumPuntjes7] of RawUtf8 = (
     '', 'free_product');
-  _TEnumPuntjes11: array[TEnumPuntjes11] of RawUtf8 = (
-    '', 'moment');
-  _TEnumPuntjes12: array[TEnumPuntjes12] of RawUtf8 = (
-    '', 'nth_purchase');
-  _TEnumPuntjes13: array[TEnumPuntjes13] of RawUtf8 = (
+  _TEnumPuntjes8: array[TEnumPuntjes8] of RawUtf8 = (
     '', 'percentage');
-  _TEnumPuntjes14: array[TEnumPuntjes14] of RawUtf8 = (
+  _TEnumPuntjes9: array[TEnumPuntjes9] of RawUtf8 = (
     '', 'points');
-  _TEnumPuntjes15: array[TEnumPuntjes15] of RawUtf8 = (
-    '', 'specific_dates');
-  _TEnumPuntjes16: array[TEnumPuntjes16] of RawUtf8 = (
+  _TEnumPuntjes10: array[TEnumPuntjes10] of RawUtf8 = (
     '', 'fixed_points', 'multiplier');
-  _TEnumPuntjes17: array[TEnumPuntjes17] of RawUtf8 = (
+  _TEnumPuntjes11: array[TEnumPuntjes11] of RawUtf8 = (
     '', 'products', 'whole', 'whole_purchase');
-  _TEnumPuntjes18: array[TEnumPuntjes18] of RawUtf8 = (
-    '', 'transaction');
-  _TEnumPuntjes19: array[TEnumPuntjes19] of RawUtf8 = (
-    '', 'win_back');
-  _TEnumPuntjes20: array[TEnumPuntjes20] of RawUtf8 = (
-    '', 'adjust', 'earn', 'expire', 'redeem');
-  _TEnumPuntjes21: array[TEnumPuntjes21] of RawUtf8 = (
+  _TEnumPuntjes12: array[TEnumPuntjes12] of RawUtf8 = (
     '', 'apple', 'google');
-  _TEnumPuntjes22: array[TEnumPuntjes22] of RawUtf8 = (
-    '', 'cancelled', 'expired', 'used', 'valid');
-  _TEnumPuntjes23: array[TEnumPuntjes23] of RawUtf8 = (
+  _TEnumPuntjes13: array[TEnumPuntjes13] of RawUtf8 = (
+    '', 'adjust', 'earn', 'expire', 'redeem');
+  _TEnumPuntjes14: array[TEnumPuntjes14] of RawUtf8 = (
+    '', 'expired', 'used', 'valid');
+  _TEnumPuntjes15: array[TEnumPuntjes15] of RawUtf8 = (
     '', '30d', '7d', '90d', 'today');
 
 
@@ -1332,7 +1417,7 @@ const
   // exact definition of the DTOs expected JSON serialization
   _TAdjustWalletApiData = 'amount:integer reason:RawUtf8 idempotency_key:RawUtf8';
   _TAnniversaryCampaignConfigData = 'years:integer gift:variant backfill:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes1';
+    'branch_ids:TIntegerDynArray';
   _TBranchReferenceData = 'external_id:RawUtf8 name:RawUtf8 type:RawUtf8';
   _TProductData = 'id:integer external_id:RawUtf8 name:RawUtf8 description:variant ' +
     'price_cents:variant image_url:variant category:variant stock:variant status:RawUtf8 ' +
@@ -1349,8 +1434,6 @@ const
     'status:TCampaignStatusData min_transaction_amount:variant branches:variant ' +
     'created_at:variant updated_at:variant';
   _TCampaignProductRuleData = 'sku:RawUtf8 name:RawUtf8';
-  _TCampaignVoucherLookupData = 'voucher_code:RawUtf8 discount:variant valid_until:variant ' +
-    'consumed_at:variant campaign_id:integer kind:RawUtf8 products:variant status:RawUtf8';
   _TCampaignVoucherVerificationData = 'voucher_code:RawUtf8 discount:variant ' +
     'valid_until:variant consumed_at:RawUtf8 campaign_id:integer kind:RawUtf8 ' +
     'products:variant';
@@ -1363,20 +1446,19 @@ const
   _TVolumeBucketData = 'label:RawUtf8 orders:integer revenue:integer';
   _TCommerceStatisticsData = 'orders:integer revenue_cents:integer average_order_value_cents:integer ' +
     'itemized:TItemizedStatisticsData volume_trend:array of TVolumeBucketData';
-  _TCreateIdentifierData = 'type:TEnumPuntjes2 value:RawUtf8 is_primary:boolean';
+  _TCreateIdentifierData = 'type:TEnumPuntjes1 value:RawUtf8 is_primary:boolean';
   _TCreateCustomerData = 'first_name:variant last_name:variant email:variant ' +
     'phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant marketing_consent:variant marketing_consent_statement_version:variant ' +
     'identifiers:array of TCreateIdentifierData';
   _TCreateProductData = 'external_id:RawUtf8 name:RawUtf8 description:variant ' +
-    'price_cents:variant image_url:variant category:variant stock:variant status:TEnumPuntjes3 ' +
+    'price_cents:variant image_url:variant category:variant stock:variant status:TEnumPuntjes2 ' +
     'metadata:variant';
   _TCreateRedemptionData = 'identifier:RawUtf8 reward_id:integer idempotency_key:RawUtf8 ' +
     'branch:variant';
   _TCreateRewardFromProductData = 'point_cost:integer name:variant description:variant ' +
-    'total_stock:variant status:TEnumPuntjes4 available_from:variant available_until:variant ' +
-    'code_valid_for_hours:variant payment_amount:variant idempotency_key:variant ' +
-    'max_redemptions_per_customer:variant';
+    'total_stock:variant status:TEnumPuntjes3 available_from:variant available_until:variant ' +
+    'code_valid_for_hours:variant payment_amount:variant';
   _TCreateTransactionItemData = 'name:RawUtf8 quantity:integer unit_price:integer ' +
     'sku:variant category:variant';
   _TCreateTransactionData = 'identifier:RawUtf8 idempotency_key:RawUtf8 total_amount:integer ' +
@@ -1392,44 +1474,23 @@ const
     'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
     'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
     'anonymized_at:variant created_at:variant updated_at:variant';
-  _TCustomerDetailData = 'id:integer first_name:variant last_name:variant ' +
-    'email:variant phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
-    'locale:variant status:TCustomerStatusData identifiers:array of TCustomerIdentifierData ' +
-    'marketingConsent:boolean marketingConsentGrantedAt:variant marketingConsentGrantedSource:variant ' +
-    'marketingConsentWithdrawnAt:variant marketingConsentWithdrawnSource:variant ' +
-    'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
-    'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
-    'anonymized_at:variant created_at:variant updated_at:variant is_deactivated:boolean';
-  _TCustomerLookupData = 'id:integer first_name:variant last_name:variant ' +
-    'email:variant phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
-    'locale:variant status:TCustomerStatusData identifiers:array of TCustomerIdentifierData ' +
-    'marketingConsent:boolean marketingConsentGrantedAt:variant marketingConsentGrantedSource:variant ' +
-    'marketingConsentWithdrawnAt:variant marketingConsentWithdrawnSource:variant ' +
-    'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
-    'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
-    'anonymized_at:variant created_at:variant updated_at:variant wallet_balance:integer ' +
-    'is_deactivated:boolean';
-  _TCustomerVoucherData = 'voucher_code:RawUtf8 campaign_id:integer kind:RawUtf8 ' +
-    'discount:variant products:variant valid_until:variant branches:variant';
-  _TDateRangeRecurrenceData = 'active_from:RawUtf8 active_until:RawUtf8 type:TEnumPuntjes5';
-  _TDaysOfWeekRecurrenceData = 'days:TIntegerDynArray type:TEnumPuntjes6';
-  _TDiscountGiftData = 'type:TEnumPuntjes7 discount:variant validity_days:variant ' +
+  _TDateRangeRecurrenceData = 'active_from:RawUtf8 active_until:RawUtf8';
+  _TDaysOfWeekRecurrenceData = 'days:TIntegerDynArray';
+  _TDiscountGiftData = 'type:TEnumPuntjes4 discount:variant validity_days:variant ' +
     'message:variant';
-  _TDiscountRedemptionData = 'discount_value:integer discount_type:TEnumPuntjes8 ' +
-    'product_reference:variant type:TEnumPuntjes7';
+  _TDiscountRedemptionData = 'discount_value:integer discount_type:TEnumPuntjes5 ' +
+    'product_reference:variant';
   _TEarnResultData = 'rule_id:integer rule_name:RawUtf8 rule_type:RawUtf8 ' +
     'points_earned:integer family:variant moment:variant campaign_version:variant ' +
     'suppressed_by:variant reason:variant line_breakdown:variant';
   _TDtoPuntjes1 = 'code:RawUtf8 message:RawUtf8 status:integer request_id:RawUtf8 ' +
     'details:variant';
   _TErrorResponse = 'error:TDtoPuntjes1';
-  _TFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_id:variant ' +
-    'type:TEnumPuntjes9';
+  _TFixedDiscountData = 'kind:TEnumPuntjes6 amount_cents:integer product_id:variant';
   _TGiftProductData = 'id:variant name:RawUtf8 quantity:integer';
-  _TFreeProductGiftData = 'type:TEnumPuntjes10 products:array of TGiftProductData ' +
+  _TFreeProductGiftData = 'type:TEnumPuntjes7 products:array of TGiftProductData ' +
     'message:variant';
-  _TFreeProductRedemptionData = 'product_reference:variant payment_amount:integer ' +
-    'type:TEnumPuntjes10';
+  _TFreeProductRedemptionData = 'product_reference:variant payment_amount:integer';
   _TGoogleWalletPassData = 'save_url:RawUtf8';
   _TLedgerEntryData = 'id:integer wallet_id:integer type:RawUtf8 amount:integer ' +
     'running_balance:integer reason:variant causer_type:variant causer_id:variant ' +
@@ -1439,16 +1500,11 @@ const
     'points_expired:integer net_adjustments:integer redemption_rate:variant ' +
     'breakage_rate:variant points_redeemed_from_import:integer points_expired_from_import:integer ' +
     'redemption_rate_excluding_import:variant breakage_rate_excluding_import:variant';
-  _TMomentCampaignConfigData = 'gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TEnumPuntjes11';
+  _TMomentCampaignConfigData = 'gift:variant branch_ids:TIntegerDynArray';
   _TNthPurchaseCampaignConfigData = 'every_n:integer gift:variant min_amount:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes12';
-  _TPaginationLinks = 'first:variant last:variant prev:variant next:variant';
-  _TPaginationMeta = 'current_page:integer last_page:integer per_page:integer ' +
-    'total:integer';
-  _TPercentageDiscountData = 'kind:TEnumPuntjes13 percentage:integer product_id:variant ' +
-    'type:TEnumPuntjes13';
-  _TPointsGiftData = 'type:TEnumPuntjes14 points:integer message:variant';
+    'branch_ids:TIntegerDynArray';
+  _TPercentageDiscountData = 'kind:TEnumPuntjes8 percentage:integer product_id:variant';
+  _TPointsGiftData = 'type:TEnumPuntjes9 points:integer message:variant';
   _TRedemptionRewardData = 'name:RawUtf8 type:RawUtf8';
   _TRedemptionCreatedData = 'redemption_id:integer confirmation_code:RawUtf8 ' +
     'reward:TRedemptionRewardData points_deducted:integer remaining_balance:integer ' +
@@ -1464,25 +1520,24 @@ const
   _TRewardCatalogItemData = 'id:integer name:RawUtf8 description:variant ' +
     'type:RawUtf8 point_cost:integer payment_amount:integer image_url:variant ' +
     'remaining_stock:variant total_stock:variant available_from:variant available_until:variant ' +
-    'branches:variant product_reference:variant is_unlimited:boolean discount_type:variant ' +
-    'discount_value:variant max_redemptions_per_customer:variant customer_redemptions:variant';
+    'branches:variant product_reference:variant';
   _TRewardStatusData = 'value:RawUtf8 label:RawUtf8';
   _TRewardData = 'id:integer product_id:variant name:RawUtf8 description:variant ' +
     'type:RawUtf8 point_cost:integer image_url:variant total_stock:variant remaining_stock:integer ' +
     'status:TRewardStatusData available_from:variant available_until:variant ' +
     'discount_value:variant discount_type:variant product_reference:variant ' +
     'payment_amount:integer code_valid_for_hours:variant created_at:variant ' +
-    'updated_at:variant is_unlimited:boolean max_redemptions_per_customer:variant';
+    'updated_at:variant';
   _TSendLoyaltyCardRequestData = 'channel:variant';
   _TSendLoyaltyCardResultData = 'customer_id:integer channel:RawUtf8 queued:boolean';
-  _TSpecificDatesRecurrenceData = 'dates:TRawUtf8DynArray type:TEnumPuntjes15';
+  _TSpecificDatesRecurrenceData = 'dates:TRawUtf8DynArray';
   _TStatisticsPeriodData = 'preset:RawUtf8 from:RawUtf8 to:RawUtf8 timezone:RawUtf8 ' +
     'granularity:RawUtf8';
   _TStatisticsApiData = 'period:TStatisticsPeriodData commerce:TCommerceStatisticsData ' +
     'loyalty:variant';
-  _TTransactionCampaignConfigData = 'reward_type:TEnumPuntjes16 scope:TEnumPuntjes17 ' +
+  _TTransactionCampaignConfigData = 'reward_type:TEnumPuntjes10 scope:TEnumPuntjes11 ' +
     'stackable:boolean points:variant max_points_per_purchase:variant products:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes18';
+    'branch_ids:TIntegerDynArray';
   _TTransactionItemData = 'id:integer name:RawUtf8 sku:variant quantity:integer ' +
     'unit_price:integer line_total:integer category:variant';
   _TTransactionData = 'id:integer customer_id:integer idempotency_key:RawUtf8 ' +
@@ -1493,59 +1548,110 @@ const
     'phone:variant date_of_birth:variant customer_since:variant locale:variant ' +
     'marketing_consent:variant marketing_consent_statement_version:variant';
   _TUpdateProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
-    'image_url:variant category:variant stock:variant status:TEnumPuntjes3 metadata:variant';
+    'image_url:variant category:variant stock:variant status:TEnumPuntjes2 metadata:variant';
   _TUpsertProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
-    'image_url:variant category:variant stock:variant status:TEnumPuntjes3 metadata:variant';
+    'image_url:variant category:variant stock:variant status:TEnumPuntjes2 metadata:variant';
   _TVendorBrandingData = 'display_name:RawUtf8 logo_url:variant brand_color_primary:variant ' +
     'brand_color_accent:variant';
-  _TVerifyCampaignVoucherData = 'branch:variant idempotency_key:variant';
-  _TVoucherFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_reference:variant ' +
-    'type:TEnumPuntjes9';
-  _TVoucherGiftProductData = 'id:variant name:RawUtf8 quantity:integer product_reference:variant';
-  _TVoucherPercentageDiscountData = 'kind:TEnumPuntjes13 percentage:integer ' +
-    'product_reference:variant type:TEnumPuntjes13';
+  _TVerifyCampaignVoucherData = 'branch:variant';
+  _TVoucherFixedDiscountData = 'kind:TEnumPuntjes6 amount_cents:integer product_reference:variant';
+  _TVoucherPercentageDiscountData = 'kind:TEnumPuntjes8 percentage:integer ' +
+    'product_reference:variant';
   _TWalletData = 'id:integer customer_id:integer balance:integer expiring_soon:integer ' +
     'created_at:variant updated_at:variant';
-  _TWinBackCampaignConfigData = 'months:integer gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TEnumPuntjes19';
-  _TDtoPuntjes2 = 'data:TCustomerLookupData';
-  _TDtoPuntjes4 = 'data:TCustomerData';
-  _TDtoPuntjes6 = 'data:TCustomerData';
-  _TDtoPuntjes8 = 'data:TCustomerData';
-  _TDtoPuntjes10 = 'data:TCustomerData';
-  _TDtoPuntjes12 = 'data:TSendLoyaltyCardResultData';
-  _TDtoPuntjes14 = 'data:TSendLoyaltyCardResultData';
-  _TDtoPuntjes16 = 'data:TCustomerDetailData';
-  _TDtoPuntjes18 = 'data:TTransactionData';
-  _TDtoPuntjes20 = 'data:array of TTransactionData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes23 = 'data:array of TTransactionData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes21 = 'data:TDtoPuntjes23';
-  _TDtoPuntjes25 = 'data:TWalletData';
-  _TDtoPuntjes28 = 'data:array of TLedgerEntryData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes31 = 'data:array of TLedgerEntryData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes29 = 'data:TDtoPuntjes31';
-  _TDtoPuntjes33 = 'data:TGoogleWalletPassData';
-  _TDtoPuntjes35 = 'data:TLedgerEntryData';
-  _TDtoPuntjes37 = 'data:array of TRewardCatalogItemData';
-  _TDtoPuntjes40 = 'data:array of TRedemptionLookupData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes43 = 'data:array of TRedemptionLookupData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes41 = 'data:TDtoPuntjes43';
-  _TDtoPuntjes45 = 'data:TRedemptionCreatedData';
-  _TDtoPuntjes47 = 'data:TRedemptionLookupData';
-  _TDtoPuntjes49 = 'data:TRedemptionVerificationData';
-  _TDtoPuntjes52 = 'data:array of TProductData links:TPaginationLinks meta:TPaginationMeta';
-  _TDtoPuntjes55 = 'data:array of TProductData links:TPaginationLinks meta:TPaginationMeta';
-  _TDtoPuntjes53 = 'data:TDtoPuntjes55';
-  _TDtoPuntjes57 = 'products:array of TCreateProductData';
-  _TDtoPuntjes65 = 'data:array of TCampaignListData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes72 = 'status:RawUtf8';
+  _TWinBackCampaignConfigData = 'months:integer gift:variant branch_ids:TIntegerDynArray';
+  _TDtoPuntjes3 = 'status:RawUtf8';
+  _TDtoPuntjes2 = 'data:TDtoPuntjes3';
+  _TDtoPuntjes5 = 'data:TLedgerEntryData';
+  _TDtoPuntjes7 = 'data:TBulkUpsertResponseData';
+  _TDtoPuntjes9 = 'data:TCustomerData';
+  _TDtoPuntjes11 = 'data:TProductData';
+  _TDtoPuntjes14 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes15 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes13 = 'data:array of TProductData links:TDtoPuntjes14 meta:TDtoPuntjes15';
+  _TDtoPuntjes24 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes26 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes22 = 'data:array of TProductData links:TDtoPuntjes24 meta:TDtoPuntjes26';
+  _TDtoPuntjes16 = 'data:TDtoPuntjes22';
+  _TDtoPuntjes19 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes21 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes28 = 'data:TRewardData';
+  _TDtoPuntjes30 = 'data:TProductData';
+  _TDtoPuntjes32 = 'data:TProductData';
+  _TDtoPuntjes34 = 'data:TProductData';
+  _TDtoPuntjes36 = 'data:TGoogleWalletPassData';
+  _TDtoPuntjes38 = 'data:TCustomerData';
+  _TDtoPuntjes42 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes44 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes47 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes49 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes45 = 'data:array of TCampaignListData links:TDtoPuntjes47 meta:TDtoPuntjes49';
+  _TDtoPuntjes58 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes60 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes56 = 'data:array of TCampaignListData links:TDtoPuntjes58 meta:TDtoPuntjes60';
+  _TDtoPuntjes50 = 'data:TDtoPuntjes56';
+  _TDtoPuntjes53 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes55 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes64 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes66 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes69 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes71 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes67 = 'data:array of TLedgerEntryData links:TDtoPuntjes69 meta:TDtoPuntjes71';
+  _TDtoPuntjes80 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes82 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes78 = 'data:array of TLedgerEntryData links:TDtoPuntjes80 meta:TDtoPuntjes82';
+  _TDtoPuntjes72 = 'data:TDtoPuntjes78';
+  _TDtoPuntjes75 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes77 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes86 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes88 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes91 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes93 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes89 = 'data:array of TRedemptionLookupData links:TDtoPuntjes91 ' +
+    'meta:TDtoPuntjes93';
+  _TDtoPuntjes102 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes104 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes100 = 'data:array of TRedemptionLookupData links:TDtoPuntjes102 ' +
+    'meta:TDtoPuntjes104';
+  _TDtoPuntjes94 = 'data:TDtoPuntjes100';
+  _TDtoPuntjes97 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes99 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes106 = 'data:array of TRewardCatalogItemData';
+  _TDtoPuntjes110 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes112 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes115 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes117 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes113 = 'data:array of TTransactionData links:TDtoPuntjes115 ' +
+    'meta:TDtoPuntjes117';
+  _TDtoPuntjes126 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes128 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes124 = 'data:array of TTransactionData links:TDtoPuntjes126 ' +
+    'meta:TDtoPuntjes128';
+  _TDtoPuntjes118 = 'data:TDtoPuntjes124';
+  _TDtoPuntjes121 = 'first:variant last:variant prev:variant next:variant';
+  _TDtoPuntjes123 = 'current_page:integer last_page:integer per_page:integer ' +
+    'total:integer';
+  _TDtoPuntjes130 = 'data:TCustomerData';
+  _TDtoPuntjes132 = 'data:TRedemptionLookupData';
+  _TDtoPuntjes134 = 'data:TRedemptionCreatedData';
 
 
 procedure RegisterRtti;
@@ -1565,15 +1671,7 @@ begin
     TypeInfo(TEnumPuntjes12), nil, @_TEnumPuntjes12,
     TypeInfo(TEnumPuntjes13), nil, @_TEnumPuntjes13,
     TypeInfo(TEnumPuntjes14), nil, @_TEnumPuntjes14,
-    TypeInfo(TEnumPuntjes15), nil, @_TEnumPuntjes15,
-    TypeInfo(TEnumPuntjes16), nil, @_TEnumPuntjes16,
-    TypeInfo(TEnumPuntjes17), nil, @_TEnumPuntjes17,
-    TypeInfo(TEnumPuntjes18), nil, @_TEnumPuntjes18,
-    TypeInfo(TEnumPuntjes19), nil, @_TEnumPuntjes19,
-    TypeInfo(TEnumPuntjes20), nil, @_TEnumPuntjes20,
-    TypeInfo(TEnumPuntjes21), nil, @_TEnumPuntjes21,
-    TypeInfo(TEnumPuntjes22), nil, @_TEnumPuntjes22,
-    TypeInfo(TEnumPuntjes23), nil, @_TEnumPuntjes23]);
+    TypeInfo(TEnumPuntjes15), nil, @_TEnumPuntjes15]);
   Rtti.RegisterFromText([
     TypeInfo(TAdjustWalletApiData), _TAdjustWalletApiData,
     TypeInfo(TAnniversaryCampaignConfigData), _TAnniversaryCampaignConfigData,
@@ -1585,7 +1683,6 @@ begin
     TypeInfo(TCampaignStatusData), _TCampaignStatusData,
     TypeInfo(TCampaignListData), _TCampaignListData,
     TypeInfo(TCampaignProductRuleData), _TCampaignProductRuleData,
-    TypeInfo(TCampaignVoucherLookupData), _TCampaignVoucherLookupData,
     TypeInfo(TCampaignVoucherVerificationData), _TCampaignVoucherVerificationData,
     TypeInfo(TCategoryRevenueData), _TCategoryRevenueData,
     TypeInfo(TTopProductData), _TTopProductData,
@@ -1602,9 +1699,6 @@ begin
     TypeInfo(TCustomerStatusData), _TCustomerStatusData,
     TypeInfo(TCustomerIdentifierData), _TCustomerIdentifierData,
     TypeInfo(TCustomerData), _TCustomerData,
-    TypeInfo(TCustomerDetailData), _TCustomerDetailData,
-    TypeInfo(TCustomerLookupData), _TCustomerLookupData,
-    TypeInfo(TCustomerVoucherData), _TCustomerVoucherData,
     TypeInfo(TDateRangeRecurrenceData), _TDateRangeRecurrenceData,
     TypeInfo(TDaysOfWeekRecurrenceData), _TDaysOfWeekRecurrenceData,
     TypeInfo(TDiscountGiftData), _TDiscountGiftData,
@@ -1622,8 +1716,6 @@ begin
     TypeInfo(TLoyaltyStatisticsData), _TLoyaltyStatisticsData,
     TypeInfo(TMomentCampaignConfigData), _TMomentCampaignConfigData,
     TypeInfo(TNthPurchaseCampaignConfigData), _TNthPurchaseCampaignConfigData,
-    TypeInfo(TPaginationLinks), _TPaginationLinks,
-    TypeInfo(TPaginationMeta), _TPaginationMeta,
     TypeInfo(TPercentageDiscountData), _TPercentageDiscountData,
     TypeInfo(TPointsGiftData), _TPointsGiftData,
     TypeInfo(TRedemptionRewardData), _TRedemptionRewardData,
@@ -1648,41 +1740,78 @@ begin
     TypeInfo(TVendorBrandingData), _TVendorBrandingData,
     TypeInfo(TVerifyCampaignVoucherData), _TVerifyCampaignVoucherData,
     TypeInfo(TVoucherFixedDiscountData), _TVoucherFixedDiscountData,
-    TypeInfo(TVoucherGiftProductData), _TVoucherGiftProductData,
     TypeInfo(TVoucherPercentageDiscountData), _TVoucherPercentageDiscountData,
     TypeInfo(TWalletData), _TWalletData,
     TypeInfo(TWinBackCampaignConfigData), _TWinBackCampaignConfigData,
+    TypeInfo(TDtoPuntjes3), _TDtoPuntjes3,
     TypeInfo(TDtoPuntjes2), _TDtoPuntjes2,
-    TypeInfo(TDtoPuntjes4), _TDtoPuntjes4,
-    TypeInfo(TDtoPuntjes6), _TDtoPuntjes6,
-    TypeInfo(TDtoPuntjes8), _TDtoPuntjes8,
-    TypeInfo(TDtoPuntjes10), _TDtoPuntjes10,
-    TypeInfo(TDtoPuntjes12), _TDtoPuntjes12,
+    TypeInfo(TDtoPuntjes5), _TDtoPuntjes5,
+    TypeInfo(TDtoPuntjes7), _TDtoPuntjes7,
+    TypeInfo(TDtoPuntjes9), _TDtoPuntjes9,
+    TypeInfo(TDtoPuntjes11), _TDtoPuntjes11,
     TypeInfo(TDtoPuntjes14), _TDtoPuntjes14,
+    TypeInfo(TDtoPuntjes15), _TDtoPuntjes15,
+    TypeInfo(TDtoPuntjes13), _TDtoPuntjes13,
+    TypeInfo(TDtoPuntjes24), _TDtoPuntjes24,
+    TypeInfo(TDtoPuntjes26), _TDtoPuntjes26,
+    TypeInfo(TDtoPuntjes22), _TDtoPuntjes22,
     TypeInfo(TDtoPuntjes16), _TDtoPuntjes16,
-    TypeInfo(TDtoPuntjes18), _TDtoPuntjes18,
-    TypeInfo(TDtoPuntjes20), _TDtoPuntjes20,
-    TypeInfo(TDtoPuntjes23), _TDtoPuntjes23,
+    TypeInfo(TDtoPuntjes19), _TDtoPuntjes19,
     TypeInfo(TDtoPuntjes21), _TDtoPuntjes21,
-    TypeInfo(TDtoPuntjes25), _TDtoPuntjes25,
     TypeInfo(TDtoPuntjes28), _TDtoPuntjes28,
-    TypeInfo(TDtoPuntjes31), _TDtoPuntjes31,
-    TypeInfo(TDtoPuntjes29), _TDtoPuntjes29,
-    TypeInfo(TDtoPuntjes33), _TDtoPuntjes33,
-    TypeInfo(TDtoPuntjes35), _TDtoPuntjes35,
-    TypeInfo(TDtoPuntjes37), _TDtoPuntjes37,
-    TypeInfo(TDtoPuntjes40), _TDtoPuntjes40,
-    TypeInfo(TDtoPuntjes43), _TDtoPuntjes43,
-    TypeInfo(TDtoPuntjes41), _TDtoPuntjes41,
-    TypeInfo(TDtoPuntjes45), _TDtoPuntjes45,
+    TypeInfo(TDtoPuntjes30), _TDtoPuntjes30,
+    TypeInfo(TDtoPuntjes32), _TDtoPuntjes32,
+    TypeInfo(TDtoPuntjes34), _TDtoPuntjes34,
+    TypeInfo(TDtoPuntjes36), _TDtoPuntjes36,
+    TypeInfo(TDtoPuntjes38), _TDtoPuntjes38,
+    TypeInfo(TDtoPuntjes42), _TDtoPuntjes42,
+    TypeInfo(TDtoPuntjes44), _TDtoPuntjes44,
     TypeInfo(TDtoPuntjes47), _TDtoPuntjes47,
     TypeInfo(TDtoPuntjes49), _TDtoPuntjes49,
-    TypeInfo(TDtoPuntjes52), _TDtoPuntjes52,
-    TypeInfo(TDtoPuntjes55), _TDtoPuntjes55,
+    TypeInfo(TDtoPuntjes45), _TDtoPuntjes45,
+    TypeInfo(TDtoPuntjes58), _TDtoPuntjes58,
+    TypeInfo(TDtoPuntjes60), _TDtoPuntjes60,
+    TypeInfo(TDtoPuntjes56), _TDtoPuntjes56,
+    TypeInfo(TDtoPuntjes50), _TDtoPuntjes50,
     TypeInfo(TDtoPuntjes53), _TDtoPuntjes53,
-    TypeInfo(TDtoPuntjes57), _TDtoPuntjes57,
-    TypeInfo(TDtoPuntjes65), _TDtoPuntjes65,
-    TypeInfo(TDtoPuntjes72), _TDtoPuntjes72]);
+    TypeInfo(TDtoPuntjes55), _TDtoPuntjes55,
+    TypeInfo(TDtoPuntjes64), _TDtoPuntjes64,
+    TypeInfo(TDtoPuntjes66), _TDtoPuntjes66,
+    TypeInfo(TDtoPuntjes69), _TDtoPuntjes69,
+    TypeInfo(TDtoPuntjes71), _TDtoPuntjes71,
+    TypeInfo(TDtoPuntjes67), _TDtoPuntjes67,
+    TypeInfo(TDtoPuntjes80), _TDtoPuntjes80,
+    TypeInfo(TDtoPuntjes82), _TDtoPuntjes82,
+    TypeInfo(TDtoPuntjes78), _TDtoPuntjes78,
+    TypeInfo(TDtoPuntjes72), _TDtoPuntjes72,
+    TypeInfo(TDtoPuntjes75), _TDtoPuntjes75,
+    TypeInfo(TDtoPuntjes77), _TDtoPuntjes77,
+    TypeInfo(TDtoPuntjes86), _TDtoPuntjes86,
+    TypeInfo(TDtoPuntjes88), _TDtoPuntjes88,
+    TypeInfo(TDtoPuntjes91), _TDtoPuntjes91,
+    TypeInfo(TDtoPuntjes93), _TDtoPuntjes93,
+    TypeInfo(TDtoPuntjes89), _TDtoPuntjes89,
+    TypeInfo(TDtoPuntjes102), _TDtoPuntjes102,
+    TypeInfo(TDtoPuntjes104), _TDtoPuntjes104,
+    TypeInfo(TDtoPuntjes100), _TDtoPuntjes100,
+    TypeInfo(TDtoPuntjes94), _TDtoPuntjes94,
+    TypeInfo(TDtoPuntjes97), _TDtoPuntjes97,
+    TypeInfo(TDtoPuntjes99), _TDtoPuntjes99,
+    TypeInfo(TDtoPuntjes106), _TDtoPuntjes106,
+    TypeInfo(TDtoPuntjes110), _TDtoPuntjes110,
+    TypeInfo(TDtoPuntjes112), _TDtoPuntjes112,
+    TypeInfo(TDtoPuntjes115), _TDtoPuntjes115,
+    TypeInfo(TDtoPuntjes117), _TDtoPuntjes117,
+    TypeInfo(TDtoPuntjes113), _TDtoPuntjes113,
+    TypeInfo(TDtoPuntjes126), _TDtoPuntjes126,
+    TypeInfo(TDtoPuntjes128), _TDtoPuntjes128,
+    TypeInfo(TDtoPuntjes124), _TDtoPuntjes124,
+    TypeInfo(TDtoPuntjes118), _TDtoPuntjes118,
+    TypeInfo(TDtoPuntjes121), _TDtoPuntjes121,
+    TypeInfo(TDtoPuntjes123), _TDtoPuntjes123,
+    TypeInfo(TDtoPuntjes130), _TDtoPuntjes130,
+    TypeInfo(TDtoPuntjes132), _TDtoPuntjes132,
+    TypeInfo(TDtoPuntjes134), _TDtoPuntjes134]);
 end;
 
 initialization
