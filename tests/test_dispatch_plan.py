@@ -69,3 +69,6 @@ class DispatchPlanTest(unittest.TestCase):
     def test_a_source_that_is_not_a_tag_keeps_the_level(self):
         _, p = plan('v1.1.0', 'patch', URL, 'main@abc1234')
         self.assertEqual([p['commit_type'], p['auto_merge']], ['fix', 'true'])
+
+    def test_reads_source_with_the_newline_the_workflow_writes(self):
+        self.assertEqual(plan('v1.1.0', 'minor', URL, 'v1.1.0\n')[1]['skip'], 'true')
