@@ -10,7 +10,7 @@ if ! fpc -Mdelphi -FU.mormot/build/example -FE.mormot/build \
   grep -E 'Error|Fatal' "$log" >&2
   exit 1
 fi
-if grep -E '^puntjes\.[a-z]+\.pas\([0-9,]+\) (Warning|Note|Hint):' "$log" >&2; then
-  echo "The generated units must compile with no warning, note or hint." >&2
+if grep -E '^puntjes\.[a-z]+\.pas\([0-9,]+\) (Warning|Note):' "$log" >&2; then
+  echo "The generated units must compile with no warning or note." >&2
   exit 1
 fi

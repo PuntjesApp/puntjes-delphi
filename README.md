@@ -18,7 +18,7 @@ licensed Windows machine.
 
 ## Install
 
-Download `puntjes-delphi-<version>.zip` from the [latest release](https://github.com/PuntjesApp/puntjes-delphi/releases/latest),
+Download `puntjes-delphi-v<version>.zip` (for example `puntjes-delphi-v0.1.0.zip`) from the [latest release](https://github.com/PuntjesApp/puntjes-delphi/releases/latest),
 or the two units on their own, and add `src` to your search path.
 
 Or use [Boss](https://github.com/HashLoad/boss):
@@ -60,6 +60,10 @@ QuickStart health
 ## What to expect from generated units
 
 - **A nullable field or a union arrives as a `variant`.** Check it with `VarIsNull` before you read it.
+- **An update sends every field, also the ones you did not set.** An unset `variant` field goes out as `null`, and
+  the API stores that `null`. So `UpdateCustomerByExternalId` with only `Phone` set also clears the name, the email
+  and the date of birth, and `UpdateProduct` with only `Name` set clears the description and the price. Read the
+  record first, copy every field you want to keep into the payload, then send it.
 - **The answer types called `TDtoPuntjes<N>` can be renamed in any release.** `mopenapi` numbers each unnamed
   answer wrapper, so a new endpoint can move the numbers after it. Do not declare a variable of such a type. Read
   `.Data` in the expression, as the quick start does, and keep the named records such as `TCustomerData`. This is
@@ -68,7 +72,9 @@ QuickStart health
   `SetBearer` again.
 - **Nothing retries.** On a network error or a 5xx, send the same request again with the same `idempotency_key`.
   The API records the purchase once.
-- **An error answer raises `EErrorResponse`.** Its `Error.Error` record carries the API's `Code` and `Message`.
+- **An error answer with a documented status raises `EErrorResponse`.** Its `Error.Error` record carries the API's
+  `Code` and `Message`. Any other status, such as a 502 from a proxy, raises a plain `EJsonClient` without that
+  record.
 
 The [Puntjes API documentation](https://docs.puntjes.app/docs/api-overview) describes every endpoint and error code.
 
@@ -78,7 +84,7 @@ The [Puntjes API documentation](https://docs.puntjes.app/docs/api-overview) desc
 |---|---|
 | `scripts/mormot.sh` | Clones mORMot at `2.4-stable` into `.mormot`, refuses a commit other than the pinned one, and unpacks the static files after a sha256 check |
 | `scripts/generate.sh` | Builds `mopenapi` and writes `src/` from `spec/api.json` |
-| `scripts/compile.sh` | Compiles the quick start with `fpc -Mdelphi`, and fails on any warning in a generated unit |
+| `scripts/compile.sh` | Compiles the quick start with `fpc -Mdelphi`, and fails on any warning or note in a generated unit |
 
 `spec/SOURCE` names the published spec the units come from. On a machine without Free Pascal, run the scripts in a
 container:

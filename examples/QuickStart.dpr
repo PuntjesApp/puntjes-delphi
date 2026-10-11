@@ -30,7 +30,6 @@ var
   answer: TTokenAnswer;
 begin
   oauth := TJsonClient.Create(Server, '');
-  oauth.Options := [jcoParseTolerant, jcoHttpErrorRaise];
   request.grant_type := 'client_credentials';
   request.client_id := GetEnvironmentVariable('PUNTJES_CLIENT_ID');
   request.client_secret := GetEnvironmentVariable('PUNTJES_CLIENT_SECRET');
