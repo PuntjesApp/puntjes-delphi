@@ -1,6 +1,6 @@
 // Client unit for Puntjes
 // - Puntjes Loyalty API
-// - version 2.0.0
+// - version 2.1.0
 unit puntjes.client;
 
 {$I mormot.defines.inc}
@@ -75,6 +75,8 @@ type
     procedure OnError11(const Sender: IJsonClient;
       const Response: TJsonResponse; const ErrorMsg: ShortString);
     procedure OnError12(const Sender: IJsonClient;
+      const Response: TJsonResponse; const ErrorMsg: ShortString);
+    procedure OnError13(const Sender: IJsonClient;
       const Response: TJsonResponse; const ErrorMsg: ShortString);
   public
 
@@ -339,6 +341,7 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
+    // - 503 [EErrorResponse]
     function DownloadWalletPass(const Customer: variant;
       const Platform: TEnumPuntjes21): TDtoPuntjes33;
 
@@ -914,11 +917,15 @@ begin
       e := EErrorResponse;
     403:
       e := EErrorResponse;
+    404:
+      e := EErrorResponse;
     422:
       e := EErrorResponse;
     429:
       e := EErrorResponse;
     500:
+      e := EErrorResponse;
+    503:
       e := EErrorResponse;
   else
     e := EJsonClient;
@@ -935,10 +942,6 @@ begin
     401:
       e := EErrorResponse;
     403:
-      e := EErrorResponse;
-    404:
-      e := EErrorResponse;
-    415:
       e := EErrorResponse;
     422:
       e := EErrorResponse;
@@ -958,11 +961,11 @@ var
   e: EJsonClientClass;
 begin
   case Response.Status of
-    400:
-      e := EErrorResponse;
     401:
       e := EErrorResponse;
     403:
+      e := EErrorResponse;
+    404:
       e := EErrorResponse;
     415:
       e := EErrorResponse;
@@ -984,6 +987,32 @@ var
   e: EJsonClientClass;
 begin
   case Response.Status of
+    400:
+      e := EErrorResponse;
+    401:
+      e := EErrorResponse;
+    403:
+      e := EErrorResponse;
+    415:
+      e := EErrorResponse;
+    422:
+      e := EErrorResponse;
+    429:
+      e := EErrorResponse;
+    500:
+      e := EErrorResponse;
+  else
+    e := EJsonClient;
+  end;
+  raise e.CreateResp('%.%', [self, ErrorMsg], Response);
+end;
+
+procedure TPuntjesClient.OnError10(const Sender: IJsonClient;
+  const Response: TJsonResponse; const ErrorMsg: ShortString);
+var
+  e: EJsonClientClass;
+begin
+  case Response.Status of
     401:
       e := EErrorResponse;
     403:
@@ -1002,7 +1031,7 @@ begin
   raise e.CreateResp('%.%', [self, ErrorMsg], Response);
 end;
 
-procedure TPuntjesClient.OnError10(const Sender: IJsonClient;
+procedure TPuntjesClient.OnError11(const Sender: IJsonClient;
   const Response: TJsonResponse; const ErrorMsg: ShortString);
 var
   e: EJsonClientClass;
@@ -1026,7 +1055,7 @@ begin
   raise e.CreateResp('%.%', [self, ErrorMsg], Response);
 end;
 
-procedure TPuntjesClient.OnError11(const Sender: IJsonClient;
+procedure TPuntjesClient.OnError12(const Sender: IJsonClient;
   const Response: TJsonResponse; const ErrorMsg: ShortString);
 var
   e: EJsonClientClass;
@@ -1046,7 +1075,7 @@ begin
   raise e.CreateResp('%.%', [self, ErrorMsg], Response);
 end;
 
-procedure TPuntjesClient.OnError12(const Sender: IJsonClient;
+procedure TPuntjesClient.OnError13(const Sender: IJsonClient;
   const Response: TJsonResponse; const ErrorMsg: ShortString);
 var
   e: EJsonClientClass;
@@ -1157,7 +1186,7 @@ function TPuntjesClient.DownloadWalletPass(const Customer: variant;
 begin
   fClient.Request('GET', '/customers/%/wallet-pass', [Customer], [
     'platform', _TEnumPuntjes21[Platform]], [],
-    result, TypeInfo(TDtoPuntjes33), OnError1);
+    result, TypeInfo(TDtoPuntjes33), OnError6);
 end;
 
 function TPuntjesClient.AdjustWallet(const Customer: variant;
@@ -1173,7 +1202,7 @@ begin
   fClient.Request('GET', '/rewards', [], [
     'affordable', Affordable,
     'identifier', Identifier], [],
-    result, TypeInfo(TDtoPuntjes37), OnError6);
+    result, TypeInfo(TDtoPuntjes37), OnError7);
 end;
 
 function TPuntjesClient.ListCustomerRedemptions(const Customer: variant;
@@ -1201,7 +1230,7 @@ end;
 function TPuntjesClient.VerifyRedemption(const Code: variant): TDtoPuntjes49;
 begin
   fClient.Request('POST', '/redemptions/%/verify', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes49), OnError7);
+    result, TypeInfo(TDtoPuntjes49), OnError8);
 end;
 
 function TPuntjesClient.ListProducts(const Status: TEnumPuntjes3;
@@ -1214,7 +1243,7 @@ begin
     'search', Search,
     'per_page', PerPage,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError6);
+    result, TypeInfo(TDtoPuntjes53), OnError7);
 end;
 
 function TPuntjesClient.CreateProduct(
@@ -1228,7 +1257,7 @@ function TPuntjesClient.BulkUpsertProducts(
   const Payload: TDtoPuntjes57): TDtoPuntjes53;
 begin
   fClient.Request('POST', '/products/batch', [], [], [],
-    Payload, result, TypeInfo(TDtoPuntjes57), TypeInfo(TDtoPuntjes53), OnError8);
+    Payload, result, TypeInfo(TDtoPuntjes57), TypeInfo(TDtoPuntjes53), OnError9);
 end;
 
 function TPuntjesClient.CreateRewardFromProduct(const ExternalId: variant;
@@ -1248,7 +1277,7 @@ function TPuntjesClient.UpsertProduct(const ExternalId: variant;
   const Payload: TUpsertProductData): TDtoPuntjes53;
 begin
   fClient.Request('PUT', '/products/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TDtoPuntjes53), OnError8);
+    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TDtoPuntjes53), OnError9);
 end;
 
 function TPuntjesClient.UpdateProduct(const ExternalId: variant;
@@ -1260,7 +1289,7 @@ end;
 
 procedure TPuntjesClient.DeleteProduct(const ExternalId: variant);
 begin
-  fClient.Request('DELETE', '/products/%', [ExternalId], [], [], OnError9);
+  fClient.Request('DELETE', '/products/%', [ExternalId], [], [], OnError10);
 end;
 
 function TPuntjesClient.ListCampaigns(const Branch: RawUtf8;
@@ -1269,7 +1298,7 @@ begin
   fClient.Request('GET', '/campaigns', [], [
     'branch', Branch,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError6);
+    result, TypeInfo(TDtoPuntjes53), OnError7);
 end;
 
 function TPuntjesClient.ListCustomerVouchers(const Customer: variant): TDtoPuntjes53;
@@ -1298,19 +1327,19 @@ begin
     'period', _TEnumPuntjes23[Period],
     'top_products_limit', TopProductsLimit,
     'branch', Branch], [],
-    result, TypeInfo(TDtoPuntjes53), OnError10);
+    result, TypeInfo(TDtoPuntjes53), OnError11);
 end;
 
 function TPuntjesClient.ShowMe(): TDtoPuntjes53;
 begin
   fClient.Request('GET', '/me', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError11);
+    result, TypeInfo(TDtoPuntjes53), OnError12);
 end;
 
 function TPuntjesClient.CheckHealth(): TDtoPuntjes53;
 begin
   fClient.Request('GET', '/health', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError12);
+    result, TypeInfo(TDtoPuntjes53), OnError13);
 end;
 
 
