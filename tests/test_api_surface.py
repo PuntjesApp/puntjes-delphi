@@ -90,6 +90,11 @@ class SurfaceTest(unittest.TestCase):
         self.assertEqual(changed('ep3None, ep3Active', 'ep3None, ep3Draft, ep3Active'),
                          {'u: TEnumPuntjes3[1]: ep3Active', 'u: TEnumPuntjes3[2]: ep3Archived'})
 
+    def test_an_overload_directive_or_an_added_overload_is_no_removal(self):
+        self.assertFalse(changed('(const Code: variant): TDtoPuntjes49;',
+                                 '(const Code: variant): TDtoPuntjes49; overload;\n'
+                                 '    function VerifyRedemption(): TDtoPuntjes49; overload;'))
+
     def test_a_renumbered_answer_wrapper_is_no_removal(self):
         self.assertFalse(changed('TDtoPuntjes49', 'TDtoPuntjes50'))
 

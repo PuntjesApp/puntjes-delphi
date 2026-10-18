@@ -2,6 +2,7 @@
 
 The public surface is the interface section of each unit under src, one line per declaration: a public class
 member, a record field, an enum value, a type or a constant. A removed line is a break, an added line is not.
+The overload directive does not count: adding an overload is additive.
 The answer wrappers TDtoPuntjes<N> are renumbered by mopenapi in any release (README), so their number counts only
 where a caller must name the type: in a parameter.
 """
@@ -44,6 +45,12 @@ def statement(toks, i):
     return toks[i:j + 1], j + 1
 
 
+def signature(parts):
+    kept = [part for k, part in enumerate(parts) if part.lower() != 'overload'
+            and not (part == ';' and k and parts[k - 1].lower() == 'overload')]
+    return render(kept[:-1])
+
+
 def parameters(parts):
     if '(' not in parts:
         return ''
@@ -65,7 +72,7 @@ def declarations(toks):
             section, i = word, i + 1
         elif word in ('procedure', 'function'):
             parts, i = statement(toks, i)
-            found.append((toks[i - len(parts) + 1], render(parts[:-1]), parameters(parts)))
+            found.append((parts[1], signature(parts), parameters(parts)))
         elif section == 'type' and toks[i + 1] == '=':
             i = type_declaration(toks, i, found)
         elif section in ('const', 'var', 'threadvar', 'resourcestring'):
@@ -135,7 +142,7 @@ def class_declaration(toks, i, found):
             continue
         if word in ROUTINES:
             member = parts[2] if word == 'class' else parts[1]
-            found.append((f'{name}.{member}', render(parts[:-1]), parameters(parts)))
+            found.append((f'{name}.{member}', signature(parts), parameters(parts)))
         else:
             fields = render(parts[:parts.index(':')]).split(', ')
             found.extend((f'{name}.{field}', render(parts[:-1]), '') for field in fields)

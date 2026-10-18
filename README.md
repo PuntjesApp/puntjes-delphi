@@ -64,10 +64,13 @@ QuickStart health
   the API stores that `null`. So `UpdateCustomerByExternalId` with only `Phone` set also clears the name, the email
   and the date of birth, and `UpdateProduct` with only `Name` set clears the description and the price. Read the
   record first, copy every field you want to keep into the payload, then send it.
-- **The answer types called `TDtoPuntjes<N>` can be renamed in any release.** `mopenapi` numbers each unnamed
-  answer wrapper, so a new endpoint can move the numbers after it. Do not declare a variable of such a type. Read
-  `.Data` in the expression, as the quick start does, and keep the named records such as `TCustomerData`. This is
-  why the version stays below 1.0.
+- **A request body that the API does not require has an overload without it.** `VerifyRedemption(code)` sends no
+  body, and `VerifyRedemption(code, payload)` sends the payload. The same goes for the customer, card, product and
+  voucher calls whose body is optional in the API spec.
+- **Each answer and body record takes its name from its operation.** `ShowMe` returns `TShowMeResponse`. `ListCampaigns`
+  returns `TListCampaignsResponse`, and its page is `TListCampaignsResponseData`. A record inside a named record
+  adds the field name, such as `TErrorResponseError`. Up to 0.4.0 these records were numbered `TDtoPuntjes<N>`, and 14 methods
+  from `CreateProduct` on decoded the answer into the wrong record.
 - **The token is yours to fetch and renew.** A token lasts one hour. On a 401, fetch a new one and call
   `SetBearer` again.
 - **Nothing retries.** On a network error or a 5xx, send the same request again with the same `idempotency_key`.
