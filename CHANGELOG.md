@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.4.0...v0.5.0) (2026-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* make optional request bodies optional and decode each answer into its own record ([#11](https://github.com/PuntjesApp/puntjes-delphi/issues/11))
+
+### Bug Fixes
+
+* make optional request bodies optional and decode each answer into its own record ([#11](https://github.com/PuntjesApp/puntjes-delphi/issues/11)) ([6004ce6](https://github.com/PuntjesApp/puntjes-delphi/commit/6004ce64f713e8e7a6b23fcc6785445b298d1baa))
+
 ## [0.4.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.3.0...v0.4.0) (2026-10-18)
 
 
