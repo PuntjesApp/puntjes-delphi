@@ -64,6 +64,9 @@ QuickStart health
   the API stores that `null`. So `UpdateCustomerByExternalId` with only `Phone` set also clears the name, the email
   and the date of birth, and `UpdateProduct` with only `Name` set clears the description and the price. Read the
   record first, copy every field you want to keep into the payload, then send it.
+- **A request body that the API does not require has an overload without it.** `VerifyRedemption(code)` sends no
+  body, and `VerifyRedemption(code, payload)` sends the payload. The same goes for the customer, card, product and
+  voucher calls whose body is optional in the API spec.
 - **The answer types called `TDtoPuntjes<N>` can be renamed in any release.** `mopenapi` numbers each unnamed
   answer wrapper, so a new endpoint can move the numbers after it. Do not declare a variable of such a type. Read
   `.Data` in the expression, as the quick start does, and keep the named records such as `TCustomerData`. This is

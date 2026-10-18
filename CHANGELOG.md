@@ -5,7 +5,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* `VerifyRedemption` now takes a body, so a call with only the code no longer compiles. Before: `puntjes.VerifyRedemption(code)`. After: `puntjes.VerifyRedemption(code, payload)`, with `var payload: TVerifyRedemptionData`. Leave its fields unset to send no branch and no idempotency key ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8))
+* `VerifyRedemption` now takes a body, so a call with only the code no longer compiles. Before: `puntjes.VerifyRedemption(code)`. After: `puntjes.VerifyRedemption(code, payload)`, with `var payload: TVerifyRedemptionData`. Leave its fields unset to send no branch and no idempotency key. The next patch release brings back `VerifyRedemption(code)`, which sends no body ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8))
 * `TDtoPuntjes72` is now `TDtoPuntjes73`. No method returns it, and numbered types can change in any release ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8))
 
 ### Features
