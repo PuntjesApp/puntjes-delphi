@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited] # edited: a retitle to feat!: runs the API check again
   push:
     branches: [main]
 
@@ -44,6 +45,24 @@ jobs:
       - name: Compile the example with fpc -Mdelphi
         run: scripts/compile.sh
 
+  # A removed or changed public declaration since the last release fails a PR whose title is not feat!:.
+  # So a breaking regenerate PR does not merge itself.
+  api:
+    name: Public API
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Compare the interface sections with the last release
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD' }}
+        run: python3 tools/api_surface.py
+
   workflows:
     name: Workflows
     runs-on: ubuntu-24.04
@@ -60,7 +79,7 @@ jobs:
   # The one check the main ruleset requires, so a change to the jobs above never edits the ruleset.
   ci:
     name: CI
-    needs: [planner, units, workflows]
+    needs: [planner, units, api, workflows]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -69,5 +88,6 @@ jobs:
         env:
           PLANNER: ${{ needs.planner.result }}
           UNITS: ${{ needs.units.result }}
+          API: ${{ needs.api.result }}
           WORKFLOWS: ${{ needs.workflows.result }}
-        run: test "$PLANNER" = success && test "$UNITS" = success && test "$WORKFLOWS" = success
+        run: test "$PLANNER" = success && test "$UNITS" = success && test "$API" = success && test "$WORKFLOWS" = success
