@@ -102,7 +102,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function LookupCustomer(const Identifier: RawUtf8 = '';
-      const ExternalId: RawUtf8 = ''): TDtoPuntjes2;
+      const ExternalId: RawUtf8 = ''): TLookupCustomerResponse;
 
     // registerCustomer [post] /customers
     //
@@ -120,9 +120,10 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function RegisterCustomer(const Payload: TCreateCustomerData): TDtoPuntjes4; overload;
+    function RegisterCustomer(
+      const Payload: TCreateCustomerData): TRegisterCustomerResponse; overload;
     // The same call with no request body.
-    function RegisterCustomer(): TDtoPuntjes4; overload;
+    function RegisterCustomer(): TRegisterCustomerResponse; overload;
 
     // replaceCustomerByExternalId [put] /customers/by-external-id/{externalId}
     //
@@ -143,9 +144,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ReplaceCustomerByExternalId(const ExternalId: variant;
-      const Payload: TUpdateCustomerData): TDtoPuntjes6; overload;
+      const Payload: TUpdateCustomerData): TReplaceCustomerByExternalIdResponse; overload;
     // The same call with no request body.
-    function ReplaceCustomerByExternalId(const ExternalId: variant): TDtoPuntjes6; overload;
+    function ReplaceCustomerByExternalId(const ExternalId: variant): TReplaceCustomerByExternalIdResponse; overload;
 
     // updateCustomerByExternalId [patch] /customers/by-external-id/{externalId}
     //
@@ -166,9 +167,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function UpdateCustomerByExternalId(const ExternalId: variant;
-      const Payload: TUpdateCustomerData): TDtoPuntjes8; overload;
+      const Payload: TUpdateCustomerData): TUpdateCustomerByExternalIdResponse; overload;
     // The same call with no request body.
-    function UpdateCustomerByExternalId(const ExternalId: variant): TDtoPuntjes8; overload;
+    function UpdateCustomerByExternalId(const ExternalId: variant): TUpdateCustomerByExternalIdResponse; overload;
 
     // linkCustomerExternalId [post] /customers/link-external-id
     //
@@ -187,7 +188,8 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function LinkCustomerExternalId(const Payload: TLinkExternalIdData): TDtoPuntjes10;
+    function LinkCustomerExternalId(
+      const Payload: TLinkExternalIdData): TLinkCustomerExternalIdResponse;
 
     // sendLoyaltyCardByExternalId [post] /customers/by-external-id/{externalId}/send-card
     //
@@ -207,9 +209,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function SendLoyaltyCardByExternalId(const ExternalId: variant;
-      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes12; overload;
+      const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardByExternalIdResponse; overload;
     // The same call with no request body.
-    function SendLoyaltyCardByExternalId(const ExternalId: variant): TDtoPuntjes12; overload;
+    function SendLoyaltyCardByExternalId(const ExternalId: variant): TSendLoyaltyCardByExternalIdResponse; overload;
 
     // sendLoyaltyCard [post] /customers/{customer}/send-card
     //
@@ -229,9 +231,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function SendLoyaltyCard(const Customer: variant;
-      const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes14; overload;
+      const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardResponse; overload;
     // The same call with no request body.
-    function SendLoyaltyCard(const Customer: variant): TDtoPuntjes14; overload;
+    function SendLoyaltyCard(const Customer: variant): TSendLoyaltyCardResponse; overload;
 
     // showCustomer [get] /customers/{customer}
     //
@@ -246,7 +248,7 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowCustomer(const Customer: variant): TDtoPuntjes16;
+    function ShowCustomer(const Customer: variant): TShowCustomerResponse;
 
 
     // ----------------------
@@ -269,7 +271,8 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function SubmitTransaction(const Payload: TCreateTransactionData): TDtoPuntjes18;
+    function SubmitTransaction(
+      const Payload: TCreateTransactionData): TSubmitTransactionResponse;
 
     // listCustomerTransactions [get] /customers/{customer}/transactions
     //
@@ -290,7 +293,7 @@ type
     // - 500 [EErrorResponse]
     function ListCustomerTransactions(const Customer: variant;
       const DateFrom: RawUtf8 = ''; const DateTo: RawUtf8 = '';
-      Page: integer = 0): TDtoPuntjes21;
+      Page: integer = 0): TListCustomerTransactionsResponse;
 
 
     // ----------------
@@ -310,7 +313,7 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowWallet(const Customer: variant): TDtoPuntjes25;
+    function ShowWallet(const Customer: variant): TShowWalletResponse;
 
     // listLedgerEntries [get] /customers/{customer}/ledger
     //
@@ -332,7 +335,7 @@ type
     // - 500 [EErrorResponse]
     function ListLedgerEntries(const Customer: variant; const DateFrom: RawUtf8 = '';
       const DateTo: RawUtf8 = ''; const _Type: TEnumPuntjes20 = ep20None;
-      Page: integer = 0): TDtoPuntjes29;
+      Page: integer = 0): TListLedgerEntriesResponse;
 
     // downloadWalletPass [get] /customers/{customer}/wallet-pass
     //
@@ -351,7 +354,7 @@ type
     // - 500 [EErrorResponse]
     // - 503 [EErrorResponse]
     function DownloadWalletPass(const Customer: variant;
-      const Platform: TEnumPuntjes21): TDtoPuntjes33;
+      const Platform: TEnumPuntjes21): TDownloadWalletPassResponse;
 
     // adjustWallet [post] /customers/{customer}/wallet/adjust
     //
@@ -371,7 +374,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function AdjustWallet(const Customer: variant;
-      const Payload: TAdjustWalletApiData): TDtoPuntjes35;
+      const Payload: TAdjustWalletApiData): TAdjustWalletResponse;
 
 
     // -----------------
@@ -393,7 +396,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ListRewards(Affordable: boolean = false;
-      const Identifier: RawUtf8 = ''): TDtoPuntjes37;
+      const Identifier: RawUtf8 = ''): TListRewardsResponse;
 
 
     // ---------------------
@@ -417,7 +420,8 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ListCustomerRedemptions(const Customer: variant;
-      const Status: TEnumPuntjes22 = ep22None; Page: integer = 0): TDtoPuntjes41;
+      const Status: TEnumPuntjes22 = ep22None;
+      Page: integer = 0): TListCustomerRedemptionsResponse;
 
     // redeemReward [post] /redemptions
     //
@@ -435,7 +439,7 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function RedeemReward(const Payload: TCreateRedemptionData): TDtoPuntjes45;
+    function RedeemReward(const Payload: TCreateRedemptionData): TRedeemRewardResponse;
 
     // lookupRedemption [get] /redemptions/{code}
     //
@@ -450,7 +454,7 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function LookupRedemption(const Code: variant): TDtoPuntjes47;
+    function LookupRedemption(const Code: variant): TLookupRedemptionResponse;
 
     // verifyRedemption [post] /redemptions/{code}/verify
     //
@@ -470,9 +474,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function VerifyRedemption(const Code: variant;
-      const Payload: TVerifyRedemptionData): TDtoPuntjes49; overload;
+      const Payload: TVerifyRedemptionData): TVerifyRedemptionResponse; overload;
     // The same call with no request body.
-    function VerifyRedemption(const Code: variant): TDtoPuntjes49; overload;
+    function VerifyRedemption(const Code: variant): TVerifyRedemptionResponse; overload;
 
 
     // ------------------
@@ -498,7 +502,7 @@ type
     // - 500 [EErrorResponse]
     function ListProducts(const Status: TEnumPuntjes3 = ep3None;
       const Category: RawUtf8 = ''; const Search: RawUtf8 = ''; PerPage: integer = 0;
-      Page: integer = 0): TDtoPuntjes53;
+      Page: integer = 0): TListProductsResponse;
 
     // createProduct [post] /products
     //
@@ -516,7 +520,7 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function CreateProduct(const Payload: TCreateProductData): TDtoPuntjes53;
+    function CreateProduct(const Payload: TCreateProductData): TCreateProductResponse;
 
     // bulkUpsertProducts [post] /products/batch
     //
@@ -533,7 +537,8 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function BulkUpsertProducts(const Payload: TDtoPuntjes57): TDtoPuntjes53;
+    function BulkUpsertProducts(
+      const Payload: TBulkUpsertProductsRequest): TBulkUpsertProductsResponse;
 
     // createRewardFromProduct [post] /products/{externalId}/reward
     //
@@ -553,7 +558,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function CreateRewardFromProduct(const ExternalId: variant;
-      const Payload: TCreateRewardFromProductData): TDtoPuntjes53;
+      const Payload: TCreateRewardFromProductData): TCreateRewardFromProductResponse;
 
     // showProduct [get] /products/{externalId}
     //
@@ -568,7 +573,7 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowProduct(const ExternalId: variant): TDtoPuntjes53;
+    function ShowProduct(const ExternalId: variant): TShowProductResponse;
 
     // upsertProduct [put] /products/{externalId}
     //
@@ -588,7 +593,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function UpsertProduct(const ExternalId: variant;
-      const Payload: TUpsertProductData): TDtoPuntjes53;
+      const Payload: TUpsertProductData): TUpsertProductResponse;
 
     // updateProduct [patch] /products/{externalId}
     //
@@ -608,9 +613,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function UpdateProduct(const ExternalId: variant;
-      const Payload: TUpdateProductData): TDtoPuntjes53; overload;
+      const Payload: TUpdateProductData): TUpdateProductResponse; overload;
     // The same call with no request body.
-    function UpdateProduct(const ExternalId: variant): TDtoPuntjes53; overload;
+    function UpdateProduct(const ExternalId: variant): TUpdateProductResponse; overload;
 
     // deleteProduct [delete] /products/{externalId}
     //
@@ -647,7 +652,8 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListCampaigns(const Branch: RawUtf8 = ''; Page: integer = 0): TDtoPuntjes53;
+    function ListCampaigns(const Branch: RawUtf8 = '';
+      Page: integer = 0): TListCampaignsResponse;
 
 
     // ------------------
@@ -667,7 +673,8 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListCustomerVouchers(const Customer: variant): TDtoPuntjes53;
+    function ListCustomerVouchers(
+      const Customer: variant): TListCustomerVouchersResponse;
 
     // lookupVoucher [get] /vouchers/{code}
     //
@@ -682,7 +689,7 @@ type
     // - 404 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function LookupVoucher(const Code: variant): TDtoPuntjes53;
+    function LookupVoucher(const Code: variant): TLookupVoucherResponse;
 
     // verifyVoucher [post] /vouchers/{code}/verify
     //
@@ -702,9 +709,9 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function VerifyVoucher(const Code: variant;
-      const Payload: TVerifyCampaignVoucherData): TDtoPuntjes53; overload;
+      const Payload: TVerifyCampaignVoucherData): TVerifyVoucherResponse; overload;
     // The same call with no request body.
-    function VerifyVoucher(const Code: variant): TDtoPuntjes53; overload;
+    function VerifyVoucher(const Code: variant): TVerifyVoucherResponse; overload;
 
 
     // --------------------
@@ -728,7 +735,8 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ShowStatistics(const Period: TEnumPuntjes23 = ep23None;
-      TopProductsLimit: integer = 0; const Branch: RawUtf8 = ''): TDtoPuntjes53;
+      TopProductsLimit: integer = 0;
+      const Branch: RawUtf8 = ''): TShowStatisticsResponse;
 
 
     // ------------
@@ -744,7 +752,7 @@ type
     // - 403 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowMe(): TDtoPuntjes53;
+    function ShowMe(): TShowMeResponse;
 
 
     // ------------------
@@ -760,7 +768,7 @@ type
     // - 403 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListBranches(): TDtoPuntjes53;
+    function ListBranches(): TListBranchesResponse;
 
 
     // ----------------
@@ -773,7 +781,7 @@ type
     // Responses:
     // - 200 (main)
     // - 500 [EErrorResponse]
-    function CheckHealth(): TDtoPuntjes53;
+    function CheckHealth(): TCheckHealthResponse;
 
     // access to the associated HTTP/JSON client instance
     property JsonClient: IJsonClient
@@ -1097,189 +1105,191 @@ begin
 end;
 
 function TPuntjesClient.LookupCustomer(const Identifier: RawUtf8;
-  const ExternalId: RawUtf8): TDtoPuntjes2;
+  const ExternalId: RawUtf8): TLookupCustomerResponse;
 begin
   fClient.Request('GET', '/customers/lookup', [], [
     'identifier', Identifier,
     'external_id', ExternalId], [],
-    result, TypeInfo(TDtoPuntjes2), OnError1);
+    result, TypeInfo(TLookupCustomerResponse), OnError1);
 end;
 
 function TPuntjesClient.RegisterCustomer(
-  const Payload: TCreateCustomerData): TDtoPuntjes4;
+  const Payload: TCreateCustomerData): TRegisterCustomerResponse;
 begin
   fClient.Request('POST', '/customers', [], [], [],
-    Payload, result, TypeInfo(TCreateCustomerData), TypeInfo(TDtoPuntjes4), OnError2);
+    Payload, result, TypeInfo(TCreateCustomerData), TypeInfo(TRegisterCustomerResponse), OnError2);
 end;
 
-function TPuntjesClient.RegisterCustomer(): TDtoPuntjes4;
+function TPuntjesClient.RegisterCustomer(): TRegisterCustomerResponse;
 begin
   fClient.Request('POST', '/customers', [], [], [],
-    result, TypeInfo(TDtoPuntjes4), OnError2);
+    result, TypeInfo(TRegisterCustomerResponse), OnError2);
 end;
 
 function TPuntjesClient.ReplaceCustomerByExternalId(const ExternalId: variant;
-  const Payload: TUpdateCustomerData): TDtoPuntjes6;
+  const Payload: TUpdateCustomerData): TReplaceCustomerByExternalIdResponse;
 begin
   fClient.Request('PUT', '/customers/by-external-id/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TDtoPuntjes6), OnError3);
+    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TReplaceCustomerByExternalIdResponse), OnError3);
 end;
 
-function TPuntjesClient.ReplaceCustomerByExternalId(const ExternalId: variant): TDtoPuntjes6;
+function TPuntjesClient.ReplaceCustomerByExternalId(const ExternalId: variant): TReplaceCustomerByExternalIdResponse;
 begin
   fClient.Request('PUT', '/customers/by-external-id/%', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes6), OnError3);
+    result, TypeInfo(TReplaceCustomerByExternalIdResponse), OnError3);
 end;
 
 function TPuntjesClient.UpdateCustomerByExternalId(const ExternalId: variant;
-  const Payload: TUpdateCustomerData): TDtoPuntjes8;
+  const Payload: TUpdateCustomerData): TUpdateCustomerByExternalIdResponse;
 begin
   fClient.Request('PATCH', '/customers/by-external-id/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TDtoPuntjes8), OnError3);
+    Payload, result, TypeInfo(TUpdateCustomerData), TypeInfo(TUpdateCustomerByExternalIdResponse), OnError3);
 end;
 
-function TPuntjesClient.UpdateCustomerByExternalId(const ExternalId: variant): TDtoPuntjes8;
+function TPuntjesClient.UpdateCustomerByExternalId(const ExternalId: variant): TUpdateCustomerByExternalIdResponse;
 begin
   fClient.Request('PATCH', '/customers/by-external-id/%', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes8), OnError3);
+    result, TypeInfo(TUpdateCustomerByExternalIdResponse), OnError3);
 end;
 
 function TPuntjesClient.LinkCustomerExternalId(
-  const Payload: TLinkExternalIdData): TDtoPuntjes10;
+  const Payload: TLinkExternalIdData): TLinkCustomerExternalIdResponse;
 begin
   fClient.Request('POST', '/customers/link-external-id', [], [], [],
-    Payload, result, TypeInfo(TLinkExternalIdData), TypeInfo(TDtoPuntjes10), OnError3);
+    Payload, result, TypeInfo(TLinkExternalIdData), TypeInfo(TLinkCustomerExternalIdResponse), OnError3);
 end;
 
 function TPuntjesClient.SendLoyaltyCardByExternalId(const ExternalId: variant;
-  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes12;
+  const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardByExternalIdResponse;
 begin
   fClient.Request('POST', '/customers/by-external-id/%/send-card', [ExternalId], [], [],
-    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes12), OnError4);
+    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TSendLoyaltyCardByExternalIdResponse), OnError4);
 end;
 
-function TPuntjesClient.SendLoyaltyCardByExternalId(const ExternalId: variant): TDtoPuntjes12;
+function TPuntjesClient.SendLoyaltyCardByExternalId(const ExternalId: variant): TSendLoyaltyCardByExternalIdResponse;
 begin
   fClient.Request('POST', '/customers/by-external-id/%/send-card', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes12), OnError4);
+    result, TypeInfo(TSendLoyaltyCardByExternalIdResponse), OnError4);
 end;
 
 function TPuntjesClient.SendLoyaltyCard(const Customer: variant;
-  const Payload: TSendLoyaltyCardRequestData): TDtoPuntjes14;
+  const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardResponse;
 begin
   fClient.Request('POST', '/customers/%/send-card', [Customer], [], [],
-    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TDtoPuntjes14), OnError4);
+    Payload, result, TypeInfo(TSendLoyaltyCardRequestData), TypeInfo(TSendLoyaltyCardResponse), OnError4);
 end;
 
-function TPuntjesClient.SendLoyaltyCard(const Customer: variant): TDtoPuntjes14;
+function TPuntjesClient.SendLoyaltyCard(const Customer: variant): TSendLoyaltyCardResponse;
 begin
   fClient.Request('POST', '/customers/%/send-card', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes14), OnError4);
+    result, TypeInfo(TSendLoyaltyCardResponse), OnError4);
 end;
 
-function TPuntjesClient.ShowCustomer(const Customer: variant): TDtoPuntjes16;
+function TPuntjesClient.ShowCustomer(const Customer: variant): TShowCustomerResponse;
 begin
   fClient.Request('GET', '/customers/%', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes16), OnError5);
+    result, TypeInfo(TShowCustomerResponse), OnError5);
 end;
 
 function TPuntjesClient.SubmitTransaction(
-  const Payload: TCreateTransactionData): TDtoPuntjes18;
+  const Payload: TCreateTransactionData): TSubmitTransactionResponse;
 begin
   fClient.Request('POST', '/transactions', [], [], [],
-    Payload, result, TypeInfo(TCreateTransactionData), TypeInfo(TDtoPuntjes18), OnError4);
+    Payload, result, TypeInfo(TCreateTransactionData), TypeInfo(TSubmitTransactionResponse), OnError4);
 end;
 
 function TPuntjesClient.ListCustomerTransactions(const Customer: variant;
-  const DateFrom: RawUtf8; const DateTo: RawUtf8; Page: integer): TDtoPuntjes21;
+  const DateFrom: RawUtf8; const DateTo: RawUtf8;
+  Page: integer): TListCustomerTransactionsResponse;
 begin
   fClient.Request('GET', '/customers/%/transactions', [Customer], [
     'date_from', DateFrom,
     'date_to', DateTo,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes21), OnError1);
+    result, TypeInfo(TListCustomerTransactionsResponse), OnError1);
 end;
 
-function TPuntjesClient.ShowWallet(const Customer: variant): TDtoPuntjes25;
+function TPuntjesClient.ShowWallet(const Customer: variant): TShowWalletResponse;
 begin
   fClient.Request('GET', '/customers/%/wallet', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes25), OnError5);
+    result, TypeInfo(TShowWalletResponse), OnError5);
 end;
 
 function TPuntjesClient.ListLedgerEntries(const Customer: variant;
   const DateFrom: RawUtf8; const DateTo: RawUtf8; const _Type: TEnumPuntjes20;
-  Page: integer): TDtoPuntjes29;
+  Page: integer): TListLedgerEntriesResponse;
 begin
   fClient.Request('GET', '/customers/%/ledger', [Customer], [
     'date_from', DateFrom,
     'date_to', DateTo,
     'type', _TEnumPuntjes20[_Type],
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes29), OnError1);
+    result, TypeInfo(TListLedgerEntriesResponse), OnError1);
 end;
 
 function TPuntjesClient.DownloadWalletPass(const Customer: variant;
-  const Platform: TEnumPuntjes21): TDtoPuntjes33;
+  const Platform: TEnumPuntjes21): TDownloadWalletPassResponse;
 begin
   fClient.Request('GET', '/customers/%/wallet-pass', [Customer], [
     'platform', _TEnumPuntjes21[Platform]], [],
-    result, TypeInfo(TDtoPuntjes33), OnError6);
+    result, TypeInfo(TDownloadWalletPassResponse), OnError6);
 end;
 
 function TPuntjesClient.AdjustWallet(const Customer: variant;
-  const Payload: TAdjustWalletApiData): TDtoPuntjes35;
+  const Payload: TAdjustWalletApiData): TAdjustWalletResponse;
 begin
   fClient.Request('POST', '/customers/%/wallet/adjust', [Customer], [], [],
-    Payload, result, TypeInfo(TAdjustWalletApiData), TypeInfo(TDtoPuntjes35), OnError4);
+    Payload, result, TypeInfo(TAdjustWalletApiData), TypeInfo(TAdjustWalletResponse), OnError4);
 end;
 
 function TPuntjesClient.ListRewards(Affordable: boolean;
-  const Identifier: RawUtf8): TDtoPuntjes37;
+  const Identifier: RawUtf8): TListRewardsResponse;
 begin
   fClient.Request('GET', '/rewards', [], [
     'affordable', Affordable,
     'identifier', Identifier], [],
-    result, TypeInfo(TDtoPuntjes37), OnError7);
+    result, TypeInfo(TListRewardsResponse), OnError7);
 end;
 
 function TPuntjesClient.ListCustomerRedemptions(const Customer: variant;
-  const Status: TEnumPuntjes22; Page: integer): TDtoPuntjes41;
+  const Status: TEnumPuntjes22; Page: integer): TListCustomerRedemptionsResponse;
 begin
   fClient.Request('GET', '/customers/%/redemptions', [Customer], [
     'status', _TEnumPuntjes22[Status],
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes41), OnError1);
+    result, TypeInfo(TListCustomerRedemptionsResponse), OnError1);
 end;
 
 function TPuntjesClient.RedeemReward(
-  const Payload: TCreateRedemptionData): TDtoPuntjes45;
+  const Payload: TCreateRedemptionData): TRedeemRewardResponse;
 begin
   fClient.Request('POST', '/redemptions', [], [], [],
-    Payload, result, TypeInfo(TCreateRedemptionData), TypeInfo(TDtoPuntjes45), OnError4);
+    Payload, result, TypeInfo(TCreateRedemptionData), TypeInfo(TRedeemRewardResponse), OnError4);
 end;
 
-function TPuntjesClient.LookupRedemption(const Code: variant): TDtoPuntjes47;
+function TPuntjesClient.LookupRedemption(
+  const Code: variant): TLookupRedemptionResponse;
 begin
   fClient.Request('GET', '/redemptions/%', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes47), OnError5);
+    result, TypeInfo(TLookupRedemptionResponse), OnError5);
 end;
 
 function TPuntjesClient.VerifyRedemption(const Code: variant;
-  const Payload: TVerifyRedemptionData): TDtoPuntjes49;
+  const Payload: TVerifyRedemptionData): TVerifyRedemptionResponse;
 begin
   fClient.Request('POST', '/redemptions/%/verify', [Code], [], [],
-    Payload, result, TypeInfo(TVerifyRedemptionData), TypeInfo(TDtoPuntjes49), OnError4);
+    Payload, result, TypeInfo(TVerifyRedemptionData), TypeInfo(TVerifyRedemptionResponse), OnError4);
 end;
 
-function TPuntjesClient.VerifyRedemption(const Code: variant): TDtoPuntjes49;
+function TPuntjesClient.VerifyRedemption(const Code: variant): TVerifyRedemptionResponse;
 begin
   fClient.Request('POST', '/redemptions/%/verify', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes49), OnError4);
+    result, TypeInfo(TVerifyRedemptionResponse), OnError4);
 end;
 
 function TPuntjesClient.ListProducts(const Status: TEnumPuntjes3;
   const Category: RawUtf8; const Search: RawUtf8; PerPage: integer;
-  Page: integer): TDtoPuntjes53;
+  Page: integer): TListProductsResponse;
 begin
   fClient.Request('GET', '/products', [], [
     'status', _TEnumPuntjes3[Status],
@@ -1287,54 +1297,54 @@ begin
     'search', Search,
     'per_page', PerPage,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError7);
+    result, TypeInfo(TListProductsResponse), OnError7);
 end;
 
 function TPuntjesClient.CreateProduct(
-  const Payload: TCreateProductData): TDtoPuntjes53;
+  const Payload: TCreateProductData): TCreateProductResponse;
 begin
   fClient.Request('POST', '/products', [], [], [],
-    Payload, result, TypeInfo(TCreateProductData), TypeInfo(TDtoPuntjes53), OnError2);
+    Payload, result, TypeInfo(TCreateProductData), TypeInfo(TCreateProductResponse), OnError2);
 end;
 
 function TPuntjesClient.BulkUpsertProducts(
-  const Payload: TDtoPuntjes57): TDtoPuntjes53;
+  const Payload: TBulkUpsertProductsRequest): TBulkUpsertProductsResponse;
 begin
   fClient.Request('POST', '/products/batch', [], [], [],
-    Payload, result, TypeInfo(TDtoPuntjes57), TypeInfo(TDtoPuntjes53), OnError8);
+    Payload, result, TypeInfo(TBulkUpsertProductsRequest), TypeInfo(TBulkUpsertProductsResponse), OnError8);
 end;
 
 function TPuntjesClient.CreateRewardFromProduct(const ExternalId: variant;
-  const Payload: TCreateRewardFromProductData): TDtoPuntjes53;
+  const Payload: TCreateRewardFromProductData): TCreateRewardFromProductResponse;
 begin
   fClient.Request('POST', '/products/%/reward', [ExternalId], [], [],
-    Payload, result, TypeInfo(TCreateRewardFromProductData), TypeInfo(TDtoPuntjes53), OnError4);
+    Payload, result, TypeInfo(TCreateRewardFromProductData), TypeInfo(TCreateRewardFromProductResponse), OnError4);
 end;
 
-function TPuntjesClient.ShowProduct(const ExternalId: variant): TDtoPuntjes53;
+function TPuntjesClient.ShowProduct(const ExternalId: variant): TShowProductResponse;
 begin
   fClient.Request('GET', '/products/%', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
+    result, TypeInfo(TShowProductResponse), OnError5);
 end;
 
 function TPuntjesClient.UpsertProduct(const ExternalId: variant;
-  const Payload: TUpsertProductData): TDtoPuntjes53;
+  const Payload: TUpsertProductData): TUpsertProductResponse;
 begin
   fClient.Request('PUT', '/products/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TDtoPuntjes53), OnError8);
+    Payload, result, TypeInfo(TUpsertProductData), TypeInfo(TUpsertProductResponse), OnError8);
 end;
 
 function TPuntjesClient.UpdateProduct(const ExternalId: variant;
-  const Payload: TUpdateProductData): TDtoPuntjes53;
+  const Payload: TUpdateProductData): TUpdateProductResponse;
 begin
   fClient.Request('PATCH', '/products/%', [ExternalId], [], [],
-    Payload, result, TypeInfo(TUpdateProductData), TypeInfo(TDtoPuntjes53), OnError4);
+    Payload, result, TypeInfo(TUpdateProductData), TypeInfo(TUpdateProductResponse), OnError4);
 end;
 
-function TPuntjesClient.UpdateProduct(const ExternalId: variant): TDtoPuntjes53;
+function TPuntjesClient.UpdateProduct(const ExternalId: variant): TUpdateProductResponse;
 begin
   fClient.Request('PATCH', '/products/%', [ExternalId], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError4);
+    result, TypeInfo(TUpdateProductResponse), OnError4);
 end;
 
 procedure TPuntjesClient.DeleteProduct(const ExternalId: variant);
@@ -1343,65 +1353,66 @@ begin
 end;
 
 function TPuntjesClient.ListCampaigns(const Branch: RawUtf8;
-  Page: integer): TDtoPuntjes53;
+  Page: integer): TListCampaignsResponse;
 begin
   fClient.Request('GET', '/campaigns', [], [
     'branch', Branch,
     'page', Page], [],
-    result, TypeInfo(TDtoPuntjes53), OnError7);
+    result, TypeInfo(TListCampaignsResponse), OnError7);
 end;
 
-function TPuntjesClient.ListCustomerVouchers(const Customer: variant): TDtoPuntjes53;
+function TPuntjesClient.ListCustomerVouchers(
+  const Customer: variant): TListCustomerVouchersResponse;
 begin
   fClient.Request('GET', '/customers/%/vouchers', [Customer], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
+    result, TypeInfo(TListCustomerVouchersResponse), OnError5);
 end;
 
-function TPuntjesClient.LookupVoucher(const Code: variant): TDtoPuntjes53;
+function TPuntjesClient.LookupVoucher(const Code: variant): TLookupVoucherResponse;
 begin
   fClient.Request('GET', '/vouchers/%', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError5);
+    result, TypeInfo(TLookupVoucherResponse), OnError5);
 end;
 
 function TPuntjesClient.VerifyVoucher(const Code: variant;
-  const Payload: TVerifyCampaignVoucherData): TDtoPuntjes53;
+  const Payload: TVerifyCampaignVoucherData): TVerifyVoucherResponse;
 begin
   fClient.Request('POST', '/vouchers/%/verify', [Code], [], [],
-    Payload, result, TypeInfo(TVerifyCampaignVoucherData), TypeInfo(TDtoPuntjes53), OnError4);
+    Payload, result, TypeInfo(TVerifyCampaignVoucherData), TypeInfo(TVerifyVoucherResponse), OnError4);
 end;
 
-function TPuntjesClient.VerifyVoucher(const Code: variant): TDtoPuntjes53;
+function TPuntjesClient.VerifyVoucher(const Code: variant): TVerifyVoucherResponse;
 begin
   fClient.Request('POST', '/vouchers/%/verify', [Code], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError4);
+    result, TypeInfo(TVerifyVoucherResponse), OnError4);
 end;
 
 function TPuntjesClient.ShowStatistics(const Period: TEnumPuntjes23;
-  TopProductsLimit: integer; const Branch: RawUtf8): TDtoPuntjes53;
+  TopProductsLimit: integer; const Branch: RawUtf8): TShowStatisticsResponse;
 begin
   fClient.Request('GET', '/statistics', [], [
     'period', _TEnumPuntjes23[Period],
     'top_products_limit', TopProductsLimit,
     'branch', Branch], [],
-    result, TypeInfo(TDtoPuntjes53), OnError10);
+    result, TypeInfo(TShowStatisticsResponse), OnError10);
 end;
 
-function TPuntjesClient.ShowMe(): TDtoPuntjes53;
+function TPuntjesClient.ShowMe(): TShowMeResponse;
 begin
   fClient.Request('GET', '/me', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError11);
+    result, TypeInfo(TShowMeResponse), OnError11);
 end;
 
-function TPuntjesClient.ListBranches(): TDtoPuntjes53;
+function TPuntjesClient.ListBranches(): TListBranchesResponse;
 begin
   fClient.Request('GET', '/branches', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError11);
+    result, TypeInfo(TListBranchesResponse), OnError11);
 end;
 
-function TPuntjesClient.CheckHealth(): TDtoPuntjes53;
+function TPuntjesClient.CheckHealth(): TCheckHealthResponse;
 begin
   fClient.Request('GET', '/health', [], [], [],
-    result, TypeInfo(TDtoPuntjes53), OnError12);
+    result, TypeInfo(TCheckHealthResponse), OnError12);
 end;
 
 

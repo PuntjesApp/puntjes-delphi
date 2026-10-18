@@ -44,7 +44,7 @@ jobs:
           test -z "$(git status --porcelain -- src)"
       - name: Compile the example with fpc -Mdelphi
         run: scripts/compile.sh
-      - name: Check the raw requests of an optional body
+      - name: Run the Pascal tests
         run: scripts/test.sh
 
   # A removed or changed public declaration since the last release fails a PR whose title is not feat!:.

@@ -571,7 +571,8 @@ type
   PEarnResultData = ^TEarnResultData;
   TEarnResultDataDynArray = array of TEarnResultData;
 
-  TDtoPuntjes1 = packed record
+  // from #/components/schemas/ErrorResponseError
+  TErrorResponseError = packed record
     // The machine-readable code to branch on.
     Code: RawUtf8;
     // What went wrong, in words.
@@ -584,11 +585,11 @@ type
     // and its messages here.
     Details: variant;
   end;
-  PDtoPuntjes1 = ^TDtoPuntjes1;
+  PErrorResponseError = ^TErrorResponseError;
 
   // from #/components/schemas/ErrorResponse
   TErrorResponse = packed record
-    Error: TDtoPuntjes1;
+    Error: TErrorResponseError;
   end;
   PErrorResponse = ^TErrorResponse;
 
@@ -1117,178 +1118,261 @@ type
   end;
   PWinBackCampaignConfigData = ^TWinBackCampaignConfigData;
 
-  TDtoPuntjes2 = packed record
+  // from #/components/schemas/LookupCustomerResponse
+  TLookupCustomerResponse = packed record
     Data: TCustomerLookupData;
   end;
-  PDtoPuntjes2 = ^TDtoPuntjes2;
+  PLookupCustomerResponse = ^TLookupCustomerResponse;
 
-  TDtoPuntjes4 = packed record
+  // from #/components/schemas/RegisterCustomerResponse
+  TRegisterCustomerResponse = packed record
     Data: TCustomerData;
   end;
-  PDtoPuntjes4 = ^TDtoPuntjes4;
+  PRegisterCustomerResponse = ^TRegisterCustomerResponse;
 
-  TDtoPuntjes6 = packed record
+  // from #/components/schemas/ReplaceCustomerByExternalIdResponse
+  TReplaceCustomerByExternalIdResponse = packed record
     Data: TCustomerData;
   end;
-  PDtoPuntjes6 = ^TDtoPuntjes6;
+  PReplaceCustomerByExternalIdResponse = ^TReplaceCustomerByExternalIdResponse;
 
-  TDtoPuntjes8 = packed record
+  // from #/components/schemas/UpdateCustomerByExternalIdResponse
+  TUpdateCustomerByExternalIdResponse = packed record
     Data: TCustomerData;
   end;
-  PDtoPuntjes8 = ^TDtoPuntjes8;
+  PUpdateCustomerByExternalIdResponse = ^TUpdateCustomerByExternalIdResponse;
 
-  TDtoPuntjes10 = packed record
+  // from #/components/schemas/LinkCustomerExternalIdResponse
+  TLinkCustomerExternalIdResponse = packed record
     Data: TCustomerData;
   end;
-  PDtoPuntjes10 = ^TDtoPuntjes10;
+  PLinkCustomerExternalIdResponse = ^TLinkCustomerExternalIdResponse;
 
-  TDtoPuntjes12 = packed record
+  // from #/components/schemas/SendLoyaltyCardByExternalIdResponse
+  TSendLoyaltyCardByExternalIdResponse = packed record
     Data: TSendLoyaltyCardResultData;
   end;
-  PDtoPuntjes12 = ^TDtoPuntjes12;
+  PSendLoyaltyCardByExternalIdResponse = ^TSendLoyaltyCardByExternalIdResponse;
 
-  TDtoPuntjes14 = packed record
+  // from #/components/schemas/SendLoyaltyCardResponse
+  TSendLoyaltyCardResponse = packed record
     Data: TSendLoyaltyCardResultData;
   end;
-  PDtoPuntjes14 = ^TDtoPuntjes14;
+  PSendLoyaltyCardResponse = ^TSendLoyaltyCardResponse;
 
-  TDtoPuntjes16 = packed record
+  // from #/components/schemas/ShowCustomerResponse
+  TShowCustomerResponse = packed record
     Data: TCustomerDetailData;
   end;
-  PDtoPuntjes16 = ^TDtoPuntjes16;
+  PShowCustomerResponse = ^TShowCustomerResponse;
 
-  TDtoPuntjes18 = packed record
+  // from #/components/schemas/SubmitTransactionResponse
+  TSubmitTransactionResponse = packed record
     Data: TTransactionData;
   end;
-  PDtoPuntjes18 = ^TDtoPuntjes18;
+  PSubmitTransactionResponse = ^TSubmitTransactionResponse;
 
-  TDtoPuntjes20 = packed record
+  // from #/components/schemas/ListCustomerTransactionsResponseData
+  TListCustomerTransactionsResponseData = packed record
     Data: TTransactionDataDynArray;
     Links: TPaginationLinks;
     Meta: TPaginationMeta;
   end;
-  PDtoPuntjes20 = ^TDtoPuntjes20;
+  PListCustomerTransactionsResponseData = ^TListCustomerTransactionsResponseData;
 
-  TDtoPuntjes23 = packed record
-    Data: TTransactionDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  // from #/components/schemas/ListCustomerTransactionsResponse
+  TListCustomerTransactionsResponse = packed record
+    Data: TListCustomerTransactionsResponseData;
   end;
-  PDtoPuntjes23 = ^TDtoPuntjes23;
+  PListCustomerTransactionsResponse = ^TListCustomerTransactionsResponse;
 
-  TDtoPuntjes21 = packed record
-    Data: TDtoPuntjes23;
-  end;
-  PDtoPuntjes21 = ^TDtoPuntjes21;
-
-  TDtoPuntjes25 = packed record
+  // from #/components/schemas/ShowWalletResponse
+  TShowWalletResponse = packed record
     Data: TWalletData;
   end;
-  PDtoPuntjes25 = ^TDtoPuntjes25;
+  PShowWalletResponse = ^TShowWalletResponse;
 
-  TDtoPuntjes28 = packed record
+  // from #/components/schemas/ListLedgerEntriesResponseData
+  TListLedgerEntriesResponseData = packed record
     Data: TLedgerEntryDataDynArray;
     Links: TPaginationLinks;
     Meta: TPaginationMeta;
   end;
-  PDtoPuntjes28 = ^TDtoPuntjes28;
+  PListLedgerEntriesResponseData = ^TListLedgerEntriesResponseData;
 
-  TDtoPuntjes31 = packed record
-    Data: TLedgerEntryDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  // from #/components/schemas/ListLedgerEntriesResponse
+  TListLedgerEntriesResponse = packed record
+    Data: TListLedgerEntriesResponseData;
   end;
-  PDtoPuntjes31 = ^TDtoPuntjes31;
+  PListLedgerEntriesResponse = ^TListLedgerEntriesResponse;
 
-  TDtoPuntjes29 = packed record
-    Data: TDtoPuntjes31;
-  end;
-  PDtoPuntjes29 = ^TDtoPuntjes29;
-
-  TDtoPuntjes33 = packed record
+  // from #/components/schemas/DownloadWalletPassResponse
+  TDownloadWalletPassResponse = packed record
     Data: TGoogleWalletPassData;
   end;
-  PDtoPuntjes33 = ^TDtoPuntjes33;
+  PDownloadWalletPassResponse = ^TDownloadWalletPassResponse;
 
-  TDtoPuntjes35 = packed record
+  // from #/components/schemas/AdjustWalletResponse
+  TAdjustWalletResponse = packed record
     Data: TLedgerEntryData;
   end;
-  PDtoPuntjes35 = ^TDtoPuntjes35;
+  PAdjustWalletResponse = ^TAdjustWalletResponse;
 
-  TDtoPuntjes37 = packed record
+  // from #/components/schemas/ListRewardsResponse
+  TListRewardsResponse = packed record
     Data: TRewardCatalogItemDataDynArray;
   end;
-  PDtoPuntjes37 = ^TDtoPuntjes37;
+  PListRewardsResponse = ^TListRewardsResponse;
 
-  TDtoPuntjes40 = packed record
+  // from #/components/schemas/ListCustomerRedemptionsResponseData
+  TListCustomerRedemptionsResponseData = packed record
     Data: TRedemptionLookupDataDynArray;
     Links: TPaginationLinks;
     Meta: TPaginationMeta;
   end;
-  PDtoPuntjes40 = ^TDtoPuntjes40;
+  PListCustomerRedemptionsResponseData = ^TListCustomerRedemptionsResponseData;
 
-  TDtoPuntjes43 = packed record
-    Data: TRedemptionLookupDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  // from #/components/schemas/ListCustomerRedemptionsResponse
+  TListCustomerRedemptionsResponse = packed record
+    Data: TListCustomerRedemptionsResponseData;
   end;
-  PDtoPuntjes43 = ^TDtoPuntjes43;
+  PListCustomerRedemptionsResponse = ^TListCustomerRedemptionsResponse;
 
-  TDtoPuntjes41 = packed record
-    Data: TDtoPuntjes43;
-  end;
-  PDtoPuntjes41 = ^TDtoPuntjes41;
-
-  TDtoPuntjes45 = packed record
+  // from #/components/schemas/RedeemRewardResponse
+  TRedeemRewardResponse = packed record
     Data: TRedemptionCreatedData;
   end;
-  PDtoPuntjes45 = ^TDtoPuntjes45;
+  PRedeemRewardResponse = ^TRedeemRewardResponse;
 
-  TDtoPuntjes47 = packed record
+  // from #/components/schemas/LookupRedemptionResponse
+  TLookupRedemptionResponse = packed record
     Data: TRedemptionLookupData;
   end;
-  PDtoPuntjes47 = ^TDtoPuntjes47;
+  PLookupRedemptionResponse = ^TLookupRedemptionResponse;
 
-  TDtoPuntjes49 = packed record
+  // from #/components/schemas/VerifyRedemptionResponse
+  TVerifyRedemptionResponse = packed record
     Data: TRedemptionVerificationData;
   end;
-  PDtoPuntjes49 = ^TDtoPuntjes49;
+  PVerifyRedemptionResponse = ^TVerifyRedemptionResponse;
 
-  TDtoPuntjes52 = packed record
+  // from #/components/schemas/ListProductsResponseData
+  TListProductsResponseData = packed record
     Data: TProductDataDynArray;
     Links: TPaginationLinks;
     Meta: TPaginationMeta;
   end;
-  PDtoPuntjes52 = ^TDtoPuntjes52;
+  PListProductsResponseData = ^TListProductsResponseData;
 
-  TDtoPuntjes55 = packed record
-    Data: TProductDataDynArray;
-    Links: TPaginationLinks;
-    Meta: TPaginationMeta;
+  // from #/components/schemas/ListProductsResponse
+  TListProductsResponse = packed record
+    Data: TListProductsResponseData;
   end;
-  PDtoPuntjes55 = ^TDtoPuntjes55;
+  PListProductsResponse = ^TListProductsResponse;
 
-  TDtoPuntjes53 = packed record
-    Data: TDtoPuntjes55;
+  // from #/components/schemas/CreateProductResponse
+  TCreateProductResponse = packed record
+    Data: TProductData;
   end;
-  PDtoPuntjes53 = ^TDtoPuntjes53;
+  PCreateProductResponse = ^TCreateProductResponse;
 
-  TDtoPuntjes57 = packed record
+  // from #/components/schemas/BulkUpsertProductsResponse
+  TBulkUpsertProductsResponse = packed record
+    Data: TBulkUpsertResponseData;
+  end;
+  PBulkUpsertProductsResponse = ^TBulkUpsertProductsResponse;
+
+  // from #/components/schemas/BulkUpsertProductsRequest
+  TBulkUpsertProductsRequest = packed record
     Products: TCreateProductDataDynArray;
   end;
-  PDtoPuntjes57 = ^TDtoPuntjes57;
+  PBulkUpsertProductsRequest = ^TBulkUpsertProductsRequest;
 
-  TDtoPuntjes65 = packed record
+  // from #/components/schemas/CreateRewardFromProductResponse
+  TCreateRewardFromProductResponse = packed record
+    Data: TRewardData;
+  end;
+  PCreateRewardFromProductResponse = ^TCreateRewardFromProductResponse;
+
+  // from #/components/schemas/ShowProductResponse
+  TShowProductResponse = packed record
+    Data: TProductData;
+  end;
+  PShowProductResponse = ^TShowProductResponse;
+
+  // from #/components/schemas/UpsertProductResponse
+  TUpsertProductResponse = packed record
+    Data: TProductData;
+  end;
+  PUpsertProductResponse = ^TUpsertProductResponse;
+
+  // from #/components/schemas/UpdateProductResponse
+  TUpdateProductResponse = packed record
+    Data: TProductData;
+  end;
+  PUpdateProductResponse = ^TUpdateProductResponse;
+
+  // from #/components/schemas/ListCampaignsResponseData
+  TListCampaignsResponseData = packed record
     Data: TCampaignListDataDynArray;
     Links: TPaginationLinks;
     Meta: TPaginationMeta;
   end;
-  PDtoPuntjes65 = ^TDtoPuntjes65;
+  PListCampaignsResponseData = ^TListCampaignsResponseData;
 
-  TDtoPuntjes73 = packed record
+  // from #/components/schemas/ListCampaignsResponse
+  TListCampaignsResponse = packed record
+    Data: TListCampaignsResponseData;
+  end;
+  PListCampaignsResponse = ^TListCampaignsResponse;
+
+  // from #/components/schemas/ListCustomerVouchersResponse
+  TListCustomerVouchersResponse = packed record
+    Data: TCustomerVoucherDataDynArray;
+  end;
+  PListCustomerVouchersResponse = ^TListCustomerVouchersResponse;
+
+  // from #/components/schemas/LookupVoucherResponse
+  TLookupVoucherResponse = packed record
+    Data: TCampaignVoucherLookupData;
+  end;
+  PLookupVoucherResponse = ^TLookupVoucherResponse;
+
+  // from #/components/schemas/VerifyVoucherResponse
+  TVerifyVoucherResponse = packed record
+    Data: TCampaignVoucherVerificationData;
+  end;
+  PVerifyVoucherResponse = ^TVerifyVoucherResponse;
+
+  // from #/components/schemas/ShowStatisticsResponse
+  TShowStatisticsResponse = packed record
+    Data: TStatisticsApiData;
+  end;
+  PShowStatisticsResponse = ^TShowStatisticsResponse;
+
+  // from #/components/schemas/ShowMeResponse
+  TShowMeResponse = packed record
+    Data: TVendorBrandingData;
+  end;
+  PShowMeResponse = ^TShowMeResponse;
+
+  // from #/components/schemas/ListBranchesResponse
+  TListBranchesResponse = packed record
+    Data: TBranchReferenceDataDynArray;
+  end;
+  PListBranchesResponse = ^TListBranchesResponse;
+
+  // from #/components/schemas/CheckHealthResponseData
+  TCheckHealthResponseData = packed record
     Status: RawUtf8;
   end;
-  PDtoPuntjes73 = ^TDtoPuntjes73;
+  PCheckHealthResponseData = ^TCheckHealthResponseData;
+
+  // from #/components/schemas/CheckHealthResponse
+  TCheckHealthResponse = packed record
+    Data: TCheckHealthResponseData;
+  end;
+  PCheckHealthResponse = ^TCheckHealthResponse;
 
 
 
@@ -1438,9 +1522,9 @@ const
   _TEarnResultData = 'rule_id:integer rule_name:RawUtf8 rule_type:RawUtf8 ' +
     'points_earned:integer family:variant moment:variant campaign_version:variant ' +
     'suppressed_by:variant reason:variant line_breakdown:variant';
-  _TDtoPuntjes1 = 'code:RawUtf8 message:RawUtf8 status:integer request_id:RawUtf8 ' +
+  _TErrorResponseError = 'code:RawUtf8 message:RawUtf8 status:integer request_id:RawUtf8 ' +
     'details:variant';
-  _TErrorResponse = 'error:TDtoPuntjes1';
+  _TErrorResponse = 'error:TErrorResponseError';
   _TFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_id:variant ' +
     'type:TEnumPuntjes9';
   _TGiftProductData = 'id:variant name:RawUtf8 quantity:integer';
@@ -1527,44 +1611,52 @@ const
     'created_at:variant updated_at:variant';
   _TWinBackCampaignConfigData = 'months:integer gift:variant branch_ids:TIntegerDynArray ' +
     'type:TEnumPuntjes19';
-  _TDtoPuntjes2 = 'data:TCustomerLookupData';
-  _TDtoPuntjes4 = 'data:TCustomerData';
-  _TDtoPuntjes6 = 'data:TCustomerData';
-  _TDtoPuntjes8 = 'data:TCustomerData';
-  _TDtoPuntjes10 = 'data:TCustomerData';
-  _TDtoPuntjes12 = 'data:TSendLoyaltyCardResultData';
-  _TDtoPuntjes14 = 'data:TSendLoyaltyCardResultData';
-  _TDtoPuntjes16 = 'data:TCustomerDetailData';
-  _TDtoPuntjes18 = 'data:TTransactionData';
-  _TDtoPuntjes20 = 'data:array of TTransactionData links:TPaginationLinks ' +
+  _TLookupCustomerResponse = 'data:TCustomerLookupData';
+  _TRegisterCustomerResponse = 'data:TCustomerData';
+  _TReplaceCustomerByExternalIdResponse = 'data:TCustomerData';
+  _TUpdateCustomerByExternalIdResponse = 'data:TCustomerData';
+  _TLinkCustomerExternalIdResponse = 'data:TCustomerData';
+  _TSendLoyaltyCardByExternalIdResponse = 'data:TSendLoyaltyCardResultData';
+  _TSendLoyaltyCardResponse = 'data:TSendLoyaltyCardResultData';
+  _TShowCustomerResponse = 'data:TCustomerDetailData';
+  _TSubmitTransactionResponse = 'data:TTransactionData';
+  _TListCustomerTransactionsResponseData = 'data:array of TTransactionData ' +
+    'links:TPaginationLinks meta:TPaginationMeta';
+  _TListCustomerTransactionsResponse = 'data:TListCustomerTransactionsResponseData';
+  _TShowWalletResponse = 'data:TWalletData';
+  _TListLedgerEntriesResponseData = 'data:array of TLedgerEntryData links:TPaginationLinks ' +
     'meta:TPaginationMeta';
-  _TDtoPuntjes23 = 'data:array of TTransactionData links:TPaginationLinks ' +
+  _TListLedgerEntriesResponse = 'data:TListLedgerEntriesResponseData';
+  _TDownloadWalletPassResponse = 'data:TGoogleWalletPassData';
+  _TAdjustWalletResponse = 'data:TLedgerEntryData';
+  _TListRewardsResponse = 'data:array of TRewardCatalogItemData';
+  _TListCustomerRedemptionsResponseData = 'data:array of TRedemptionLookupData ' +
+    'links:TPaginationLinks meta:TPaginationMeta';
+  _TListCustomerRedemptionsResponse = 'data:TListCustomerRedemptionsResponseData';
+  _TRedeemRewardResponse = 'data:TRedemptionCreatedData';
+  _TLookupRedemptionResponse = 'data:TRedemptionLookupData';
+  _TVerifyRedemptionResponse = 'data:TRedemptionVerificationData';
+  _TListProductsResponseData = 'data:array of TProductData links:TPaginationLinks ' +
     'meta:TPaginationMeta';
-  _TDtoPuntjes21 = 'data:TDtoPuntjes23';
-  _TDtoPuntjes25 = 'data:TWalletData';
-  _TDtoPuntjes28 = 'data:array of TLedgerEntryData links:TPaginationLinks ' +
+  _TListProductsResponse = 'data:TListProductsResponseData';
+  _TCreateProductResponse = 'data:TProductData';
+  _TBulkUpsertProductsResponse = 'data:TBulkUpsertResponseData';
+  _TBulkUpsertProductsRequest = 'products:array of TCreateProductData';
+  _TCreateRewardFromProductResponse = 'data:TRewardData';
+  _TShowProductResponse = 'data:TProductData';
+  _TUpsertProductResponse = 'data:TProductData';
+  _TUpdateProductResponse = 'data:TProductData';
+  _TListCampaignsResponseData = 'data:array of TCampaignListData links:TPaginationLinks ' +
     'meta:TPaginationMeta';
-  _TDtoPuntjes31 = 'data:array of TLedgerEntryData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes29 = 'data:TDtoPuntjes31';
-  _TDtoPuntjes33 = 'data:TGoogleWalletPassData';
-  _TDtoPuntjes35 = 'data:TLedgerEntryData';
-  _TDtoPuntjes37 = 'data:array of TRewardCatalogItemData';
-  _TDtoPuntjes40 = 'data:array of TRedemptionLookupData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes43 = 'data:array of TRedemptionLookupData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes41 = 'data:TDtoPuntjes43';
-  _TDtoPuntjes45 = 'data:TRedemptionCreatedData';
-  _TDtoPuntjes47 = 'data:TRedemptionLookupData';
-  _TDtoPuntjes49 = 'data:TRedemptionVerificationData';
-  _TDtoPuntjes52 = 'data:array of TProductData links:TPaginationLinks meta:TPaginationMeta';
-  _TDtoPuntjes55 = 'data:array of TProductData links:TPaginationLinks meta:TPaginationMeta';
-  _TDtoPuntjes53 = 'data:TDtoPuntjes55';
-  _TDtoPuntjes57 = 'products:array of TCreateProductData';
-  _TDtoPuntjes65 = 'data:array of TCampaignListData links:TPaginationLinks ' +
-    'meta:TPaginationMeta';
-  _TDtoPuntjes73 = 'status:RawUtf8';
+  _TListCampaignsResponse = 'data:TListCampaignsResponseData';
+  _TListCustomerVouchersResponse = 'data:array of TCustomerVoucherData';
+  _TLookupVoucherResponse = 'data:TCampaignVoucherLookupData';
+  _TVerifyVoucherResponse = 'data:TCampaignVoucherVerificationData';
+  _TShowStatisticsResponse = 'data:TStatisticsApiData';
+  _TShowMeResponse = 'data:TVendorBrandingData';
+  _TListBranchesResponse = 'data:array of TBranchReferenceData';
+  _TCheckHealthResponseData = 'status:RawUtf8';
+  _TCheckHealthResponse = 'data:TCheckHealthResponseData';
 
 
 procedure RegisterRtti;
@@ -1629,7 +1721,7 @@ begin
     TypeInfo(TDiscountGiftData), _TDiscountGiftData,
     TypeInfo(TDiscountRedemptionData), _TDiscountRedemptionData,
     TypeInfo(TEarnResultData), _TEarnResultData,
-    TypeInfo(TDtoPuntjes1), _TDtoPuntjes1,
+    TypeInfo(TErrorResponseError), _TErrorResponseError,
     TypeInfo(TErrorResponse), _TErrorResponse,
     TypeInfo(TFixedDiscountData), _TFixedDiscountData,
     TypeInfo(TGiftProductData), _TGiftProductData,
@@ -1672,37 +1764,47 @@ begin
     TypeInfo(TVoucherPercentageDiscountData), _TVoucherPercentageDiscountData,
     TypeInfo(TWalletData), _TWalletData,
     TypeInfo(TWinBackCampaignConfigData), _TWinBackCampaignConfigData,
-    TypeInfo(TDtoPuntjes2), _TDtoPuntjes2,
-    TypeInfo(TDtoPuntjes4), _TDtoPuntjes4,
-    TypeInfo(TDtoPuntjes6), _TDtoPuntjes6,
-    TypeInfo(TDtoPuntjes8), _TDtoPuntjes8,
-    TypeInfo(TDtoPuntjes10), _TDtoPuntjes10,
-    TypeInfo(TDtoPuntjes12), _TDtoPuntjes12,
-    TypeInfo(TDtoPuntjes14), _TDtoPuntjes14,
-    TypeInfo(TDtoPuntjes16), _TDtoPuntjes16,
-    TypeInfo(TDtoPuntjes18), _TDtoPuntjes18,
-    TypeInfo(TDtoPuntjes20), _TDtoPuntjes20,
-    TypeInfo(TDtoPuntjes23), _TDtoPuntjes23,
-    TypeInfo(TDtoPuntjes21), _TDtoPuntjes21,
-    TypeInfo(TDtoPuntjes25), _TDtoPuntjes25,
-    TypeInfo(TDtoPuntjes28), _TDtoPuntjes28,
-    TypeInfo(TDtoPuntjes31), _TDtoPuntjes31,
-    TypeInfo(TDtoPuntjes29), _TDtoPuntjes29,
-    TypeInfo(TDtoPuntjes33), _TDtoPuntjes33,
-    TypeInfo(TDtoPuntjes35), _TDtoPuntjes35,
-    TypeInfo(TDtoPuntjes37), _TDtoPuntjes37,
-    TypeInfo(TDtoPuntjes40), _TDtoPuntjes40,
-    TypeInfo(TDtoPuntjes43), _TDtoPuntjes43,
-    TypeInfo(TDtoPuntjes41), _TDtoPuntjes41,
-    TypeInfo(TDtoPuntjes45), _TDtoPuntjes45,
-    TypeInfo(TDtoPuntjes47), _TDtoPuntjes47,
-    TypeInfo(TDtoPuntjes49), _TDtoPuntjes49,
-    TypeInfo(TDtoPuntjes52), _TDtoPuntjes52,
-    TypeInfo(TDtoPuntjes55), _TDtoPuntjes55,
-    TypeInfo(TDtoPuntjes53), _TDtoPuntjes53,
-    TypeInfo(TDtoPuntjes57), _TDtoPuntjes57,
-    TypeInfo(TDtoPuntjes65), _TDtoPuntjes65,
-    TypeInfo(TDtoPuntjes73), _TDtoPuntjes73]);
+    TypeInfo(TLookupCustomerResponse), _TLookupCustomerResponse,
+    TypeInfo(TRegisterCustomerResponse), _TRegisterCustomerResponse,
+    TypeInfo(TReplaceCustomerByExternalIdResponse), _TReplaceCustomerByExternalIdResponse,
+    TypeInfo(TUpdateCustomerByExternalIdResponse), _TUpdateCustomerByExternalIdResponse,
+    TypeInfo(TLinkCustomerExternalIdResponse), _TLinkCustomerExternalIdResponse,
+    TypeInfo(TSendLoyaltyCardByExternalIdResponse), _TSendLoyaltyCardByExternalIdResponse,
+    TypeInfo(TSendLoyaltyCardResponse), _TSendLoyaltyCardResponse,
+    TypeInfo(TShowCustomerResponse), _TShowCustomerResponse,
+    TypeInfo(TSubmitTransactionResponse), _TSubmitTransactionResponse,
+    TypeInfo(TListCustomerTransactionsResponseData), _TListCustomerTransactionsResponseData,
+    TypeInfo(TListCustomerTransactionsResponse), _TListCustomerTransactionsResponse,
+    TypeInfo(TShowWalletResponse), _TShowWalletResponse,
+    TypeInfo(TListLedgerEntriesResponseData), _TListLedgerEntriesResponseData,
+    TypeInfo(TListLedgerEntriesResponse), _TListLedgerEntriesResponse,
+    TypeInfo(TDownloadWalletPassResponse), _TDownloadWalletPassResponse,
+    TypeInfo(TAdjustWalletResponse), _TAdjustWalletResponse,
+    TypeInfo(TListRewardsResponse), _TListRewardsResponse,
+    TypeInfo(TListCustomerRedemptionsResponseData), _TListCustomerRedemptionsResponseData,
+    TypeInfo(TListCustomerRedemptionsResponse), _TListCustomerRedemptionsResponse,
+    TypeInfo(TRedeemRewardResponse), _TRedeemRewardResponse,
+    TypeInfo(TLookupRedemptionResponse), _TLookupRedemptionResponse,
+    TypeInfo(TVerifyRedemptionResponse), _TVerifyRedemptionResponse,
+    TypeInfo(TListProductsResponseData), _TListProductsResponseData,
+    TypeInfo(TListProductsResponse), _TListProductsResponse,
+    TypeInfo(TCreateProductResponse), _TCreateProductResponse,
+    TypeInfo(TBulkUpsertProductsResponse), _TBulkUpsertProductsResponse,
+    TypeInfo(TBulkUpsertProductsRequest), _TBulkUpsertProductsRequest,
+    TypeInfo(TCreateRewardFromProductResponse), _TCreateRewardFromProductResponse,
+    TypeInfo(TShowProductResponse), _TShowProductResponse,
+    TypeInfo(TUpsertProductResponse), _TUpsertProductResponse,
+    TypeInfo(TUpdateProductResponse), _TUpdateProductResponse,
+    TypeInfo(TListCampaignsResponseData), _TListCampaignsResponseData,
+    TypeInfo(TListCampaignsResponse), _TListCampaignsResponse,
+    TypeInfo(TListCustomerVouchersResponse), _TListCustomerVouchersResponse,
+    TypeInfo(TLookupVoucherResponse), _TLookupVoucherResponse,
+    TypeInfo(TVerifyVoucherResponse), _TVerifyVoucherResponse,
+    TypeInfo(TShowStatisticsResponse), _TShowStatisticsResponse,
+    TypeInfo(TShowMeResponse), _TShowMeResponse,
+    TypeInfo(TListBranchesResponse), _TListBranchesResponse,
+    TypeInfo(TCheckHealthResponseData), _TCheckHealthResponseData,
+    TypeInfo(TCheckHealthResponse), _TCheckHealthResponse]);
 end;
 
 initialization
