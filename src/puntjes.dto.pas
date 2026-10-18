@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.1.0
+// - version 2.2.0
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
@@ -117,12 +117,14 @@ type
   end;
   PAnniversaryCampaignConfigData = ^TAnniversaryCampaignConfigData;
 
+  // from #/components/schemas/BranchReferenceData
   TBranchReferenceData = packed record
     ExternalId: RawUtf8;
     Name: RawUtf8;
     _Type: RawUtf8;
   end;
   PBranchReferenceData = ^TBranchReferenceData;
+  TBranchReferenceDataDynArray = array of TBranchReferenceData;
 
   // from #/components/schemas/ProductData
   TProductData = packed record
@@ -765,6 +767,8 @@ type
   TRedemptionRewardData = packed record
     Name: RawUtf8;
     _Type: RawUtf8;
+    // The reward's id, the one GET /rewards lists.
+    Id: integer;
   end;
   PRedemptionRewardData = ^TRedemptionRewardData;
 
@@ -780,6 +784,8 @@ type
     // What the counter needs, shaped by the reward's type. Its `type` says which
     // shape this is.
     TypeSpecificData: variant;
+    // The branches the reward has now; null means every branch.
+    Branches: variant;
   end;
   PRedemptionCreatedData = ^TRedemptionCreatedData;
 
@@ -803,6 +809,8 @@ type
     // What the counter needs, shaped by the reward's type. Its `type` says which
     // shape this is.
     TypeSpecificData: variant;
+    // The branches the reward has now; null means every branch.
+    Branches: variant;
   end;
   PRedemptionLookupData = ^TRedemptionLookupData;
   TRedemptionLookupDataDynArray = array of TRedemptionLookupData;
@@ -818,6 +826,8 @@ type
     // What the counter needs, shaped by the reward's type. Its `type` says which
     // shape this is.
     TypeSpecificData: variant;
+    // The branches the reward has now; null means every branch.
+    Branches: variant;
   end;
   PRedemptionVerificationData = ^TRedemptionVerificationData;
 
@@ -1026,6 +1036,7 @@ type
     LogoUrl: variant;
     BrandColorPrimary: variant;
     BrandColorAccent: variant;
+    DefaultBranch: variant;
   end;
   PVendorBrandingData = ^TVendorBrandingData;
 
@@ -1035,6 +1046,13 @@ type
     IdempotencyKey: variant;
   end;
   PVerifyCampaignVoucherData = ^TVerifyCampaignVoucherData;
+
+  // from #/components/schemas/VerifyRedemptionData
+  TVerifyRedemptionData = packed record
+    Branch: variant;
+    IdempotencyKey: variant;
+  end;
+  PVerifyRedemptionData = ^TVerifyRedemptionData;
 
   TVoucherFixedDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `fixed` for this
@@ -1267,10 +1285,10 @@ type
   end;
   PDtoPuntjes65 = ^TDtoPuntjes65;
 
-  TDtoPuntjes72 = packed record
+  TDtoPuntjes73 = packed record
     Status: RawUtf8;
   end;
-  PDtoPuntjes72 = ^TDtoPuntjes72;
+  PDtoPuntjes73 = ^TDtoPuntjes73;
 
 
 
@@ -1449,18 +1467,18 @@ const
   _TPercentageDiscountData = 'kind:TEnumPuntjes13 percentage:integer product_id:variant ' +
     'type:TEnumPuntjes13';
   _TPointsGiftData = 'type:TEnumPuntjes14 points:integer message:variant';
-  _TRedemptionRewardData = 'name:RawUtf8 type:RawUtf8';
+  _TRedemptionRewardData = 'name:RawUtf8 type:RawUtf8 id:integer';
   _TRedemptionCreatedData = 'redemption_id:integer confirmation_code:RawUtf8 ' +
     'reward:TRedemptionRewardData points_deducted:integer remaining_balance:integer ' +
-    'redeemed_at:RawUtf8 expires_at:variant type_specific_data:variant';
+    'redeemed_at:RawUtf8 expires_at:variant type_specific_data:variant branches:variant';
   _TRedemptionCustomerData = 'name:RawUtf8';
   _TRedemptionLookupData = 'redemption_id:integer confirmation_code:RawUtf8 ' +
     'status:RawUtf8 reward:TRedemptionRewardData customer:TRedemptionCustomerData ' +
     'points_deducted:integer redeemed_at:RawUtf8 verified_at:variant expires_at:variant ' +
-    'type_specific_data:variant';
+    'type_specific_data:variant branches:variant';
   _TRedemptionVerificationData = 'redemption_id:integer confirmation_code:RawUtf8 ' +
     'status:RawUtf8 reward:TRedemptionRewardData points_deducted:integer verified_at:RawUtf8 ' +
-    'type_specific_data:variant';
+    'type_specific_data:variant branches:variant';
   _TRewardCatalogItemData = 'id:integer name:RawUtf8 description:variant ' +
     'type:RawUtf8 point_cost:integer payment_amount:integer image_url:variant ' +
     'remaining_stock:variant total_stock:variant available_from:variant available_until:variant ' +
@@ -1497,8 +1515,9 @@ const
   _TUpsertProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
     'image_url:variant category:variant stock:variant status:TEnumPuntjes3 metadata:variant';
   _TVendorBrandingData = 'display_name:RawUtf8 logo_url:variant brand_color_primary:variant ' +
-    'brand_color_accent:variant';
+    'brand_color_accent:variant default_branch:variant';
   _TVerifyCampaignVoucherData = 'branch:variant idempotency_key:variant';
+  _TVerifyRedemptionData = 'branch:variant idempotency_key:variant';
   _TVoucherFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_reference:variant ' +
     'type:TEnumPuntjes9';
   _TVoucherGiftProductData = 'id:variant name:RawUtf8 quantity:integer product_reference:variant';
@@ -1545,7 +1564,7 @@ const
   _TDtoPuntjes57 = 'products:array of TCreateProductData';
   _TDtoPuntjes65 = 'data:array of TCampaignListData links:TPaginationLinks ' +
     'meta:TPaginationMeta';
-  _TDtoPuntjes72 = 'status:RawUtf8';
+  _TDtoPuntjes73 = 'status:RawUtf8';
 
 
 procedure RegisterRtti;
@@ -1647,6 +1666,7 @@ begin
     TypeInfo(TUpsertProductData), _TUpsertProductData,
     TypeInfo(TVendorBrandingData), _TVendorBrandingData,
     TypeInfo(TVerifyCampaignVoucherData), _TVerifyCampaignVoucherData,
+    TypeInfo(TVerifyRedemptionData), _TVerifyRedemptionData,
     TypeInfo(TVoucherFixedDiscountData), _TVoucherFixedDiscountData,
     TypeInfo(TVoucherGiftProductData), _TVoucherGiftProductData,
     TypeInfo(TVoucherPercentageDiscountData), _TVoucherPercentageDiscountData,
@@ -1682,7 +1702,7 @@ begin
     TypeInfo(TDtoPuntjes53), _TDtoPuntjes53,
     TypeInfo(TDtoPuntjes57), _TDtoPuntjes57,
     TypeInfo(TDtoPuntjes65), _TDtoPuntjes65,
-    TypeInfo(TDtoPuntjes72), _TDtoPuntjes72]);
+    TypeInfo(TDtoPuntjes73), _TDtoPuntjes73]);
 end;
 
 initialization
