@@ -3,6 +3,11 @@
 ## [0.4.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.3.0...v0.4.0) (2026-10-18)
 
 
+### ⚠ BREAKING CHANGES
+
+* `VerifyRedemption` now takes a body, so a call with only the code no longer compiles. Before: `puntjes.VerifyRedemption(code)`. After: `puntjes.VerifyRedemption(code, payload)`, with `var payload: TVerifyRedemptionData`. Leave its fields unset to send no branch and no idempotency key ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8))
+* `TDtoPuntjes72` is now `TDtoPuntjes73`. No method returns it, and numbered types can change in any release ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8))
+
 ### Features
 
 * regenerate from puntjes-openapi v2.2.0 ([#8](https://github.com/PuntjesApp/puntjes-delphi/issues/8)) ([94740f4](https://github.com/PuntjesApp/puntjes-delphi/commit/94740f4af86a4e04edf81340a485adde09b7bfbc))
