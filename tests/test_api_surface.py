@@ -9,10 +9,10 @@ type
   // A comment that names function Fake(): integer;
   TEnumPuntjes3 = (
     ep3None, ep3Active, ep3Archived);
-  TDtoPuntjes49 = packed record
+  TVerifyRedemptionResponse = packed record
     Data: TRedemptionVerificationData;
   end;
-  TDtoPuntjes57 = packed record
+  TBulkUpsertProductsRequest = packed record
     Products: TCreateProductDataDynArray;
   end;
   TVerifyRedemptionData = packed record
@@ -35,9 +35,9 @@ type
   public
     constructor Create(const aClient: IJsonClient);
     { VerifyRedemption [post] }
-    function VerifyRedemption(const Code: variant): TDtoPuntjes49;
+    function VerifyRedemption(const Code: variant): TVerifyRedemptionResponse;
     function BulkUpsertProducts(
-      const Payload: TDtoPuntjes57): TDtoPuntjes49;
+      const Payload: TBulkUpsertProductsRequest): TVerifyRedemptionResponse;
     property JsonClient: IJsonClient
       read fClient write fClient;
   end;
@@ -45,7 +45,7 @@ const
   _TEnumPuntjes3: array[TEnumPuntjes3] of RawUtf8 = (
     '', 'active', 'archived');
 implementation
-function TPuntjesClient.VerifyRedemption(const Code: variant): TDtoPuntjes49;
+function TPuntjesClient.VerifyRedemption(const Code: variant): TVerifyRedemptionResponse;
 begin
 end;
 end.
@@ -60,7 +60,7 @@ class SurfaceTest(unittest.TestCase):
     def test_lists_public_members_and_skips_private_comments_and_implementation(self):
         lines = surface({'u': UNIT})
         self.assertIn('u: TPuntjesClient.VerifyRedemption: function VerifyRedemption(const Code: variant): '
-                      'TDtoPuntjes<N>', lines)
+                      'TVerifyRedemptionResponse', lines)
         self.assertIn('u: TPuntjesClient.JsonClient: property JsonClient: IJsonClient read fClient write fClient',
                       lines)
         self.assertFalse([line for line in lines if 'OnError1' in line or 'fClient:' in line or 'Fake' in line])
@@ -70,10 +70,10 @@ class SurfaceTest(unittest.TestCase):
         self.assertIn('u: EErrorResponse: EErrorResponse = class(EJsonClient)', lines)
 
     def test_a_changed_signature_is_a_removal(self):
-        self.assertEqual(changed('(const Code: variant): TDtoPuntjes49;',
-                                 '(const Code: variant;\n      const Payload: TVerifyRedemptionData): TDtoPuntjes49;'),
+        self.assertEqual(changed('(const Code: variant): TVerifyRedemptionResponse;',
+                                 '(const Code: variant;\n      const Payload: TVerifyRedemptionData): TVerifyRedemptionResponse;'),
                          {'u: TPuntjesClient.VerifyRedemption: function VerifyRedemption(const Code: variant): '
-                          'TDtoPuntjes<N>'})
+                          'TVerifyRedemptionResponse'})
 
     def test_a_removed_method_field_or_type_is_a_removal(self):
         self.assertTrue(changed('    property JsonClient', '    property OtherName'))
@@ -82,7 +82,7 @@ class SurfaceTest(unittest.TestCase):
 
     def test_an_added_field_method_or_appended_enum_value_is_no_removal(self):
         self.assertFalse(changed('    IdempotencyKey: variant;\n', '    IdempotencyKey: variant;\n    Id: integer;\n'))
-        self.assertFalse(changed('  public\n', '  public\n    function ListBranches(): TDtoPuntjes49;\n'))
+        self.assertFalse(changed('  public\n', '  public\n    function ListBranches(): TVerifyRedemptionResponse;\n'))
         self.assertFalse(changed("ep3Archived);", "ep3Archived, ep3Draft);").union(
             changed("'archived');", "'archived', 'draft');")))
 
@@ -91,15 +91,13 @@ class SurfaceTest(unittest.TestCase):
                          {'u: TEnumPuntjes3[1]: ep3Active', 'u: TEnumPuntjes3[2]: ep3Archived'})
 
     def test_an_overload_directive_or_an_added_overload_is_no_removal(self):
-        self.assertFalse(changed('(const Code: variant): TDtoPuntjes49;',
-                                 '(const Code: variant): TDtoPuntjes49; overload;\n'
-                                 '    function VerifyRedemption(): TDtoPuntjes49; overload;'))
+        self.assertFalse(changed('(const Code: variant): TVerifyRedemptionResponse;',
+                                 '(const Code: variant): TVerifyRedemptionResponse; overload;\n'
+                                 '    function VerifyRedemption(): TVerifyRedemptionResponse; overload;'))
 
-    def test_a_renumbered_answer_wrapper_is_no_removal(self):
-        self.assertFalse(changed('TDtoPuntjes49', 'TDtoPuntjes50'))
-
-    def test_a_renumbered_wrapper_that_a_caller_passes_is_a_removal(self):
-        self.assertTrue(changed('TDtoPuntjes57', 'TDtoPuntjes58'))
+    def test_a_renamed_answer_or_body_type_is_a_removal(self):
+        self.assertTrue(changed('TVerifyRedemptionResponse', 'TVerifyRedemptionAnswer'))
+        self.assertTrue(changed('TBulkUpsertProductsRequest', 'TBulkUpsertProductsBody'))
 
 
 class AnnouncedTest(unittest.TestCase):

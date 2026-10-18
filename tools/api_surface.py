@@ -3,8 +3,6 @@
 The public surface is the interface section of each unit under src, one line per declaration: a public class
 member, a record field, an enum value, a type or a constant. A removed line is a break, an added line is not.
 The overload directive does not count: adding an overload is additive.
-The answer wrappers TDtoPuntjes<N> are renumbered by mopenapi in any release (README), so their number counts only
-where a caller must name the type: in a parameter.
 """
 import os
 import re
@@ -13,7 +11,6 @@ import sys
 from pathlib import Path
 
 TOKEN = re.compile(r"\s+|//[^\n]*|\{[^}]*\}|\(\*.*?\*\)|('(?:[^']|'')*')|([A-Za-z_][\w.]*|\d+|\.\.|:=|\S)", re.S)
-WRAPPER = re.compile(r'\b([TP]DtoPuntjes)\d+\b')
 VISIBILITY = {'private', 'protected', 'public', 'published', 'strict'}
 DIRECTIVES = {'override', 'virtual', 'overload', 'reintroduce', 'abstract', 'static', 'dynamic', 'inline', 'final',
               'default', 'deprecated', 'cdecl', 'stdcall', 'register', 'safecall'}
@@ -51,17 +48,6 @@ def signature(parts):
     return render(kept[:-1])
 
 
-def parameters(parts):
-    if '(' not in parts:
-        return ''
-    depth, start = 0, parts.index('(')
-    for k in range(start, len(parts)):
-        depth += {'(': 1, ')': -1}.get(parts[k], 0)
-        if depth == 0:
-            return ' '.join(parts[start:k])
-    return ''
-
-
 def declarations(toks):
     found, i, section = [], 0, None
     while i < len(toks):
@@ -72,7 +58,7 @@ def declarations(toks):
             section, i = word, i + 1
         elif word in ('procedure', 'function'):
             parts, i = statement(toks, i)
-            found.append((parts[1], signature(parts), parameters(parts)))
+            found.append((parts[1], signature(parts)))
         elif section == 'type' and toks[i + 1] == '=':
             i = type_declaration(toks, i, found)
         elif section in ('const', 'var', 'threadvar', 'resourcestring'):
@@ -88,7 +74,7 @@ def constant(parts, found):
     split = next((k for k, part in enumerate(parts) if part == '=' and '(' not in parts[:k]), len(parts))
     head, value = parts[:split], parts[split + 1:]
     if value[:1] == ['('] and value[-1:] == [')']:
-        found.append((name, render(head), ''))
+        found.append((name, render(head)))
         items, current = [], []
         for part in value[1:-1]:
             depth += {'(': 1, ')': -1}.get(part, 0)
@@ -97,9 +83,9 @@ def constant(parts, found):
                 current = []
             else:
                 current.append(part)
-        found.extend((f'{name}[{k}]', render(item), '') for k, item in enumerate(items + [current]))
+        found.extend((f'{name}[{k}]', render(item)) for k, item in enumerate(items + [current]))
     else:
-        found.append((name, render(parts), ''))
+        found.append((name, render(parts)))
 
 
 def type_declaration(toks, i, found):
@@ -107,19 +93,19 @@ def type_declaration(toks, i, found):
     if toks[i + 2] == '(':
         close = toks.index(')', i)
         values = [t for t in toks[i + 3:close] if t != ',']
-        found.extend((f'{name}[{k}]', value, '') for k, value in enumerate(values))
+        found.extend((f'{name}[{k}]', value) for k, value in enumerate(values))
         return close + 2
     if 'record' in rest:
         j = i + 2 + rest.index('record') + 1
         while toks[j].lower() != 'end':
             parts, j = statement(toks, j)
             names, field_type = render(parts[:parts.index(':')]).split(', '), render(parts[parts.index(':') + 1:-1])
-            found.extend((f'{name}.{field}', field_type, '') for field in names)
+            found.extend((f'{name}.{field}', field_type) for field in names)
         return j + 2
     if rest[0] == 'class' and rest[1] not in (';', 'of'):
         return class_declaration(toks, i, found)
     parts, j = statement(toks, i)
-    found.append((name, render(parts[:-1]), ''))
+    found.append((name, render(parts[:-1])))
     return j
 
 
@@ -127,10 +113,10 @@ def class_declaration(toks, i, found):
     name, j = toks[i], i + 3
     if toks[j] == '(':
         close = toks.index(')', j)
-        found.append((name, render(toks[i:close + 1]), ''))
+        found.append((name, render(toks[i:close + 1])))
         j = close + 1
     else:
-        found.append((name, render(toks[i:i + 3]), ''))
+        found.append((name, render(toks[i:i + 3])))
     public = True
     while toks[j].lower() != 'end':
         word = toks[j].lower()
@@ -142,21 +128,16 @@ def class_declaration(toks, i, found):
             continue
         if word in ROUTINES:
             member = parts[2] if word == 'class' else parts[1]
-            found.append((f'{name}.{member}', signature(parts), parameters(parts)))
+            found.append((f'{name}.{member}', signature(parts)))
         else:
             fields = render(parts[:parts.index(':')]).split(', ')
-            found.extend((f'{name}.{field}', render(parts[:-1]), '') for field in fields)
+            found.extend((f'{name}.{field}', render(parts[:-1])) for field in fields)
     return j + 2
 
 
 def surface(units):
     found = {unit: declarations(tokens(text)) for unit, text in units.items()}
-    pinned = {match.group(0) for decls in found.values() for *_, params in decls for match in WRAPPER.finditer(params)}
-
-    def normal(text):
-        return WRAPPER.sub(lambda m: m.group(0) if m.group(0) in pinned else f'{m.group(1)}<N>', text)
-
-    return {normal(f'{unit}: {key}: {text}') for unit, decls in found.items() for key, text, _ in decls}
+    return {f'{unit}: {key}: {text}' for unit, decls in found.items() for key, text in decls}
 
 
 def announced(message):
