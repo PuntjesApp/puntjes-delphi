@@ -10,81 +10,8 @@ uses
   mormot.core.base,
   mormot.net.client,
   puntjes.dto,
-  puntjes.client;
-
-type
-  TRecordingClient = class(TJsonClientAbstract)
-  public
-    SentMethod, SentAction, SentBody: RawUtf8;
-    Calls: integer;
-    function GetCookies: RawUtf8; override;
-    procedure SetCookies(const Value: RawUtf8); override;
-    function GetDefaultHeaders: RawUtf8; override;
-    procedure SetDefaultHeaders(const Value: RawUtf8); override;
-    function Http: IHttpClient; override;
-    procedure AddDefaultHeader(const Name, Value: RawUtf8); override;
-    function Connected: string; override;
-    procedure RawRequest(const Method, Action, InType, InBody, InHeaders: RawUtf8;
-      var Response: TJsonResponse); override;
-  end;
-
-function TRecordingClient.GetCookies: RawUtf8;
-begin
-  result := '';
-end;
-
-procedure TRecordingClient.SetCookies(const Value: RawUtf8);
-begin
-end;
-
-function TRecordingClient.GetDefaultHeaders: RawUtf8;
-begin
-  result := '';
-end;
-
-procedure TRecordingClient.SetDefaultHeaders(const Value: RawUtf8);
-begin
-end;
-
-function TRecordingClient.Http: IHttpClient;
-begin
-  result := nil;
-end;
-
-procedure TRecordingClient.AddDefaultHeader(const Name, Value: RawUtf8);
-begin
-end;
-
-function TRecordingClient.Connected: string;
-begin
-  result := 'recorder';
-end;
-
-procedure TRecordingClient.RawRequest(const Method, Action, InType, InBody, InHeaders: RawUtf8;
-  var Response: TJsonResponse);
-begin
-  inc(Calls);
-  SentMethod := Method;
-  SentAction := Action;
-  SentBody := InBody;
-  Response.Status := 200;
-  Response.Method := Method;
-  Response.Url := Action;
-  Response.Content := '{"data":{"confirmation_code":"ABC123","status":"used"}}';
-  UniqueString(Response.Content); // mORMot parses the answer in place, so it must not be a literal
-end;
-
-var
-  failures: integer;
-
-procedure Expect(ok: boolean; const what: string);
-begin
-  if not ok then
-  begin
-    writeln('FAIL: ', what);
-    inc(failures);
-  end;
-end;
+  puntjes.client,
+  RecordingClient;
 
 var
   recorder: TRecordingClient;
@@ -92,8 +19,8 @@ var
   puntjes: TPuntjesClient;
   payload: TVerifyRedemptionData;
 begin
-  failures := 0;
   recorder := TRecordingClient.Create;
+  recorder.Answer := '{"data":{"confirmation_code":"ABC123","status":"used"}}';
   recorder.Options := [jcoParseTolerant, jcoHttpErrorRaise];
   http := recorder;
   puntjes := TPuntjesClient.Create(http);
@@ -114,7 +41,7 @@ begin
   finally
     puntjes.Free;
   end;
-  if failures > 0 then
+  if Failures > 0 then
     halt(1);
   writeln('OptionalBody: every check passed.');
 end.
