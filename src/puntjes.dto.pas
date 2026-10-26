@@ -27,70 +27,112 @@ type
 { ************ Enumerations and Sets }
 
   // Which shape this is.
-  TEnumPuntjes1 = (
-    epNone, epAnniversary);
-  TEnumPuntjes2 = (
-    ep2None, ep2Email, ep2LoyaltyCard);
-  TEnumPuntjes3 = (
-    ep3None, ep3Active, ep3Archived, ep3Inactive);
-  TEnumPuntjes4 = (
-    ep4None, ep4Active, ep4Inactive);
+  TAnniversaryCampaignConfigDataType = (
+    anniversaryCampaignConfigDataTypeNone, anniversaryCampaignConfigDataTypeAnniversary);
+  TCreateIdentifierDataType = (
+    createIdentifierDataTypeNone, createIdentifierDataTypeEmail, createIdentifierDataTypeLoyaltyCard);
+  TCreateProductDataStatus = (
+    createProductDataStatusNone, createProductDataStatusActive, createProductDataStatusInactive,
+    createProductDataStatusArchived);
+  TCreateRewardFromProductDataStatus = (
+    createRewardFromProductDataStatusNone, createRewardFromProductDataStatusActive,
+    createRewardFromProductDataStatusInactive);
   // Which shape this is.
-  TEnumPuntjes5 = (
-    ep5None, ep5DateRange);
+  TDateRangeRecurrenceDataType = (
+    dateRangeRecurrenceDataTypeNone, dateRangeRecurrenceDataTypeDateRange);
   // Which shape this is.
-  TEnumPuntjes6 = (
-    ep6None, ep6DaysOfWeek);
+  TDaysOfWeekRecurrenceDataType = (
+    daysOfWeekRecurrenceDataTypeNone, daysOfWeekRecurrenceDataTypeDaysOfWeek);
   // Always `discount` for this shape.
-  TEnumPuntjes7 = (
-    ep7None, ep7Discount);
+  TDiscountGiftDataType = (
+    discountGiftDataTypeNone, discountGiftDataTypeDiscount);
   // Which of the two `discount_value` is.
-  TEnumPuntjes8 = (
-    ep8None, ep8FixedAmount, ep8Percentage);
+  TDiscountRedemptionDataDiscountType = (
+    discountRedemptionDataDiscountTypeNone, discountRedemptionDataDiscountTypeFixedAmount,
+    discountRedemptionDataDiscountTypePercentage);
+  // Which shape this is.
+  TDiscountRedemptionDataType = (
+    discountRedemptionDataTypeNone, discountRedemptionDataTypeDiscount);
   // Deprecated: read `type`, which carries the same value. Always `fixed` for this
   // shape.
-  TEnumPuntjes9 = (
-    ep9None, ep9Fixed);
+  TFixedDiscountDataKind = (
+    fixedDiscountDataKindNone, fixedDiscountDataKindFixed);
+  // Which shape this is.
+  TFixedDiscountDataType = (
+    fixedDiscountDataTypeNone, fixedDiscountDataTypeFixed);
   // Always `free_product` for this shape.
-  TEnumPuntjes10 = (
-    ep10None, ep10FreeProduct);
+  TFreeProductGiftDataType = (
+    freeProductGiftDataTypeNone, freeProductGiftDataTypeFreeProduct);
   // Which shape this is.
-  TEnumPuntjes11 = (
-    ep11None, ep11Moment);
+  TFreeProductRedemptionDataType = (
+    freeProductRedemptionDataTypeNone, freeProductRedemptionDataTypeFreeProduct);
   // Which shape this is.
-  TEnumPuntjes12 = (
-    ep12None, ep12NthPurchase);
+  TMomentCampaignConfigDataType = (
+    momentCampaignConfigDataTypeNone, momentCampaignConfigDataTypeMoment);
+  // Which shape this is.
+  TNthPurchaseCampaignConfigDataType = (
+    nthPurchaseCampaignConfigDataTypeNone, nthPurchaseCampaignConfigDataTypeNthPurchase);
   // Deprecated: read `type`, which carries the same value. Always `percentage`
   // for this shape.
-  TEnumPuntjes13 = (
-    ep13None, ep13Percentage);
-  // Always `points` for this shape.
-  TEnumPuntjes14 = (
-    ep14None, ep14Points);
+  TPercentageDiscountDataKind = (
+    percentageDiscountDataKindNone, percentageDiscountDataKindPercentage);
   // Which shape this is.
-  TEnumPuntjes15 = (
-    ep15None, ep15SpecificDates);
+  TPercentageDiscountDataType = (
+    percentageDiscountDataTypeNone, percentageDiscountDataTypePercentage);
+  // Always `points` for this shape.
+  TPointsGiftDataType = (
+    pointsGiftDataTypeNone, pointsGiftDataTypePoints);
+  // Which shape this is.
+  TSpecificDatesRecurrenceDataType = (
+    specificDatesRecurrenceDataTypeNone, specificDatesRecurrenceDataTypeSpecificDates);
   // Multiply the points earned, or add a fixed number. Absent reads as `multiplier`.
-  TEnumPuntjes16 = (
-    ep16None, ep16FixedPoints, ep16Multiplier);
+  TTransactionCampaignConfigDataRewardType = (
+    transactionCampaignConfigDataRewardTypeNone, transactionCampaignConfigDataRewardTypeMultiplier,
+    transactionCampaignConfigDataRewardTypeFixedPoints);
   // `whole` and `whole_purchase` both mean the whole purchase. Absent reads as
   // `whole`.
-  TEnumPuntjes17 = (
-    ep17None, ep17Products, ep17Whole, ep17WholePurchase);
+  TTransactionCampaignConfigDataScope = (
+    transactionCampaignConfigDataScopeNone, transactionCampaignConfigDataScopeWhole,
+    transactionCampaignConfigDataScopeWholePurchase, transactionCampaignConfigDataScopeProducts);
   // Which shape this is.
-  TEnumPuntjes18 = (
-    ep18None, ep18Transaction);
+  TTransactionCampaignConfigDataType = (
+    transactionCampaignConfigDataTypeNone, transactionCampaignConfigDataTypeTransaction);
+  TUpdateProductDataStatus = (
+    updateProductDataStatusNone, updateProductDataStatusActive, updateProductDataStatusInactive,
+    updateProductDataStatusArchived);
+  TUpsertProductDataStatus = (
+    upsertProductDataStatusNone, upsertProductDataStatusActive, upsertProductDataStatusInactive,
+    upsertProductDataStatusArchived);
+  // Deprecated: read `type`, which carries the same value. Always `fixed` for this
+  // shape.
+  TVoucherFixedDiscountDataKind = (
+    voucherFixedDiscountDataKindNone, voucherFixedDiscountDataKindFixed);
   // Which shape this is.
-  TEnumPuntjes19 = (
-    ep19None, ep19WinBack);
-  TEnumPuntjes20 = (
-    ep20None, ep20Adjust, ep20Earn, ep20Expire, ep20Redeem);
-  TEnumPuntjes21 = (
-    ep21None, ep21Apple, ep21Google);
-  TEnumPuntjes22 = (
-    ep22None, ep22Cancelled, ep22Expired, ep22Used, ep22Valid);
-  TEnumPuntjes23 = (
-    ep23None, ep2330d, ep237d, ep2390d, ep23Today);
+  TVoucherFixedDiscountDataType = (
+    voucherFixedDiscountDataTypeNone, voucherFixedDiscountDataTypeFixed);
+  // Deprecated: read `type`, which carries the same value. Always `percentage`
+  // for this shape.
+  TVoucherPercentageDiscountDataKind = (
+    voucherPercentageDiscountDataKindNone, voucherPercentageDiscountDataKindPercentage);
+  // Which shape this is.
+  TVoucherPercentageDiscountDataType = (
+    voucherPercentageDiscountDataTypeNone, voucherPercentageDiscountDataTypePercentage);
+  // Which shape this is.
+  TWinBackCampaignConfigDataType = (
+    winBackCampaignConfigDataTypeNone, winBackCampaignConfigDataTypeWinBack);
+  TListLedgerEntriesType = (
+    listLedgerEntriesTypeNone, listLedgerEntriesTypeEarn, listLedgerEntriesTypeAdjust, listLedgerEntriesTypeRedeem,
+    listLedgerEntriesTypeExpire);
+  TDownloadWalletPassPlatform = (
+    downloadWalletPassPlatformNone, downloadWalletPassPlatformApple, downloadWalletPassPlatformGoogle);
+  TListCustomerRedemptionsStatus = (
+    listCustomerRedemptionsStatusNone, listCustomerRedemptionsStatusValid, listCustomerRedemptionsStatusUsed,
+    listCustomerRedemptionsStatusExpired, listCustomerRedemptionsStatusCancelled);
+  TListProductsStatus = (
+    listProductsStatusNone, listProductsStatusActive, listProductsStatusInactive, listProductsStatusArchived);
+  TShowStatisticsPeriod = (
+    showStatisticsPeriodNone, showStatisticsPeriodToday, showStatisticsPeriod7d, showStatisticsPeriod30d,
+    showStatisticsPeriod90d);
 
 
 { ************ Data Transfert Objects }
@@ -113,7 +155,7 @@ type
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes1;
+    _Type: TAnniversaryCampaignConfigDataType;
   end;
   PAnniversaryCampaignConfigData = ^TAnniversaryCampaignConfigData;
 
@@ -295,7 +337,7 @@ type
 
   // from #/components/schemas/CreateIdentifierData
   TCreateIdentifierData = packed record
-    _Type: TEnumPuntjes2;
+    _Type: TCreateIdentifierDataType;
     Value: RawUtf8;
     IsPrimary: boolean;
   end;
@@ -327,7 +369,7 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TCreateProductDataStatus;
     Metadata: variant;
   end;
   PCreateProductData = ^TCreateProductData;
@@ -348,7 +390,7 @@ type
     Name: variant;
     Description: variant;
     TotalStock: variant;
-    Status: TEnumPuntjes4;
+    Status: TCreateRewardFromProductDataStatus;
     AvailableFrom: variant;
     AvailableUntil: variant;
     CodeValidForHours: variant;
@@ -518,7 +560,7 @@ type
     // year.
     ActiveUntil: RawUtf8;
     // Which shape this is.
-    _Type: TEnumPuntjes5;
+    _Type: TDateRangeRecurrenceDataType;
   end;
   PDateRangeRecurrenceData = ^TDateRangeRecurrenceData;
 
@@ -526,13 +568,13 @@ type
     // The days it runs, 0 for Sunday through 6 for Saturday.
     Days: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes6;
+    _Type: TDaysOfWeekRecurrenceDataType;
   end;
   PDaysOfWeekRecurrenceData = ^TDaysOfWeekRecurrenceData;
 
   TDiscountGiftData = packed record
     // Always `discount` for this shape.
-    _Type: TEnumPuntjes7;
+    _Type: TDiscountGiftDataType;
     // How much comes off. Its `type` says which shape this is.
     Discount: variant;
     // How many days the customer has to use it.
@@ -546,12 +588,12 @@ type
     // How much comes off: a percentage, or an amount in cents.
     DiscountValue: integer;
     // Which of the two `discount_value` is.
-    DiscountType: TEnumPuntjes8;
+    DiscountType: TDiscountRedemptionDataDiscountType;
     // The item number of the one product the discount is for; null when it counts
     // on the whole purchase.
     ProductReference: variant;
     // Which shape this is.
-    _Type: TEnumPuntjes7;
+    _Type: TDiscountRedemptionDataType;
   end;
   PDiscountRedemptionData = ^TDiscountRedemptionData;
 
@@ -596,13 +638,13 @@ type
   TFixedDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `fixed` for this
     // shape.
-    Kind: TEnumPuntjes9;
+    Kind: TFixedDiscountDataKind;
     // How much to take off, in cents.
     AmountCents: integer;
     // The one product the discount is for; leave it out for the whole purchase.
     ProductId: variant;
     // Which shape this is.
-    _Type: TEnumPuntjes9;
+    _Type: TFixedDiscountDataType;
   end;
   PFixedDiscountData = ^TFixedDiscountData;
 
@@ -620,7 +662,7 @@ type
 
   TFreeProductGiftData = packed record
     // Always `free_product` for this shape.
-    _Type: TEnumPuntjes10;
+    _Type: TFreeProductGiftDataType;
     // The products the customer gets.
     Products: TGiftProductDataDynArray;
     // A line the customer reads with the gift.
@@ -635,7 +677,7 @@ type
     // cover it.
     PaymentAmount: integer;
     // Which shape this is.
-    _Type: TEnumPuntjes10;
+    _Type: TFreeProductRedemptionDataType;
   end;
   PFreeProductRedemptionData = ^TFreeProductRedemptionData;
 
@@ -705,7 +747,7 @@ type
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes11;
+    _Type: TMomentCampaignConfigDataType;
   end;
   PMomentCampaignConfigData = ^TMomentCampaignConfigData;
 
@@ -719,7 +761,7 @@ type
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes12;
+    _Type: TNthPurchaseCampaignConfigDataType;
   end;
   PNthPurchaseCampaignConfigData = ^TNthPurchaseCampaignConfigData;
 
@@ -744,19 +786,19 @@ type
   TPercentageDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `percentage`
     // for this shape.
-    Kind: TEnumPuntjes13;
+    Kind: TPercentageDiscountDataKind;
     // How many percent to take off, 1 to 100.
     Percentage: integer;
     // The one product the discount is for; leave it out for the whole purchase.
     ProductId: variant;
     // Which shape this is.
-    _Type: TEnumPuntjes13;
+    _Type: TPercentageDiscountDataType;
   end;
   PPercentageDiscountData = ^TPercentageDiscountData;
 
   TPointsGiftData = packed record
     // Always `points` for this shape.
-    _Type: TEnumPuntjes14;
+    _Type: TPointsGiftDataType;
     // How many points the customer gets.
     Points: integer;
     // A line the customer reads with the gift.
@@ -918,7 +960,7 @@ type
     // The days it runs, each as `YYYY-MM-DD`.
     Dates: TRawUtf8DynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes15;
+    _Type: TSpecificDatesRecurrenceDataType;
   end;
   PSpecificDatesRecurrenceData = ^TSpecificDatesRecurrenceData;
 
@@ -942,10 +984,10 @@ type
 
   TTransactionCampaignConfigData = packed record
     // Multiply the points earned, or add a fixed number. Absent reads as `multiplier`.
-    RewardType: TEnumPuntjes16;
+    RewardType: TTransactionCampaignConfigDataRewardType;
     // `whole` and `whole_purchase` both mean the whole purchase. Absent reads as
     // `whole`.
-    Scope: TEnumPuntjes17;
+    Scope: TTransactionCampaignConfigDataScope;
     // Whether it pays out beside another campaign. Older rows carry `combineerbaar`.
     Stackable: boolean;
     // The points added, when `reward_type` is `fixed_points`.
@@ -957,7 +999,7 @@ type
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes18;
+    _Type: TTransactionCampaignConfigDataType;
   end;
   PTransactionCampaignConfigData = ^TTransactionCampaignConfigData;
 
@@ -1013,7 +1055,7 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TUpdateProductDataStatus;
     Metadata: variant;
   end;
   PUpdateProductData = ^TUpdateProductData;
@@ -1026,7 +1068,7 @@ type
     ImageUrl: variant;
     Category: variant;
     Stock: variant;
-    Status: TEnumPuntjes3;
+    Status: TUpsertProductDataStatus;
     Metadata: variant;
   end;
   PUpsertProductData = ^TUpsertProductData;
@@ -1058,14 +1100,14 @@ type
   TVoucherFixedDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `fixed` for this
     // shape.
-    Kind: TEnumPuntjes9;
+    Kind: TVoucherFixedDiscountDataKind;
     // How much to take off, in cents.
     AmountCents: integer;
     // The item number of the one product the discount is for; null for the whole
     // purchase.
     ProductReference: variant;
     // Which shape this is.
-    _Type: TEnumPuntjes9;
+    _Type: TVoucherFixedDiscountDataType;
   end;
   PVoucherFixedDiscountData = ^TVoucherFixedDiscountData;
 
@@ -1084,14 +1126,14 @@ type
   TVoucherPercentageDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `percentage`
     // for this shape.
-    Kind: TEnumPuntjes13;
+    Kind: TVoucherPercentageDiscountDataKind;
     // How many percent to take off, 1 to 100.
     Percentage: integer;
     // The item number of the one product the discount is for; null for the whole
     // purchase.
     ProductReference: variant;
     // Which shape this is.
-    _Type: TEnumPuntjes13;
+    _Type: TVoucherPercentageDiscountDataType;
   end;
   PVoucherPercentageDiscountData = ^TVoucherPercentageDiscountData;
 
@@ -1114,7 +1156,7 @@ type
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
     // Which shape this is.
-    _Type: TEnumPuntjes19;
+    _Type: TWinBackCampaignConfigDataType;
   end;
   PWinBackCampaignConfigData = ^TWinBackCampaignConfigData;
 
@@ -1378,52 +1420,74 @@ type
 
 const
   // define how enums/sets are actually transmitted as JSON array of string
-  _TEnumPuntjes1: array[TEnumPuntjes1] of RawUtf8 = (
+  _TAnniversaryCampaignConfigDataType: array[TAnniversaryCampaignConfigDataType] of RawUtf8 = (
     '', 'anniversary');
-  _TEnumPuntjes2: array[TEnumPuntjes2] of RawUtf8 = (
+  _TCreateIdentifierDataType: array[TCreateIdentifierDataType] of RawUtf8 = (
     '', 'email', 'loyalty_card');
-  _TEnumPuntjes3: array[TEnumPuntjes3] of RawUtf8 = (
-    '', 'active', 'archived', 'inactive');
-  _TEnumPuntjes4: array[TEnumPuntjes4] of RawUtf8 = (
+  _TCreateProductDataStatus: array[TCreateProductDataStatus] of RawUtf8 = (
+    '', 'active', 'inactive', 'archived');
+  _TCreateRewardFromProductDataStatus: array[TCreateRewardFromProductDataStatus] of RawUtf8 = (
     '', 'active', 'inactive');
-  _TEnumPuntjes5: array[TEnumPuntjes5] of RawUtf8 = (
+  _TDateRangeRecurrenceDataType: array[TDateRangeRecurrenceDataType] of RawUtf8 = (
     '', 'date_range');
-  _TEnumPuntjes6: array[TEnumPuntjes6] of RawUtf8 = (
+  _TDaysOfWeekRecurrenceDataType: array[TDaysOfWeekRecurrenceDataType] of RawUtf8 = (
     '', 'days_of_week');
-  _TEnumPuntjes7: array[TEnumPuntjes7] of RawUtf8 = (
+  _TDiscountGiftDataType: array[TDiscountGiftDataType] of RawUtf8 = (
     '', 'discount');
-  _TEnumPuntjes8: array[TEnumPuntjes8] of RawUtf8 = (
+  _TDiscountRedemptionDataDiscountType: array[TDiscountRedemptionDataDiscountType] of RawUtf8 = (
     '', 'fixed_amount', 'percentage');
-  _TEnumPuntjes9: array[TEnumPuntjes9] of RawUtf8 = (
+  _TDiscountRedemptionDataType: array[TDiscountRedemptionDataType] of RawUtf8 = (
+    '', 'discount');
+  _TFixedDiscountDataKind: array[TFixedDiscountDataKind] of RawUtf8 = (
     '', 'fixed');
-  _TEnumPuntjes10: array[TEnumPuntjes10] of RawUtf8 = (
+  _TFixedDiscountDataType: array[TFixedDiscountDataType] of RawUtf8 = (
+    '', 'fixed');
+  _TFreeProductGiftDataType: array[TFreeProductGiftDataType] of RawUtf8 = (
     '', 'free_product');
-  _TEnumPuntjes11: array[TEnumPuntjes11] of RawUtf8 = (
+  _TFreeProductRedemptionDataType: array[TFreeProductRedemptionDataType] of RawUtf8 = (
+    '', 'free_product');
+  _TMomentCampaignConfigDataType: array[TMomentCampaignConfigDataType] of RawUtf8 = (
     '', 'moment');
-  _TEnumPuntjes12: array[TEnumPuntjes12] of RawUtf8 = (
+  _TNthPurchaseCampaignConfigDataType: array[TNthPurchaseCampaignConfigDataType] of RawUtf8 = (
     '', 'nth_purchase');
-  _TEnumPuntjes13: array[TEnumPuntjes13] of RawUtf8 = (
+  _TPercentageDiscountDataKind: array[TPercentageDiscountDataKind] of RawUtf8 = (
     '', 'percentage');
-  _TEnumPuntjes14: array[TEnumPuntjes14] of RawUtf8 = (
+  _TPercentageDiscountDataType: array[TPercentageDiscountDataType] of RawUtf8 = (
+    '', 'percentage');
+  _TPointsGiftDataType: array[TPointsGiftDataType] of RawUtf8 = (
     '', 'points');
-  _TEnumPuntjes15: array[TEnumPuntjes15] of RawUtf8 = (
+  _TSpecificDatesRecurrenceDataType: array[TSpecificDatesRecurrenceDataType] of RawUtf8 = (
     '', 'specific_dates');
-  _TEnumPuntjes16: array[TEnumPuntjes16] of RawUtf8 = (
-    '', 'fixed_points', 'multiplier');
-  _TEnumPuntjes17: array[TEnumPuntjes17] of RawUtf8 = (
-    '', 'products', 'whole', 'whole_purchase');
-  _TEnumPuntjes18: array[TEnumPuntjes18] of RawUtf8 = (
+  _TTransactionCampaignConfigDataRewardType: array[TTransactionCampaignConfigDataRewardType] of RawUtf8 = (
+    '', 'multiplier', 'fixed_points');
+  _TTransactionCampaignConfigDataScope: array[TTransactionCampaignConfigDataScope] of RawUtf8 = (
+    '', 'whole', 'whole_purchase', 'products');
+  _TTransactionCampaignConfigDataType: array[TTransactionCampaignConfigDataType] of RawUtf8 = (
     '', 'transaction');
-  _TEnumPuntjes19: array[TEnumPuntjes19] of RawUtf8 = (
+  _TUpdateProductDataStatus: array[TUpdateProductDataStatus] of RawUtf8 = (
+    '', 'active', 'inactive', 'archived');
+  _TUpsertProductDataStatus: array[TUpsertProductDataStatus] of RawUtf8 = (
+    '', 'active', 'inactive', 'archived');
+  _TVoucherFixedDiscountDataKind: array[TVoucherFixedDiscountDataKind] of RawUtf8 = (
+    '', 'fixed');
+  _TVoucherFixedDiscountDataType: array[TVoucherFixedDiscountDataType] of RawUtf8 = (
+    '', 'fixed');
+  _TVoucherPercentageDiscountDataKind: array[TVoucherPercentageDiscountDataKind] of RawUtf8 = (
+    '', 'percentage');
+  _TVoucherPercentageDiscountDataType: array[TVoucherPercentageDiscountDataType] of RawUtf8 = (
+    '', 'percentage');
+  _TWinBackCampaignConfigDataType: array[TWinBackCampaignConfigDataType] of RawUtf8 = (
     '', 'win_back');
-  _TEnumPuntjes20: array[TEnumPuntjes20] of RawUtf8 = (
-    '', 'adjust', 'earn', 'expire', 'redeem');
-  _TEnumPuntjes21: array[TEnumPuntjes21] of RawUtf8 = (
+  _TListLedgerEntriesType: array[TListLedgerEntriesType] of RawUtf8 = (
+    '', 'earn', 'adjust', 'redeem', 'expire');
+  _TDownloadWalletPassPlatform: array[TDownloadWalletPassPlatform] of RawUtf8 = (
     '', 'apple', 'google');
-  _TEnumPuntjes22: array[TEnumPuntjes22] of RawUtf8 = (
-    '', 'cancelled', 'expired', 'used', 'valid');
-  _TEnumPuntjes23: array[TEnumPuntjes23] of RawUtf8 = (
-    '', '30d', '7d', '90d', 'today');
+  _TListCustomerRedemptionsStatus: array[TListCustomerRedemptionsStatus] of RawUtf8 = (
+    '', 'valid', 'used', 'expired', 'cancelled');
+  _TListProductsStatus: array[TListProductsStatus] of RawUtf8 = (
+    '', 'active', 'inactive', 'archived');
+  _TShowStatisticsPeriod: array[TShowStatisticsPeriod] of RawUtf8 = (
+    '', 'today', '7d', '30d', '90d');
 
 
 implementation
@@ -1434,7 +1498,7 @@ const
   // exact definition of the DTOs expected JSON serialization
   _TAdjustWalletApiData = 'amount:integer reason:RawUtf8 idempotency_key:RawUtf8';
   _TAnniversaryCampaignConfigData = 'years:integer gift:variant backfill:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes1';
+    'branch_ids:TIntegerDynArray type:TAnniversaryCampaignConfigDataType';
   _TBranchReferenceData = 'external_id:RawUtf8 name:RawUtf8 type:RawUtf8';
   _TProductData = 'id:integer external_id:RawUtf8 name:RawUtf8 description:variant ' +
     'price_cents:variant image_url:variant category:variant stock:variant status:RawUtf8 ' +
@@ -1465,20 +1529,21 @@ const
   _TVolumeBucketData = 'label:RawUtf8 orders:integer revenue:integer';
   _TCommerceStatisticsData = 'orders:integer revenue_cents:integer average_order_value_cents:integer ' +
     'itemized:TItemizedStatisticsData volume_trend:array of TVolumeBucketData';
-  _TCreateIdentifierData = 'type:TEnumPuntjes2 value:RawUtf8 is_primary:boolean';
+  _TCreateIdentifierData = 'type:TCreateIdentifierDataType value:RawUtf8 ' +
+    'is_primary:boolean';
   _TCreateCustomerData = 'first_name:variant last_name:variant email:variant ' +
     'phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant marketing_consent:variant marketing_consent_statement_version:variant ' +
     'identifiers:array of TCreateIdentifierData';
   _TCreateProductData = 'external_id:RawUtf8 name:RawUtf8 description:variant ' +
-    'price_cents:variant image_url:variant category:variant stock:variant status:TEnumPuntjes3 ' +
+    'price_cents:variant image_url:variant category:variant stock:variant status:TCreateProductDataStatus ' +
     'metadata:variant';
   _TCreateRedemptionData = 'identifier:RawUtf8 reward_id:integer idempotency_key:RawUtf8 ' +
     'branch:variant';
   _TCreateRewardFromProductData = 'point_cost:integer name:variant description:variant ' +
-    'total_stock:variant status:TEnumPuntjes4 available_from:variant available_until:variant ' +
-    'code_valid_for_hours:variant payment_amount:variant idempotency_key:variant ' +
-    'max_redemptions_per_customer:variant';
+    'total_stock:variant status:TCreateRewardFromProductDataStatus available_from:variant ' +
+    'available_until:variant code_valid_for_hours:variant payment_amount:variant ' +
+    'idempotency_key:variant max_redemptions_per_customer:variant';
   _TCreateTransactionItemData = 'name:RawUtf8 quantity:integer unit_price:integer ' +
     'sku:variant category:variant';
   _TCreateTransactionData = 'identifier:RawUtf8 idempotency_key:RawUtf8 total_amount:integer ' +
@@ -1513,25 +1578,25 @@ const
     'is_deactivated:boolean';
   _TCustomerVoucherData = 'voucher_code:RawUtf8 campaign_id:integer kind:RawUtf8 ' +
     'discount:variant products:variant valid_until:variant branches:variant';
-  _TDateRangeRecurrenceData = 'active_from:RawUtf8 active_until:RawUtf8 type:TEnumPuntjes5';
-  _TDaysOfWeekRecurrenceData = 'days:TIntegerDynArray type:TEnumPuntjes6';
-  _TDiscountGiftData = 'type:TEnumPuntjes7 discount:variant validity_days:variant ' +
+  _TDateRangeRecurrenceData = 'active_from:RawUtf8 active_until:RawUtf8 type:TDateRangeRecurrenceDataType';
+  _TDaysOfWeekRecurrenceData = 'days:TIntegerDynArray type:TDaysOfWeekRecurrenceDataType';
+  _TDiscountGiftData = 'type:TDiscountGiftDataType discount:variant validity_days:variant ' +
     'message:variant';
-  _TDiscountRedemptionData = 'discount_value:integer discount_type:TEnumPuntjes8 ' +
-    'product_reference:variant type:TEnumPuntjes7';
+  _TDiscountRedemptionData = 'discount_value:integer discount_type:TDiscountRedemptionDataDiscountType ' +
+    'product_reference:variant type:TDiscountRedemptionDataType';
   _TEarnResultData = 'rule_id:integer rule_name:RawUtf8 rule_type:RawUtf8 ' +
     'points_earned:integer family:variant moment:variant campaign_version:variant ' +
     'suppressed_by:variant reason:variant line_breakdown:variant';
   _TErrorResponseError = 'code:RawUtf8 message:RawUtf8 status:integer request_id:RawUtf8 ' +
     'details:variant';
   _TErrorResponse = 'error:TErrorResponseError';
-  _TFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_id:variant ' +
-    'type:TEnumPuntjes9';
+  _TFixedDiscountData = 'kind:TFixedDiscountDataKind amount_cents:integer ' +
+    'product_id:variant type:TFixedDiscountDataType';
   _TGiftProductData = 'id:variant name:RawUtf8 quantity:integer';
-  _TFreeProductGiftData = 'type:TEnumPuntjes10 products:array of TGiftProductData ' +
+  _TFreeProductGiftData = 'type:TFreeProductGiftDataType products:array of TGiftProductData ' +
     'message:variant';
   _TFreeProductRedemptionData = 'product_reference:variant payment_amount:integer ' +
-    'type:TEnumPuntjes10';
+    'type:TFreeProductRedemptionDataType';
   _TGoogleWalletPassData = 'save_url:RawUtf8';
   _TLedgerEntryData = 'id:integer wallet_id:integer type:RawUtf8 amount:integer ' +
     'running_balance:integer reason:variant causer_type:variant causer_id:variant ' +
@@ -1542,15 +1607,15 @@ const
     'breakage_rate:variant points_redeemed_from_import:integer points_expired_from_import:integer ' +
     'redemption_rate_excluding_import:variant breakage_rate_excluding_import:variant';
   _TMomentCampaignConfigData = 'gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TEnumPuntjes11';
+    'type:TMomentCampaignConfigDataType';
   _TNthPurchaseCampaignConfigData = 'every_n:integer gift:variant min_amount:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes12';
+    'branch_ids:TIntegerDynArray type:TNthPurchaseCampaignConfigDataType';
   _TPaginationLinks = 'first:variant last:variant prev:variant next:variant';
   _TPaginationMeta = 'current_page:integer last_page:integer per_page:integer ' +
     'total:integer';
-  _TPercentageDiscountData = 'kind:TEnumPuntjes13 percentage:integer product_id:variant ' +
-    'type:TEnumPuntjes13';
-  _TPointsGiftData = 'type:TEnumPuntjes14 points:integer message:variant';
+  _TPercentageDiscountData = 'kind:TPercentageDiscountDataKind percentage:integer ' +
+    'product_id:variant type:TPercentageDiscountDataType';
+  _TPointsGiftData = 'type:TPointsGiftDataType points:integer message:variant';
   _TRedemptionRewardData = 'name:RawUtf8 type:RawUtf8 id:integer';
   _TRedemptionCreatedData = 'redemption_id:integer confirmation_code:RawUtf8 ' +
     'reward:TRedemptionRewardData points_deducted:integer remaining_balance:integer ' +
@@ -1577,14 +1642,15 @@ const
     'updated_at:variant is_unlimited:boolean max_redemptions_per_customer:variant';
   _TSendLoyaltyCardRequestData = 'channel:variant';
   _TSendLoyaltyCardResultData = 'customer_id:integer channel:RawUtf8 queued:boolean';
-  _TSpecificDatesRecurrenceData = 'dates:TRawUtf8DynArray type:TEnumPuntjes15';
+  _TSpecificDatesRecurrenceData = 'dates:TRawUtf8DynArray type:TSpecificDatesRecurrenceDataType';
   _TStatisticsPeriodData = 'preset:RawUtf8 from:RawUtf8 to:RawUtf8 timezone:RawUtf8 ' +
     'granularity:RawUtf8';
   _TStatisticsApiData = 'period:TStatisticsPeriodData commerce:TCommerceStatisticsData ' +
     'loyalty:variant';
-  _TTransactionCampaignConfigData = 'reward_type:TEnumPuntjes16 scope:TEnumPuntjes17 ' +
-    'stackable:boolean points:variant max_points_per_purchase:variant products:variant ' +
-    'branch_ids:TIntegerDynArray type:TEnumPuntjes18';
+  _TTransactionCampaignConfigData = 'reward_type:TTransactionCampaignConfigDataRewardType ' +
+    'scope:TTransactionCampaignConfigDataScope stackable:boolean points:variant ' +
+    'max_points_per_purchase:variant products:variant branch_ids:TIntegerDynArray ' +
+    'type:TTransactionCampaignConfigDataType';
   _TTransactionItemData = 'id:integer name:RawUtf8 sku:variant quantity:integer ' +
     'unit_price:integer line_total:integer category:variant';
   _TTransactionData = 'id:integer customer_id:integer idempotency_key:RawUtf8 ' +
@@ -1595,22 +1661,24 @@ const
     'phone:variant date_of_birth:variant customer_since:variant locale:variant ' +
     'marketing_consent:variant marketing_consent_statement_version:variant';
   _TUpdateProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
-    'image_url:variant category:variant stock:variant status:TEnumPuntjes3 metadata:variant';
+    'image_url:variant category:variant stock:variant status:TUpdateProductDataStatus ' +
+    'metadata:variant';
   _TUpsertProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
-    'image_url:variant category:variant stock:variant status:TEnumPuntjes3 metadata:variant';
+    'image_url:variant category:variant stock:variant status:TUpsertProductDataStatus ' +
+    'metadata:variant';
   _TVendorBrandingData = 'display_name:RawUtf8 logo_url:variant brand_color_primary:variant ' +
     'brand_color_accent:variant default_branch:variant';
   _TVerifyCampaignVoucherData = 'branch:variant idempotency_key:variant';
   _TVerifyRedemptionData = 'branch:variant idempotency_key:variant';
-  _TVoucherFixedDiscountData = 'kind:TEnumPuntjes9 amount_cents:integer product_reference:variant ' +
-    'type:TEnumPuntjes9';
+  _TVoucherFixedDiscountData = 'kind:TVoucherFixedDiscountDataKind amount_cents:integer ' +
+    'product_reference:variant type:TVoucherFixedDiscountDataType';
   _TVoucherGiftProductData = 'id:variant name:RawUtf8 quantity:integer product_reference:variant';
-  _TVoucherPercentageDiscountData = 'kind:TEnumPuntjes13 percentage:integer ' +
-    'product_reference:variant type:TEnumPuntjes13';
+  _TVoucherPercentageDiscountData = 'kind:TVoucherPercentageDiscountDataKind ' +
+    'percentage:integer product_reference:variant type:TVoucherPercentageDiscountDataType';
   _TWalletData = 'id:integer customer_id:integer balance:integer expiring_soon:integer ' +
     'created_at:variant updated_at:variant';
   _TWinBackCampaignConfigData = 'months:integer gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TEnumPuntjes19';
+    'type:TWinBackCampaignConfigDataType';
   _TLookupCustomerResponse = 'data:TCustomerLookupData';
   _TRegisterCustomerResponse = 'data:TCustomerData';
   _TReplaceCustomerByExternalIdResponse = 'data:TCustomerData';
@@ -1662,29 +1730,40 @@ const
 procedure RegisterRtti;
 begin
   TRttiJson.RegisterCustomEnumValues([
-    TypeInfo(TEnumPuntjes1), nil, @_TEnumPuntjes1,
-    TypeInfo(TEnumPuntjes2), nil, @_TEnumPuntjes2,
-    TypeInfo(TEnumPuntjes3), nil, @_TEnumPuntjes3,
-    TypeInfo(TEnumPuntjes4), nil, @_TEnumPuntjes4,
-    TypeInfo(TEnumPuntjes5), nil, @_TEnumPuntjes5,
-    TypeInfo(TEnumPuntjes6), nil, @_TEnumPuntjes6,
-    TypeInfo(TEnumPuntjes7), nil, @_TEnumPuntjes7,
-    TypeInfo(TEnumPuntjes8), nil, @_TEnumPuntjes8,
-    TypeInfo(TEnumPuntjes9), nil, @_TEnumPuntjes9,
-    TypeInfo(TEnumPuntjes10), nil, @_TEnumPuntjes10,
-    TypeInfo(TEnumPuntjes11), nil, @_TEnumPuntjes11,
-    TypeInfo(TEnumPuntjes12), nil, @_TEnumPuntjes12,
-    TypeInfo(TEnumPuntjes13), nil, @_TEnumPuntjes13,
-    TypeInfo(TEnumPuntjes14), nil, @_TEnumPuntjes14,
-    TypeInfo(TEnumPuntjes15), nil, @_TEnumPuntjes15,
-    TypeInfo(TEnumPuntjes16), nil, @_TEnumPuntjes16,
-    TypeInfo(TEnumPuntjes17), nil, @_TEnumPuntjes17,
-    TypeInfo(TEnumPuntjes18), nil, @_TEnumPuntjes18,
-    TypeInfo(TEnumPuntjes19), nil, @_TEnumPuntjes19,
-    TypeInfo(TEnumPuntjes20), nil, @_TEnumPuntjes20,
-    TypeInfo(TEnumPuntjes21), nil, @_TEnumPuntjes21,
-    TypeInfo(TEnumPuntjes22), nil, @_TEnumPuntjes22,
-    TypeInfo(TEnumPuntjes23), nil, @_TEnumPuntjes23]);
+    TypeInfo(TAnniversaryCampaignConfigDataType), nil, @_TAnniversaryCampaignConfigDataType,
+    TypeInfo(TCreateIdentifierDataType), nil, @_TCreateIdentifierDataType,
+    TypeInfo(TCreateProductDataStatus), nil, @_TCreateProductDataStatus,
+    TypeInfo(TCreateRewardFromProductDataStatus), nil, @_TCreateRewardFromProductDataStatus,
+    TypeInfo(TDateRangeRecurrenceDataType), nil, @_TDateRangeRecurrenceDataType,
+    TypeInfo(TDaysOfWeekRecurrenceDataType), nil, @_TDaysOfWeekRecurrenceDataType,
+    TypeInfo(TDiscountGiftDataType), nil, @_TDiscountGiftDataType,
+    TypeInfo(TDiscountRedemptionDataDiscountType), nil, @_TDiscountRedemptionDataDiscountType,
+    TypeInfo(TDiscountRedemptionDataType), nil, @_TDiscountRedemptionDataType,
+    TypeInfo(TFixedDiscountDataKind), nil, @_TFixedDiscountDataKind,
+    TypeInfo(TFixedDiscountDataType), nil, @_TFixedDiscountDataType,
+    TypeInfo(TFreeProductGiftDataType), nil, @_TFreeProductGiftDataType,
+    TypeInfo(TFreeProductRedemptionDataType), nil, @_TFreeProductRedemptionDataType,
+    TypeInfo(TMomentCampaignConfigDataType), nil, @_TMomentCampaignConfigDataType,
+    TypeInfo(TNthPurchaseCampaignConfigDataType), nil, @_TNthPurchaseCampaignConfigDataType,
+    TypeInfo(TPercentageDiscountDataKind), nil, @_TPercentageDiscountDataKind,
+    TypeInfo(TPercentageDiscountDataType), nil, @_TPercentageDiscountDataType,
+    TypeInfo(TPointsGiftDataType), nil, @_TPointsGiftDataType,
+    TypeInfo(TSpecificDatesRecurrenceDataType), nil, @_TSpecificDatesRecurrenceDataType,
+    TypeInfo(TTransactionCampaignConfigDataRewardType), nil, @_TTransactionCampaignConfigDataRewardType,
+    TypeInfo(TTransactionCampaignConfigDataScope), nil, @_TTransactionCampaignConfigDataScope,
+    TypeInfo(TTransactionCampaignConfigDataType), nil, @_TTransactionCampaignConfigDataType,
+    TypeInfo(TUpdateProductDataStatus), nil, @_TUpdateProductDataStatus,
+    TypeInfo(TUpsertProductDataStatus), nil, @_TUpsertProductDataStatus,
+    TypeInfo(TVoucherFixedDiscountDataKind), nil, @_TVoucherFixedDiscountDataKind,
+    TypeInfo(TVoucherFixedDiscountDataType), nil, @_TVoucherFixedDiscountDataType,
+    TypeInfo(TVoucherPercentageDiscountDataKind), nil, @_TVoucherPercentageDiscountDataKind,
+    TypeInfo(TVoucherPercentageDiscountDataType), nil, @_TVoucherPercentageDiscountDataType,
+    TypeInfo(TWinBackCampaignConfigDataType), nil, @_TWinBackCampaignConfigDataType,
+    TypeInfo(TListLedgerEntriesType), nil, @_TListLedgerEntriesType,
+    TypeInfo(TDownloadWalletPassPlatform), nil, @_TDownloadWalletPassPlatform,
+    TypeInfo(TListCustomerRedemptionsStatus), nil, @_TListCustomerRedemptionsStatus,
+    TypeInfo(TListProductsStatus), nil, @_TListProductsStatus,
+    TypeInfo(TShowStatisticsPeriod), nil, @_TShowStatisticsPeriod]);
   Rtti.RegisterFromText([
     TypeInfo(TAdjustWalletApiData), _TAdjustWalletApiData,
     TypeInfo(TAnniversaryCampaignConfigData), _TAnniversaryCampaignConfigData,

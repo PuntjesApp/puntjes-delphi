@@ -71,6 +71,10 @@ QuickStart health
   returns `TListCampaignsResponse`, and its page is `TListCampaignsResponseData`. A record inside a named record
   adds the field name, such as `TErrorResponseError`. Up to 0.4.0 these records were numbered `TDtoPuntjes<N>`, and 14 methods
   from `CreateProduct` on decoded the answer into the wrong record.
+- **Each enum takes its name from its record and field, or from its operation and parameter.** The `Status` of
+  `TCreateProductData` is `TCreateProductDataStatus`, with the values `createProductDataStatusActive` and so on, and
+  the `Period` of `ShowStatistics` is `TShowStatisticsPeriod`. The values keep the order of the spec, and a new value can
+  arrive in any minor release. Up to 0.5.0 the enums were numbered `TEnumPuntjes<N>`, with values such as `ep3Active`.
 - **The token is yours to fetch and renew.** A token lasts one hour. On a 401, fetch a new one and call
   `SetBearer` again.
 - **Nothing retries.** On a network error or a 5xx, send the same request again with the same `idempotency_key`.
