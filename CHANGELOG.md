@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.5.0...v0.6.0) (2026-10-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* every enum type and value has a new name. For example TEnumPuntjes3 is now TCreateProductDataStatus, TUpdateProductDataStatus, TUpsertProductDataStatus or TListProductsStatus, and ep3Active is createProductDataStatusActive. The values follow the order of the spec.
+
+### Features
+
+* name each enum after its field or parameter ([#19](https://github.com/PuntjesApp/puntjes-delphi/issues/19)) ([6193fe8](https://github.com/PuntjesApp/puntjes-delphi/commit/6193fe8985318af67de9203ab4610a2dfbc338b7))
+
 ## [0.5.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.4.0...v0.5.0) (2026-10-18)
 
 
