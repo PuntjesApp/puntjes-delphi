@@ -87,7 +87,7 @@ jobs:
           TYPE: ${{ steps.plan.outputs.commit_type }}
         run: |
           curl -fsSL --retry 5 --retry-all-errors --retry-delay 10 "$URL" -o "$RUNNER_TEMP/api.json"
-          sudo apt-get update -qq && sudo apt-get install -y -qq fpc
+          scripts/install-fpc.sh
           git config user.name "puntjes-sdk-bot[bot]"
           git config user.email "puntjes-sdk-bot[bot]@users.noreply.github.com"
           base=

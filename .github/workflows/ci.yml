@@ -33,8 +33,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      # apt shows each download and gives up on a mirror that stops answering, so a slow mirror fails here in minutes.
       - name: Install FPC
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq fpc
+        timeout-minutes: 5
+        run: scripts/install-fpc.sh
       - run: scripts/mormot.sh
       - name: Regenerate from spec/api.json
         run: scripts/generate.sh
