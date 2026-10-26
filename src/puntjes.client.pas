@@ -1,6 +1,6 @@
 // Client unit for Puntjes
 // - Puntjes Loyalty API
-// - version 2.2.0
+// - version 2.3.0
 unit puntjes.client;
 
 {$I mormot.defines.inc}
@@ -191,6 +191,27 @@ type
     function LinkCustomerExternalId(
       const Payload: TLinkExternalIdData): TLinkCustomerExternalIdResponse;
 
+    // changeCustomerExternalId [put] /customers/{customer}/external-id
+    //
+    //
+    // Params:
+    // - [path] Customer (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 409 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function ChangeCustomerExternalId(const Customer: variant;
+      const Payload: TChangeExternalIdData): TChangeCustomerExternalIdResponse;
+
     // sendLoyaltyCardByExternalId [post] /customers/by-external-id/{externalId}/send-card
     //
     //
@@ -249,6 +270,26 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ShowCustomer(const Customer: variant): TShowCustomerResponse;
+
+    // mergeCustomers [post] /customers/{customer}/merge
+    //
+    //
+    // Params:
+    // - [path] Customer (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function MergeCustomers(const Customer: variant;
+      const Payload: TMergeCustomersApiData): TMergeCustomersResponse;
 
 
     // ----------------------
@@ -1159,6 +1200,13 @@ begin
     Payload, result, TypeInfo(TLinkExternalIdData), TypeInfo(TLinkCustomerExternalIdResponse), OnError3);
 end;
 
+function TPuntjesClient.ChangeCustomerExternalId(const Customer: variant;
+  const Payload: TChangeExternalIdData): TChangeCustomerExternalIdResponse;
+begin
+  fClient.Request('PUT', '/customers/%/external-id', [Customer], [], [],
+    Payload, result, TypeInfo(TChangeExternalIdData), TypeInfo(TChangeCustomerExternalIdResponse), OnError3);
+end;
+
 function TPuntjesClient.SendLoyaltyCardByExternalId(const ExternalId: variant;
   const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardByExternalIdResponse;
 begin
@@ -1189,6 +1237,13 @@ function TPuntjesClient.ShowCustomer(const Customer: variant): TShowCustomerResp
 begin
   fClient.Request('GET', '/customers/%', [Customer], [], [],
     result, TypeInfo(TShowCustomerResponse), OnError5);
+end;
+
+function TPuntjesClient.MergeCustomers(const Customer: variant;
+  const Payload: TMergeCustomersApiData): TMergeCustomersResponse;
+begin
+  fClient.Request('POST', '/customers/%/merge', [Customer], [], [],
+    Payload, result, TypeInfo(TMergeCustomersApiData), TypeInfo(TMergeCustomersResponse), OnError4);
 end;
 
 function TPuntjesClient.SubmitTransaction(

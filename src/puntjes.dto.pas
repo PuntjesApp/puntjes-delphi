@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.2.0
+// - version 2.3.0
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
@@ -154,6 +154,8 @@ type
     Backfill: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
+    // The groups this campaign is for. Absent or empty means everyone.
+    CustomerGroupIds: TIntegerDynArray;
     // Which shape this is.
     _Type: TAnniversaryCampaignConfigDataType;
   end;
@@ -221,6 +223,14 @@ type
   end;
   PCampaignStatusData = ^TCampaignStatusData;
 
+  // from #/components/schemas/CustomerGroupReferenceData
+  TCustomerGroupReferenceData = packed record
+    ExternalId: RawUtf8;
+    Name: RawUtf8;
+  end;
+  PCustomerGroupReferenceData = ^TCustomerGroupReferenceData;
+  TCustomerGroupReferenceDataDynArray = array of TCustomerGroupReferenceData;
+
   // from #/components/schemas/CampaignListData
   TCampaignListData = packed record
     Id: integer;
@@ -243,6 +253,8 @@ type
     Branches: variant;
     CreatedAt: variant;
     UpdatedAt: variant;
+    // Who the campaign is for. Empty means every customer.
+    CustomerGroups: TCustomerGroupReferenceDataDynArray;
   end;
   PCampaignListData = ^TCampaignListData;
   TCampaignListDataDynArray = array of TCampaignListData;
@@ -258,30 +270,35 @@ type
   // from #/components/schemas/CampaignVoucherLookupData
   TCampaignVoucherLookupData = packed record
     VoucherCode: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
+    // How much comes off, for a discount voucher. Its `type` says which shape this is.
     Discount: variant;
     ValidUntil: variant;
-    // When the bon was spent, or null while it is not.
+    // When the voucher was spent, or null while it is not.
     ConsumedAt: variant;
     CampaignId: integer;
     Kind: RawUtf8;
-    // What to hand over, for a free-product bon.
+    // What to hand over, for a free-product voucher.
     Products: variant;
     // `valid`, `used` or `expired`.
     Status: RawUtf8;
+    // Groups that may spend it; empty means every customer.
+    CustomerGroups: TCustomerGroupReferenceDataDynArray;
+    // Only true when `status` is `valid` and the customer is a member of none of
+    // its customer groups.
+    BlockedByGroup: boolean;
   end;
   PCampaignVoucherLookupData = ^TCampaignVoucherLookupData;
 
   // from #/components/schemas/CampaignVoucherVerificationData
   TCampaignVoucherVerificationData = packed record
     VoucherCode: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
+    // How much comes off, for a discount voucher. Its `type` says which shape this is.
     Discount: variant;
     ValidUntil: variant;
     ConsumedAt: RawUtf8;
     CampaignId: integer;
     Kind: RawUtf8;
-    // What to hand over, for a free-product bon.
+    // What to hand over, for a free-product voucher.
     Products: variant;
   end;
   PCampaignVoucherVerificationData = ^TCampaignVoucherVerificationData;
@@ -295,6 +312,12 @@ type
   end;
   PCategoryRevenueData = ^TCategoryRevenueData;
   TCategoryRevenueDataDynArray = array of TCategoryRevenueData;
+
+  // from #/components/schemas/ChangeExternalIdData
+  TChangeExternalIdData = packed record
+    ExternalId: RawUtf8;
+  end;
+  PChangeExternalIdData = ^TChangeExternalIdData;
 
   // from #/components/schemas/TopProductData
   TTopProductData = packed record
@@ -357,6 +380,7 @@ type
     MarketingConsent: variant;
     MarketingConsentStatementVersion: variant;
     Identifiers: TCreateIdentifierDataDynArray;
+    Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PCreateCustomerData = ^TCreateCustomerData;
 
@@ -469,6 +493,8 @@ type
     AnonymizedAt: variant;
     CreatedAt: variant;
     UpdatedAt: variant;
+    // The customer's groups, sorted by name, then by external_id.
+    Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PCustomerData = ^TCustomerData;
 
@@ -500,6 +526,10 @@ type
     UpdatedAt: variant;
     // `true` for a deactivated customer; the key is absent for any other customer.
     IsDeactivated: boolean;
+    // The account a merge moved this closed account into, else `null`.
+    MergedIntoCustomerId: variant;
+    // The customer's groups, sorted by name, then by external_id.
+    Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PCustomerDetailData = ^TCustomerDetailData;
 
@@ -533,6 +563,10 @@ type
     WalletBalance: integer;
     // `true` for a deactivated customer; the key is absent for any other customer.
     IsDeactivated: boolean;
+    // The account a merge moved this closed account into, else `null`.
+    MergedIntoCustomerId: variant;
+    // The customer's groups, sorted by name, then by external_id.
+    Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PCustomerLookupData = ^TCustomerLookupData;
 
@@ -541,13 +575,13 @@ type
     VoucherCode: RawUtf8;
     CampaignId: integer;
     Kind: RawUtf8;
-    // How much comes off, for a discount bon. Its `type` says which shape this is.
+    // How much comes off, for a discount voucher. Its `type` says which shape this is.
     Discount: variant;
-    // What to hand over, for a free-product bon.
+    // What to hand over, for a free-product voucher.
     Products: variant;
-    // The last day the bon can be spent, or null when it does not run out.
+    // The last day the voucher can be spent, or null when it does not run out.
     ValidUntil: variant;
-    // The branches that take the bon; null means every branch.
+    // The branches that take the voucher; null means every branch.
     Branches: variant;
   end;
   PCustomerVoucherData = ^TCustomerVoucherData;
@@ -741,11 +775,26 @@ type
   end;
   PLoyaltyStatisticsData = ^TLoyaltyStatisticsData;
 
+  // from #/components/schemas/MergeCustomersApiData
+  TMergeCustomersApiData = packed record
+    // Id of the closed account; its rows go to the kept account, its points too if
+    // `add_points`.
+    Source: integer;
+    // `true` adds the points of the closed account to the kept account; `false` drops
+    // them.
+    AddPoints: boolean;
+    // Max 255 characters; the same request again answers 200, another is refused.
+    IdempotencyKey: RawUtf8;
+  end;
+  PMergeCustomersApiData = ^TMergeCustomersApiData;
+
   TMomentCampaignConfigData = packed record
     // What the customer gets. Its `type` says which shape this is.
     Gift: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
+    // The groups this campaign is for. Absent or empty means everyone.
+    CustomerGroupIds: TIntegerDynArray;
     // Which shape this is.
     _Type: TMomentCampaignConfigDataType;
   end;
@@ -760,6 +809,8 @@ type
     MinAmount: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
+    // The groups this campaign is for. Absent or empty means everyone.
+    CustomerGroupIds: TIntegerDynArray;
     // Which shape this is.
     _Type: TNthPurchaseCampaignConfigDataType;
   end;
@@ -998,6 +1049,8 @@ type
     Products: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
+    // The groups this campaign is for. Absent or empty means everyone.
+    CustomerGroupIds: TIntegerDynArray;
     // Which shape this is.
     _Type: TTransactionCampaignConfigDataType;
   end;
@@ -1044,6 +1097,7 @@ type
     Locale: variant;
     MarketingConsent: variant;
     MarketingConsentStatementVersion: variant;
+    Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PUpdateCustomerData = ^TUpdateCustomerData;
 
@@ -1114,11 +1168,11 @@ type
   TVoucherGiftProductData = packed record
     // The product this refers to, or null when the gift named no catalogue product.
     Id: variant;
-    // The product name as it was when the bon was issued.
+    // The product name as it was when the voucher was issued.
     Name: RawUtf8;
     // How many of this product the customer gets.
     Quantity: integer;
-    // The item number when the bon was issued, or null when it had none.
+    // The item number when the voucher was issued, or null when it had none.
     ProductReference: variant;
   end;
   PVoucherGiftProductData = ^TVoucherGiftProductData;
@@ -1155,6 +1209,8 @@ type
     Gift: variant;
     // The branches this campaign runs in. Absent or empty means all of them.
     BranchIds: TIntegerDynArray;
+    // The groups this campaign is for. Absent or empty means everyone.
+    CustomerGroupIds: TIntegerDynArray;
     // Which shape this is.
     _Type: TWinBackCampaignConfigDataType;
   end;
@@ -1190,6 +1246,12 @@ type
   end;
   PLinkCustomerExternalIdResponse = ^TLinkCustomerExternalIdResponse;
 
+  // from #/components/schemas/ChangeCustomerExternalIdResponse
+  TChangeCustomerExternalIdResponse = packed record
+    Data: TCustomerDetailData;
+  end;
+  PChangeCustomerExternalIdResponse = ^TChangeCustomerExternalIdResponse;
+
   // from #/components/schemas/SendLoyaltyCardByExternalIdResponse
   TSendLoyaltyCardByExternalIdResponse = packed record
     Data: TSendLoyaltyCardResultData;
@@ -1207,6 +1269,12 @@ type
     Data: TCustomerDetailData;
   end;
   PShowCustomerResponse = ^TShowCustomerResponse;
+
+  // from #/components/schemas/MergeCustomersResponse
+  TMergeCustomersResponse = packed record
+    Data: TCustomerDetailData;
+  end;
+  PMergeCustomersResponse = ^TMergeCustomersResponse;
 
   // from #/components/schemas/SubmitTransactionResponse
   TSubmitTransactionResponse = packed record
@@ -1498,7 +1566,7 @@ const
   // exact definition of the DTOs expected JSON serialization
   _TAdjustWalletApiData = 'amount:integer reason:RawUtf8 idempotency_key:RawUtf8';
   _TAnniversaryCampaignConfigData = 'years:integer gift:variant backfill:variant ' +
-    'branch_ids:TIntegerDynArray type:TAnniversaryCampaignConfigDataType';
+    'branch_ids:TIntegerDynArray customer_group_ids:TIntegerDynArray type:TAnniversaryCampaignConfigDataType';
   _TBranchReferenceData = 'external_id:RawUtf8 name:RawUtf8 type:RawUtf8';
   _TProductData = 'id:integer external_id:RawUtf8 name:RawUtf8 description:variant ' +
     'price_cents:variant image_url:variant category:variant stock:variant status:RawUtf8 ' +
@@ -1509,19 +1577,22 @@ const
     'failed:integer';
   _TBulkUpsertResponseData = 'results:array of TBulkUpsertResultData summary:TBulkUpsertSummaryData';
   _TCampaignStatusData = 'value:RawUtf8 label:RawUtf8';
+  _TCustomerGroupReferenceData = 'external_id:RawUtf8 name:RawUtf8';
   _TCampaignListData = 'id:integer name:RawUtf8 family:RawUtf8 moment:variant ' +
     'config:variant version:integer multiplier:variant recurrence_type:variant ' +
     'recurrence_config:variant schedule_summary:RawUtf8 starts_at:RawUtf8 ends_at:variant ' +
     'status:TCampaignStatusData min_transaction_amount:variant branches:variant ' +
-    'created_at:variant updated_at:variant';
+    'created_at:variant updated_at:variant customer_groups:array of TCustomerGroupReferenceData';
   _TCampaignProductRuleData = 'sku:RawUtf8 name:RawUtf8';
   _TCampaignVoucherLookupData = 'voucher_code:RawUtf8 discount:variant valid_until:variant ' +
-    'consumed_at:variant campaign_id:integer kind:RawUtf8 products:variant status:RawUtf8';
+    'consumed_at:variant campaign_id:integer kind:RawUtf8 products:variant status:RawUtf8 ' +
+    'customer_groups:array of TCustomerGroupReferenceData blocked_by_group:boolean';
   _TCampaignVoucherVerificationData = 'voucher_code:RawUtf8 discount:variant ' +
     'valid_until:variant consumed_at:RawUtf8 campaign_id:integer kind:RawUtf8 ' +
     'products:variant';
   _TCategoryRevenueData = 'category:RawUtf8 units:integer revenue:integer ' +
     'isOther:boolean';
+  _TChangeExternalIdData = 'external_id:RawUtf8';
   _TTopProductData = 'name:RawUtf8 units:integer revenue:integer';
   _TItemizedStatisticsData = 'orders:integer revenue_cents:integer average_items_per_order:double ' +
     'other_no_item_detail_cents:integer top_products:array of TTopProductData ' +
@@ -1534,7 +1605,7 @@ const
   _TCreateCustomerData = 'first_name:variant last_name:variant email:variant ' +
     'phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant marketing_consent:variant marketing_consent_statement_version:variant ' +
-    'identifiers:array of TCreateIdentifierData';
+    'identifiers:array of TCreateIdentifierData groups:array of TCustomerGroupReferenceData';
   _TCreateProductData = 'external_id:RawUtf8 name:RawUtf8 description:variant ' +
     'price_cents:variant image_url:variant category:variant stock:variant status:TCreateProductDataStatus ' +
     'metadata:variant';
@@ -1558,7 +1629,7 @@ const
     'marketingConsentWithdrawnAt:variant marketingConsentWithdrawnSource:variant ' +
     'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
     'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
-    'anonymized_at:variant created_at:variant updated_at:variant';
+    'anonymized_at:variant created_at:variant updated_at:variant groups:array of TCustomerGroupReferenceData';
   _TCustomerDetailData = 'id:integer first_name:variant last_name:variant ' +
     'email:variant phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant status:TCustomerStatusData identifiers:array of TCustomerIdentifierData ' +
@@ -1566,7 +1637,8 @@ const
     'marketingConsentWithdrawnAt:variant marketingConsentWithdrawnSource:variant ' +
     'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
     'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
-    'anonymized_at:variant created_at:variant updated_at:variant is_deactivated:boolean';
+    'anonymized_at:variant created_at:variant updated_at:variant is_deactivated:boolean ' +
+    'merged_into_customer_id:variant groups:array of TCustomerGroupReferenceData';
   _TCustomerLookupData = 'id:integer first_name:variant last_name:variant ' +
     'email:variant phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant status:TCustomerStatusData identifiers:array of TCustomerIdentifierData ' +
@@ -1575,7 +1647,7 @@ const
     'marketingConsentStatementVersion:variant marketingConsentRecordedBy:variant ' +
     'marketingConsentRecordedByClientId:variant loyalty_card_code:variant deactivated_at:variant ' +
     'anonymized_at:variant created_at:variant updated_at:variant wallet_balance:integer ' +
-    'is_deactivated:boolean';
+    'is_deactivated:boolean merged_into_customer_id:variant groups:array of TCustomerGroupReferenceData';
   _TCustomerVoucherData = 'voucher_code:RawUtf8 campaign_id:integer kind:RawUtf8 ' +
     'discount:variant products:variant valid_until:variant branches:variant';
   _TDateRangeRecurrenceData = 'active_from:RawUtf8 active_until:RawUtf8 type:TDateRangeRecurrenceDataType';
@@ -1606,10 +1678,11 @@ const
     'points_expired:integer net_adjustments:integer redemption_rate:variant ' +
     'breakage_rate:variant points_redeemed_from_import:integer points_expired_from_import:integer ' +
     'redemption_rate_excluding_import:variant breakage_rate_excluding_import:variant';
+  _TMergeCustomersApiData = 'source:integer add_points:boolean idempotency_key:RawUtf8';
   _TMomentCampaignConfigData = 'gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TMomentCampaignConfigDataType';
+    'customer_group_ids:TIntegerDynArray type:TMomentCampaignConfigDataType';
   _TNthPurchaseCampaignConfigData = 'every_n:integer gift:variant min_amount:variant ' +
-    'branch_ids:TIntegerDynArray type:TNthPurchaseCampaignConfigDataType';
+    'branch_ids:TIntegerDynArray customer_group_ids:TIntegerDynArray type:TNthPurchaseCampaignConfigDataType';
   _TPaginationLinks = 'first:variant last:variant prev:variant next:variant';
   _TPaginationMeta = 'current_page:integer last_page:integer per_page:integer ' +
     'total:integer';
@@ -1650,7 +1723,7 @@ const
   _TTransactionCampaignConfigData = 'reward_type:TTransactionCampaignConfigDataRewardType ' +
     'scope:TTransactionCampaignConfigDataScope stackable:boolean points:variant ' +
     'max_points_per_purchase:variant products:variant branch_ids:TIntegerDynArray ' +
-    'type:TTransactionCampaignConfigDataType';
+    'customer_group_ids:TIntegerDynArray type:TTransactionCampaignConfigDataType';
   _TTransactionItemData = 'id:integer name:RawUtf8 sku:variant quantity:integer ' +
     'unit_price:integer line_total:integer category:variant';
   _TTransactionData = 'id:integer customer_id:integer idempotency_key:RawUtf8 ' +
@@ -1659,7 +1732,7 @@ const
     'items:array of TTransactionItemData';
   _TUpdateCustomerData = 'first_name:variant last_name:variant email:variant ' +
     'phone:variant date_of_birth:variant customer_since:variant locale:variant ' +
-    'marketing_consent:variant marketing_consent_statement_version:variant';
+    'marketing_consent:variant marketing_consent_statement_version:variant groups:array of TCustomerGroupReferenceData';
   _TUpdateProductData = 'name:RawUtf8 description:variant price_cents:variant ' +
     'image_url:variant category:variant stock:variant status:TUpdateProductDataStatus ' +
     'metadata:variant';
@@ -1678,15 +1751,17 @@ const
   _TWalletData = 'id:integer customer_id:integer balance:integer expiring_soon:integer ' +
     'created_at:variant updated_at:variant';
   _TWinBackCampaignConfigData = 'months:integer gift:variant branch_ids:TIntegerDynArray ' +
-    'type:TWinBackCampaignConfigDataType';
+    'customer_group_ids:TIntegerDynArray type:TWinBackCampaignConfigDataType';
   _TLookupCustomerResponse = 'data:TCustomerLookupData';
   _TRegisterCustomerResponse = 'data:TCustomerData';
   _TReplaceCustomerByExternalIdResponse = 'data:TCustomerData';
   _TUpdateCustomerByExternalIdResponse = 'data:TCustomerData';
   _TLinkCustomerExternalIdResponse = 'data:TCustomerData';
+  _TChangeCustomerExternalIdResponse = 'data:TCustomerDetailData';
   _TSendLoyaltyCardByExternalIdResponse = 'data:TSendLoyaltyCardResultData';
   _TSendLoyaltyCardResponse = 'data:TSendLoyaltyCardResultData';
   _TShowCustomerResponse = 'data:TCustomerDetailData';
+  _TMergeCustomersResponse = 'data:TCustomerDetailData';
   _TSubmitTransactionResponse = 'data:TTransactionData';
   _TListCustomerTransactionsResponseData = 'data:array of TTransactionData ' +
     'links:TPaginationLinks meta:TPaginationMeta';
@@ -1773,11 +1848,13 @@ begin
     TypeInfo(TBulkUpsertSummaryData), _TBulkUpsertSummaryData,
     TypeInfo(TBulkUpsertResponseData), _TBulkUpsertResponseData,
     TypeInfo(TCampaignStatusData), _TCampaignStatusData,
+    TypeInfo(TCustomerGroupReferenceData), _TCustomerGroupReferenceData,
     TypeInfo(TCampaignListData), _TCampaignListData,
     TypeInfo(TCampaignProductRuleData), _TCampaignProductRuleData,
     TypeInfo(TCampaignVoucherLookupData), _TCampaignVoucherLookupData,
     TypeInfo(TCampaignVoucherVerificationData), _TCampaignVoucherVerificationData,
     TypeInfo(TCategoryRevenueData), _TCategoryRevenueData,
+    TypeInfo(TChangeExternalIdData), _TChangeExternalIdData,
     TypeInfo(TTopProductData), _TTopProductData,
     TypeInfo(TItemizedStatisticsData), _TItemizedStatisticsData,
     TypeInfo(TVolumeBucketData), _TVolumeBucketData,
@@ -1810,6 +1887,7 @@ begin
     TypeInfo(TLedgerEntryData), _TLedgerEntryData,
     TypeInfo(TLinkExternalIdData), _TLinkExternalIdData,
     TypeInfo(TLoyaltyStatisticsData), _TLoyaltyStatisticsData,
+    TypeInfo(TMergeCustomersApiData), _TMergeCustomersApiData,
     TypeInfo(TMomentCampaignConfigData), _TMomentCampaignConfigData,
     TypeInfo(TNthPurchaseCampaignConfigData), _TNthPurchaseCampaignConfigData,
     TypeInfo(TPaginationLinks), _TPaginationLinks,
@@ -1848,9 +1926,11 @@ begin
     TypeInfo(TReplaceCustomerByExternalIdResponse), _TReplaceCustomerByExternalIdResponse,
     TypeInfo(TUpdateCustomerByExternalIdResponse), _TUpdateCustomerByExternalIdResponse,
     TypeInfo(TLinkCustomerExternalIdResponse), _TLinkCustomerExternalIdResponse,
+    TypeInfo(TChangeCustomerExternalIdResponse), _TChangeCustomerExternalIdResponse,
     TypeInfo(TSendLoyaltyCardByExternalIdResponse), _TSendLoyaltyCardByExternalIdResponse,
     TypeInfo(TSendLoyaltyCardResponse), _TSendLoyaltyCardResponse,
     TypeInfo(TShowCustomerResponse), _TShowCustomerResponse,
+    TypeInfo(TMergeCustomersResponse), _TMergeCustomersResponse,
     TypeInfo(TSubmitTransactionResponse), _TSubmitTransactionResponse,
     TypeInfo(TListCustomerTransactionsResponseData), _TListCustomerTransactionsResponseData,
     TypeInfo(TListCustomerTransactionsResponse), _TListCustomerTransactionsResponse,
