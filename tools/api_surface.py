@@ -2,7 +2,8 @@
 
 The public surface is the interface section of each unit under src, one line per declaration: a public class
 member, a record field, an enum value, a type or a constant. A removed line is a break, an added line is not.
-The overload directive does not count: adding an overload is additive.
+The overload directive does not count: adding an overload is additive. Enum values and the text arrays indexed by
+an enum count as a set, so a value added anywhere in the list is additive too.
 """
 import os
 import re
@@ -83,7 +84,8 @@ def constant(parts, found):
                 current = []
             else:
                 current.append(part)
-        found.extend((f'{name}[{k}]', render(item)) for k, item in enumerate(items + [current]))
+        by_enum = 'array' in head and '..' not in head
+        found.extend((f'{name}[{"" if by_enum else k}]', render(item)) for k, item in enumerate(items + [current]))
     else:
         found.append((name, render(parts)))
 
@@ -93,7 +95,7 @@ def type_declaration(toks, i, found):
     if toks[i + 2] == '(':
         close = toks.index(')', i)
         values = [t for t in toks[i + 3:close] if t != ',']
-        found.extend((f'{name}[{k}]', value) for k, value in enumerate(values))
+        found.extend((f'{name}[]', value) for value in values)
         return close + 2
     if 'record' in rest:
         j = i + 2 + rest.index('record') + 1
