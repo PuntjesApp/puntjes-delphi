@@ -86,9 +86,13 @@ class SurfaceTest(unittest.TestCase):
         self.assertFalse(changed("ep3Archived);", "ep3Archived, ep3Draft);").union(
             changed("'archived');", "'archived', 'draft');")))
 
-    def test_an_inserted_enum_value_moves_the_ones_after_it(self):
-        self.assertEqual(changed('ep3None, ep3Active', 'ep3None, ep3Draft, ep3Active'),
-                         {'u: TEnumPuntjes3[1]: ep3Active', 'u: TEnumPuntjes3[2]: ep3Archived'})
+    def test_an_enum_value_inserted_in_the_middle_is_no_removal(self):
+        self.assertFalse(changed('ep3None, ep3Active', 'ep3None, ep3Draft, ep3Active').union(
+            changed("'', 'active'", "'', 'draft', 'active'")))
+
+    def test_a_removed_enum_value_and_its_text_are_a_removal(self):
+        self.assertEqual(changed('ep3Active, ep3Archived', 'ep3Archived').union(changed("'active', ", '')),
+                         {'u: TEnumPuntjes3[]: ep3Active', "u: _TEnumPuntjes3[]: 'active'"})
 
     def test_an_overload_directive_or_an_added_overload_is_no_removal(self):
         self.assertFalse(changed('(const Code: variant): TVerifyRedemptionResponse;',
