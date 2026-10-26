@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 from tools.stable_names import stable_names
@@ -60,6 +61,32 @@ class StableNamesTest(unittest.TestCase):
         result = stable_names(spec({'/me': {'get': operation({'200': answer})}}))
 
         self.assertEqual(result['components']['schemas']['ShowMeResponse'], answer)
+
+    def test_names_a_string_enum_after_its_component_and_field(self):
+        status = {'type': 'string', 'enum': ['active', 'archived']}
+        kinds = {'type': 'array', 'items': {'type': 'string', 'enum': ['a', 'b']}}
+        product = {'type': 'object', 'properties': {'status': status, 'gift_kinds': kinds}}
+        result = stable_names(spec({}, {'ProductData': product}))
+
+        fields = result['components']['schemas']['ProductData']['properties']
+        self.assertEqual(fields['status'], {'type': 'string', 'enum': ['active', 'archived'], 'format': 'ProductDataStatus'})
+        self.assertEqual(fields['gift_kinds']['items']['format'], 'ProductDataGiftKindsItem')
+
+    def test_names_a_string_enum_parameter_after_its_operation_and_parameter(self):
+        period = {'name': 'period', 'in': 'query', 'schema': {'type': 'string', 'enum': ['today', '7d']}}
+        found = operation({'200': ref('Stats')}, operation_id='showStatistics')
+        found['parameters'] = [period]
+        result = stable_names(spec({'/statistics': {'get': found}}))
+
+        schema = result['paths']['/statistics']['get']['parameters'][0]['schema']
+        self.assertEqual(schema['format'], 'ShowStatisticsPeriod')
+
+    def test_leaves_a_nullable_or_a_formatted_enum_and_a_number_enum_as_they_are(self):
+        fields = {'locale': {'type': ['string', 'null'], 'enum': ['nl', None]},
+                  'size': {'type': 'string', 'enum': ['s'], 'format': 'Size'}, 'n': {'type': 'integer', 'enum': [1, 2]}}
+        result = stable_names(spec({}, {'Data': {'type': 'object', 'properties': copy.deepcopy(fields)}}))
+
+        self.assertEqual(result['components']['schemas']['Data']['properties'], fields)
 
     def test_names_a_nullable_inline_object_as_mopenapi_makes_it_a_record(self):
         nullable = dict(DATA, type=['object', 'null'])

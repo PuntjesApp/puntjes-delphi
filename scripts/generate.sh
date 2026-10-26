@@ -14,3 +14,4 @@ for unit in src/puntjes.dto.pas src/puntjes.client.pas; do
   sed -i -E "1,20{s/^  Generated .* via mopenapi - DO NOT MODIFY BY HAND!$/  $HEADER/;s/^  -+$/  $RULER/}" "$unit"
 done
 python3 tools/optional_bodies.py spec/api.json src/puntjes.client.pas
+python3 tools/enum_members.py src/puntjes.dto.pas src/puntjes.client.pas

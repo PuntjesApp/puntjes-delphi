@@ -4,6 +4,7 @@ mopenapi 2.4 names an inline object after its field names and tries 19 numbered 
 The 21st different `{data: ...}` answer gets the 20th one's record, so its method decodes the answer into the wrong
 record and reports no error. A record with a schema name never takes that path.
 As in mopenapi, a schema with properties is a record; a union or a nullable array is a variant, so it stays inline.
+A string enum gets the same kind of name as its format, which mopenapi reads as the type name instead of TEnumN.
 generate.sh runs this before mopenapi. A shape it cannot name stops the script.
 """
 import copy
@@ -46,6 +47,9 @@ class Namer:
         if schema.get('type') == 'array' and 'items' in schema:
             schema['items'] = self.place(schema['items'], name + 'Item')
             return schema
+        if schema.get('type') == 'string' and 'enum' in schema:
+            schema.setdefault('format', name)
+            return schema
         if not is_record(schema):
             self.fields(schema, name)
             return schema
@@ -61,6 +65,9 @@ class Namer:
         if 'operationId' not in operation:
             raise ValueError(f'{where}: no operationId to name its records after.')
         name = pascal(operation['operationId'])
+        for parameter in operation.get('parameters', []):
+            if 'schema' in parameter:
+                parameter['schema'] = self.place(parameter['schema'], name + pascal(parameter['name']))
         answers = {}
         for code, response in operation.get('responses', {}).items():
             content = response.get('content', {}).get('application/json', {})

@@ -334,7 +334,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ListLedgerEntries(const Customer: variant; const DateFrom: RawUtf8 = '';
-      const DateTo: RawUtf8 = ''; const _Type: TEnumPuntjes20 = ep20None;
+      const DateTo: RawUtf8 = ''; const _Type: TListLedgerEntriesType = listLedgerEntriesTypeNone;
       Page: integer = 0): TListLedgerEntriesResponse;
 
     // downloadWalletPass [get] /customers/{customer}/wallet-pass
@@ -354,7 +354,7 @@ type
     // - 500 [EErrorResponse]
     // - 503 [EErrorResponse]
     function DownloadWalletPass(const Customer: variant;
-      const Platform: TEnumPuntjes21): TDownloadWalletPassResponse;
+      const Platform: TDownloadWalletPassPlatform): TDownloadWalletPassResponse;
 
     // adjustWallet [post] /customers/{customer}/wallet/adjust
     //
@@ -420,7 +420,7 @@ type
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
     function ListCustomerRedemptions(const Customer: variant;
-      const Status: TEnumPuntjes22 = ep22None;
+      const Status: TListCustomerRedemptionsStatus = listCustomerRedemptionsStatusNone;
       Page: integer = 0): TListCustomerRedemptionsResponse;
 
     // redeemReward [post] /redemptions
@@ -500,7 +500,7 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ListProducts(const Status: TEnumPuntjes3 = ep3None;
+    function ListProducts(const Status: TListProductsStatus = listProductsStatusNone;
       const Category: RawUtf8 = ''; const Search: RawUtf8 = ''; PerPage: integer = 0;
       Page: integer = 0): TListProductsResponse;
 
@@ -734,7 +734,7 @@ type
     // - 422 [EErrorResponse]
     // - 429 [EErrorResponse]
     // - 500 [EErrorResponse]
-    function ShowStatistics(const Period: TEnumPuntjes23 = ep23None;
+    function ShowStatistics(const Period: TShowStatisticsPeriod = showStatisticsPeriodNone;
       TopProductsLimit: integer = 0;
       const Branch: RawUtf8 = ''): TShowStatisticsResponse;
 
@@ -1216,22 +1216,22 @@ begin
 end;
 
 function TPuntjesClient.ListLedgerEntries(const Customer: variant;
-  const DateFrom: RawUtf8; const DateTo: RawUtf8; const _Type: TEnumPuntjes20;
-  Page: integer): TListLedgerEntriesResponse;
+  const DateFrom: RawUtf8; const DateTo: RawUtf8;
+  const _Type: TListLedgerEntriesType; Page: integer): TListLedgerEntriesResponse;
 begin
   fClient.Request('GET', '/customers/%/ledger', [Customer], [
     'date_from', DateFrom,
     'date_to', DateTo,
-    'type', _TEnumPuntjes20[_Type],
+    'type', _TListLedgerEntriesType[_Type],
     'page', Page], [],
     result, TypeInfo(TListLedgerEntriesResponse), OnError1);
 end;
 
 function TPuntjesClient.DownloadWalletPass(const Customer: variant;
-  const Platform: TEnumPuntjes21): TDownloadWalletPassResponse;
+  const Platform: TDownloadWalletPassPlatform): TDownloadWalletPassResponse;
 begin
   fClient.Request('GET', '/customers/%/wallet-pass', [Customer], [
-    'platform', _TEnumPuntjes21[Platform]], [],
+    'platform', _TDownloadWalletPassPlatform[Platform]], [],
     result, TypeInfo(TDownloadWalletPassResponse), OnError6);
 end;
 
@@ -1252,10 +1252,11 @@ begin
 end;
 
 function TPuntjesClient.ListCustomerRedemptions(const Customer: variant;
-  const Status: TEnumPuntjes22; Page: integer): TListCustomerRedemptionsResponse;
+  const Status: TListCustomerRedemptionsStatus;
+  Page: integer): TListCustomerRedemptionsResponse;
 begin
   fClient.Request('GET', '/customers/%/redemptions', [Customer], [
-    'status', _TEnumPuntjes22[Status],
+    'status', _TListCustomerRedemptionsStatus[Status],
     'page', Page], [],
     result, TypeInfo(TListCustomerRedemptionsResponse), OnError1);
 end;
@@ -1287,12 +1288,12 @@ begin
     result, TypeInfo(TVerifyRedemptionResponse), OnError4);
 end;
 
-function TPuntjesClient.ListProducts(const Status: TEnumPuntjes3;
+function TPuntjesClient.ListProducts(const Status: TListProductsStatus;
   const Category: RawUtf8; const Search: RawUtf8; PerPage: integer;
   Page: integer): TListProductsResponse;
 begin
   fClient.Request('GET', '/products', [], [
-    'status', _TEnumPuntjes3[Status],
+    'status', _TListProductsStatus[Status],
     'category', Category,
     'search', Search,
     'per_page', PerPage,
@@ -1387,11 +1388,11 @@ begin
     result, TypeInfo(TVerifyVoucherResponse), OnError4);
 end;
 
-function TPuntjesClient.ShowStatistics(const Period: TEnumPuntjes23;
+function TPuntjesClient.ShowStatistics(const Period: TShowStatisticsPeriod;
   TopProductsLimit: integer; const Branch: RawUtf8): TShowStatisticsResponse;
 begin
   fClient.Request('GET', '/statistics', [], [
-    'period', _TEnumPuntjes23[Period],
+    'period', _TShowStatisticsPeriod[Period],
     'top_products_limit', TopProductsLimit,
     'branch', Branch], [],
     result, TypeInfo(TShowStatisticsResponse), OnError10);
