@@ -1,6 +1,6 @@
 // Client unit for Puntjes
 // - Puntjes Loyalty API
-// - version 2.3.0
+// - version 2.4.0
 unit puntjes.client;
 
 {$I mormot.defines.inc}
@@ -812,6 +812,65 @@ type
     function ListBranches(): TListBranchesResponse;
 
 
+    // -----------------
+    //  PARTNER METHODS
+    // -----------------
+
+    // createPartnerApiClient [post] /partner/clients
+    //
+    //
+    // Params:
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 201 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function CreatePartnerApiClient(
+      const Payload: TCreatePartnerApiClientData): TCreatePartnerApiClientResponse;
+
+    // rotateClientSecret [post] /client/secret
+    //
+    //
+    // Params:
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function RotateClientSecret(
+      const Payload: TClientSecretData): TRotateClientSecretResponse;
+
+    // deleteClient [delete] /client
+    //
+    //
+    // Params:
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 204 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    procedure DeleteClient(const Payload: TClientSecretData);
+
+
     // ----------------
     //  HEALTH METHODS
     // ----------------
@@ -1463,6 +1522,26 @@ function TPuntjesClient.ListBranches(): TListBranchesResponse;
 begin
   fClient.Request('GET', '/branches', [], [], [],
     result, TypeInfo(TListBranchesResponse), OnError11);
+end;
+
+function TPuntjesClient.CreatePartnerApiClient(
+  const Payload: TCreatePartnerApiClientData): TCreatePartnerApiClientResponse;
+begin
+  fClient.Request('POST', '/partner/clients', [], [], [],
+    Payload, result, TypeInfo(TCreatePartnerApiClientData), TypeInfo(TCreatePartnerApiClientResponse), OnError4);
+end;
+
+function TPuntjesClient.RotateClientSecret(
+  const Payload: TClientSecretData): TRotateClientSecretResponse;
+begin
+  fClient.Request('POST', '/client/secret', [], [], [],
+    Payload, result, TypeInfo(TClientSecretData), TypeInfo(TRotateClientSecretResponse), OnError8);
+end;
+
+procedure TPuntjesClient.DeleteClient(const Payload: TClientSecretData);
+begin
+  fClient.Request('DELETE', '/client', [], [], [],
+    Payload, {dummy:}self, TypeInfo(TClientSecretData), nil, OnError8);
 end;
 
 function TPuntjesClient.CheckHealth(): TCheckHealthResponse;
