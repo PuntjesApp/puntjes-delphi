@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.3.0
+// - version 2.4.0
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
@@ -319,6 +319,13 @@ type
   end;
   PChangeExternalIdData = ^TChangeExternalIdData;
 
+  // from #/components/schemas/ClientSecretData
+  TClientSecretData = packed record
+    // The current `client_secret` of this client, or the old one in its 60 minutes.
+    ClientSecret: RawUtf8;
+  end;
+  PClientSecretData = ^TClientSecretData;
+
   // from #/components/schemas/TopProductData
   TTopProductData = packed record
     Name: RawUtf8;
@@ -383,6 +390,16 @@ type
     Groups: TCustomerGroupReferenceDataDynArray;
   end;
   PCreateCustomerData = ^TCreateCustomerData;
+
+  // from #/components/schemas/CreatePartnerApiClientData
+  TCreatePartnerApiClientData = packed record
+    // The `connection` handle the partner got on its redirect URI after the admin
+    // allowed.
+    Connection: RawUtf8;
+    // The name of the new client, as the vendor sees it under API clients.
+    _Label: RawUtf8;
+  end;
+  PCreatePartnerApiClientData = ^TCreatePartnerApiClientData;
 
   // from #/components/schemas/CreateProductData
   TCreateProductData = packed record
@@ -800,6 +817,15 @@ type
   end;
   PMomentCampaignConfigData = ^TMomentCampaignConfigData;
 
+  // from #/components/schemas/NewClientSecretData
+  TNewClientSecretData = packed record
+    // The `client_id` for `POST /oauth/token`. It does not change.
+    ClientId: RawUtf8;
+    // The new `client_secret` for `POST /oauth/token`.
+    ClientSecret: RawUtf8;
+  end;
+  PNewClientSecretData = ^TNewClientSecretData;
+
   TNthPurchaseCampaignConfigData = packed record
     // Which purchase triggers the gift. 3 means every third one.
     EveryN: integer;
@@ -833,6 +859,24 @@ type
     Total: integer;
   end;
   PPaginationMeta = ^TPaginationMeta;
+
+  // from #/components/schemas/PartnerApiClientDataVendor
+  TPartnerApiClientDataVendor = packed record
+    Id: integer;
+    Name: RawUtf8;
+  end;
+  PPartnerApiClientDataVendor = ^TPartnerApiClientDataVendor;
+
+  // from #/components/schemas/PartnerApiClientData
+  TPartnerApiClientData = packed record
+    // The `client_id` for `POST /oauth/token`.
+    ClientId: RawUtf8;
+    // The `client_secret` for `POST /oauth/token`.
+    ClientSecret: RawUtf8;
+    Vendor: TPartnerApiClientDataVendor;
+    Branch: variant;
+  end;
+  PPartnerApiClientData = ^TPartnerApiClientData;
 
   TPercentageDiscountData = packed record
     // Deprecated: read `type`, which carries the same value. Always `percentage`
@@ -1472,6 +1516,18 @@ type
   end;
   PListBranchesResponse = ^TListBranchesResponse;
 
+  // from #/components/schemas/CreatePartnerApiClientResponse
+  TCreatePartnerApiClientResponse = packed record
+    Data: TPartnerApiClientData;
+  end;
+  PCreatePartnerApiClientResponse = ^TCreatePartnerApiClientResponse;
+
+  // from #/components/schemas/RotateClientSecretResponse
+  TRotateClientSecretResponse = packed record
+    Data: TNewClientSecretData;
+  end;
+  PRotateClientSecretResponse = ^TRotateClientSecretResponse;
+
   // from #/components/schemas/CheckHealthResponseData
   TCheckHealthResponseData = packed record
     Status: RawUtf8;
@@ -1593,6 +1649,7 @@ const
   _TCategoryRevenueData = 'category:RawUtf8 units:integer revenue:integer ' +
     'isOther:boolean';
   _TChangeExternalIdData = 'external_id:RawUtf8';
+  _TClientSecretData = 'client_secret:RawUtf8';
   _TTopProductData = 'name:RawUtf8 units:integer revenue:integer';
   _TItemizedStatisticsData = 'orders:integer revenue_cents:integer average_items_per_order:double ' +
     'other_no_item_detail_cents:integer top_products:array of TTopProductData ' +
@@ -1606,6 +1663,7 @@ const
     'phone:variant external_id:variant date_of_birth:variant customer_since:variant ' +
     'locale:variant marketing_consent:variant marketing_consent_statement_version:variant ' +
     'identifiers:array of TCreateIdentifierData groups:array of TCustomerGroupReferenceData';
+  _TCreatePartnerApiClientData = 'connection:RawUtf8 label:RawUtf8';
   _TCreateProductData = 'external_id:RawUtf8 name:RawUtf8 description:variant ' +
     'price_cents:variant image_url:variant category:variant stock:variant status:TCreateProductDataStatus ' +
     'metadata:variant';
@@ -1681,11 +1739,15 @@ const
   _TMergeCustomersApiData = 'source:integer add_points:boolean idempotency_key:RawUtf8';
   _TMomentCampaignConfigData = 'gift:variant branch_ids:TIntegerDynArray ' +
     'customer_group_ids:TIntegerDynArray type:TMomentCampaignConfigDataType';
+  _TNewClientSecretData = 'client_id:RawUtf8 client_secret:RawUtf8';
   _TNthPurchaseCampaignConfigData = 'every_n:integer gift:variant min_amount:variant ' +
     'branch_ids:TIntegerDynArray customer_group_ids:TIntegerDynArray type:TNthPurchaseCampaignConfigDataType';
   _TPaginationLinks = 'first:variant last:variant prev:variant next:variant';
   _TPaginationMeta = 'current_page:integer last_page:integer per_page:integer ' +
     'total:integer';
+  _TPartnerApiClientDataVendor = 'id:integer name:RawUtf8';
+  _TPartnerApiClientData = 'client_id:RawUtf8 client_secret:RawUtf8 vendor:TPartnerApiClientDataVendor ' +
+    'branch:variant';
   _TPercentageDiscountData = 'kind:TPercentageDiscountDataKind percentage:integer ' +
     'product_id:variant type:TPercentageDiscountDataType';
   _TPointsGiftData = 'type:TPointsGiftDataType points:integer message:variant';
@@ -1798,6 +1860,8 @@ const
   _TShowStatisticsResponse = 'data:TStatisticsApiData';
   _TShowMeResponse = 'data:TVendorBrandingData';
   _TListBranchesResponse = 'data:array of TBranchReferenceData';
+  _TCreatePartnerApiClientResponse = 'data:TPartnerApiClientData';
+  _TRotateClientSecretResponse = 'data:TNewClientSecretData';
   _TCheckHealthResponseData = 'status:RawUtf8';
   _TCheckHealthResponse = 'data:TCheckHealthResponseData';
 
@@ -1855,12 +1919,14 @@ begin
     TypeInfo(TCampaignVoucherVerificationData), _TCampaignVoucherVerificationData,
     TypeInfo(TCategoryRevenueData), _TCategoryRevenueData,
     TypeInfo(TChangeExternalIdData), _TChangeExternalIdData,
+    TypeInfo(TClientSecretData), _TClientSecretData,
     TypeInfo(TTopProductData), _TTopProductData,
     TypeInfo(TItemizedStatisticsData), _TItemizedStatisticsData,
     TypeInfo(TVolumeBucketData), _TVolumeBucketData,
     TypeInfo(TCommerceStatisticsData), _TCommerceStatisticsData,
     TypeInfo(TCreateIdentifierData), _TCreateIdentifierData,
     TypeInfo(TCreateCustomerData), _TCreateCustomerData,
+    TypeInfo(TCreatePartnerApiClientData), _TCreatePartnerApiClientData,
     TypeInfo(TCreateProductData), _TCreateProductData,
     TypeInfo(TCreateRedemptionData), _TCreateRedemptionData,
     TypeInfo(TCreateRewardFromProductData), _TCreateRewardFromProductData,
@@ -1889,9 +1955,12 @@ begin
     TypeInfo(TLoyaltyStatisticsData), _TLoyaltyStatisticsData,
     TypeInfo(TMergeCustomersApiData), _TMergeCustomersApiData,
     TypeInfo(TMomentCampaignConfigData), _TMomentCampaignConfigData,
+    TypeInfo(TNewClientSecretData), _TNewClientSecretData,
     TypeInfo(TNthPurchaseCampaignConfigData), _TNthPurchaseCampaignConfigData,
     TypeInfo(TPaginationLinks), _TPaginationLinks,
     TypeInfo(TPaginationMeta), _TPaginationMeta,
+    TypeInfo(TPartnerApiClientDataVendor), _TPartnerApiClientDataVendor,
+    TypeInfo(TPartnerApiClientData), _TPartnerApiClientData,
     TypeInfo(TPercentageDiscountData), _TPercentageDiscountData,
     TypeInfo(TPointsGiftData), _TPointsGiftData,
     TypeInfo(TRedemptionRewardData), _TRedemptionRewardData,
@@ -1962,6 +2031,8 @@ begin
     TypeInfo(TShowStatisticsResponse), _TShowStatisticsResponse,
     TypeInfo(TShowMeResponse), _TShowMeResponse,
     TypeInfo(TListBranchesResponse), _TListBranchesResponse,
+    TypeInfo(TCreatePartnerApiClientResponse), _TCreatePartnerApiClientResponse,
+    TypeInfo(TRotateClientSecretResponse), _TRotateClientSecretResponse,
     TypeInfo(TCheckHealthResponseData), _TCheckHealthResponseData,
     TypeInfo(TCheckHealthResponse), _TCheckHealthResponse]);
 end;
