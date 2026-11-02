@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.4.0
+// - version 2.4.1
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
