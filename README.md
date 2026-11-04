@@ -18,7 +18,7 @@ licensed Windows machine.
 
 ## Install
 
-Download `puntjes-delphi-v<version>.zip` (for example `puntjes-delphi-v0.1.0.zip`) from the [latest release](https://github.com/PuntjesApp/puntjes-delphi/releases/latest),
+Download `puntjes-delphi-v<version>.zip` (today `puntjes-delphi-v0.8.1.zip` <!-- x-release-please-version -->) from the [latest release](https://github.com/PuntjesApp/puntjes-delphi/releases/latest),
 or the two units on their own, and add `src` to your search path.
 
 Or use [Boss](https://github.com/HashLoad/boss):
