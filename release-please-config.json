@@ -8,7 +8,14 @@
       "changelog-path": "CHANGELOG.md",
       "initial-version": "0.1.0",
       "bump-minor-pre-major": true,
-      "extra-files": [{ "type": "json", "path": "boss.json", "jsonpath": "$.version" }]
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "boss.json",
+          "jsonpath": "$.version"
+        },
+        "README.md"
+      ]
     }
   }
 }
