@@ -1,6 +1,6 @@
 // Client unit for Puntjes
 // - Puntjes Loyalty API
-// - version 2.4.1
+// - version 2.5.0
 unit puntjes.client;
 
 {$I mormot.defines.inc}
@@ -255,6 +255,48 @@ type
       const Payload: TSendLoyaltyCardRequestData): TSendLoyaltyCardResponse; overload;
     // The same call with no request body.
     function SendLoyaltyCard(const Customer: variant): TSendLoyaltyCardResponse; overload;
+
+    // addLoyaltyCardByExternalId [post] /customers/by-external-id/{externalId}/loyalty-cards
+    //
+    //
+    // Params:
+    // - [path] ExternalId (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 409 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function AddLoyaltyCardByExternalId(const ExternalId: variant;
+      const Payload: TAddLoyaltyCardData): TAddLoyaltyCardByExternalIdResponse;
+
+    // addLoyaltyCard [post] /customers/{customer}/loyalty-cards
+    //
+    //
+    // Params:
+    // - [path] Customer (required)
+    // - [body] Payload  (required)
+    //
+    // Responses:
+    // - 200 (main)
+    // - 400 [EErrorResponse]
+    // - 401 [EErrorResponse]
+    // - 403 [EErrorResponse]
+    // - 404 [EErrorResponse]
+    // - 409 [EErrorResponse]
+    // - 415 [EErrorResponse]
+    // - 422 [EErrorResponse]
+    // - 429 [EErrorResponse]
+    // - 500 [EErrorResponse]
+    function AddLoyaltyCard(const Customer: variant;
+      const Payload: TAddLoyaltyCardData): TAddLoyaltyCardResponse;
 
     // showCustomer [get] /customers/{customer}
     //
@@ -1290,6 +1332,20 @@ function TPuntjesClient.SendLoyaltyCard(const Customer: variant): TSendLoyaltyCa
 begin
   fClient.Request('POST', '/customers/%/send-card', [Customer], [], [],
     result, TypeInfo(TSendLoyaltyCardResponse), OnError4);
+end;
+
+function TPuntjesClient.AddLoyaltyCardByExternalId(const ExternalId: variant;
+  const Payload: TAddLoyaltyCardData): TAddLoyaltyCardByExternalIdResponse;
+begin
+  fClient.Request('POST', '/customers/by-external-id/%/loyalty-cards', [ExternalId], [], [],
+    Payload, result, TypeInfo(TAddLoyaltyCardData), TypeInfo(TAddLoyaltyCardByExternalIdResponse), OnError3);
+end;
+
+function TPuntjesClient.AddLoyaltyCard(const Customer: variant;
+  const Payload: TAddLoyaltyCardData): TAddLoyaltyCardResponse;
+begin
+  fClient.Request('POST', '/customers/%/loyalty-cards', [Customer], [], [],
+    Payload, result, TypeInfo(TAddLoyaltyCardData), TypeInfo(TAddLoyaltyCardResponse), OnError3);
 end;
 
 function TPuntjesClient.ShowCustomer(const Customer: variant): TShowCustomerResponse;

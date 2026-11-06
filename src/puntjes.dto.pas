@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.4.1
+// - version 2.5.0
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
@@ -136,6 +136,17 @@ type
 
 
 { ************ Data Transfert Objects }
+
+  // from #/components/schemas/AddLoyaltyCardData
+  TAddLoyaltyCardData = packed record
+    // The code of a card without a customer on your card list. The setting for new
+    // codes does not apply.
+    Code: RawUtf8;
+    // The code of the card the customer gives back. Only an active card of this customer
+    // is switched off.
+    Replaces: variant;
+  end;
+  PAddLoyaltyCardData = ^TAddLoyaltyCardData;
 
   // from #/components/schemas/AdjustWalletApiData
   TAdjustWalletApiData = packed record
@@ -1308,6 +1319,18 @@ type
   end;
   PSendLoyaltyCardResponse = ^TSendLoyaltyCardResponse;
 
+  // from #/components/schemas/AddLoyaltyCardByExternalIdResponse
+  TAddLoyaltyCardByExternalIdResponse = packed record
+    Data: TCustomerDetailData;
+  end;
+  PAddLoyaltyCardByExternalIdResponse = ^TAddLoyaltyCardByExternalIdResponse;
+
+  // from #/components/schemas/AddLoyaltyCardResponse
+  TAddLoyaltyCardResponse = packed record
+    Data: TCustomerDetailData;
+  end;
+  PAddLoyaltyCardResponse = ^TAddLoyaltyCardResponse;
+
   // from #/components/schemas/ShowCustomerResponse
   TShowCustomerResponse = packed record
     Data: TCustomerDetailData;
@@ -1620,6 +1643,7 @@ implementation
 
 const
   // exact definition of the DTOs expected JSON serialization
+  _TAddLoyaltyCardData = 'code:RawUtf8 replaces:variant';
   _TAdjustWalletApiData = 'amount:integer reason:RawUtf8 idempotency_key:RawUtf8';
   _TAnniversaryCampaignConfigData = 'years:integer gift:variant backfill:variant ' +
     'branch_ids:TIntegerDynArray customer_group_ids:TIntegerDynArray type:TAnniversaryCampaignConfigDataType';
@@ -1822,6 +1846,8 @@ const
   _TChangeCustomerExternalIdResponse = 'data:TCustomerDetailData';
   _TSendLoyaltyCardByExternalIdResponse = 'data:TSendLoyaltyCardResultData';
   _TSendLoyaltyCardResponse = 'data:TSendLoyaltyCardResultData';
+  _TAddLoyaltyCardByExternalIdResponse = 'data:TCustomerDetailData';
+  _TAddLoyaltyCardResponse = 'data:TCustomerDetailData';
   _TShowCustomerResponse = 'data:TCustomerDetailData';
   _TMergeCustomersResponse = 'data:TCustomerDetailData';
   _TSubmitTransactionResponse = 'data:TTransactionData';
@@ -1904,6 +1930,7 @@ begin
     TypeInfo(TListProductsStatus), nil, @_TListProductsStatus,
     TypeInfo(TShowStatisticsPeriod), nil, @_TShowStatisticsPeriod]);
   Rtti.RegisterFromText([
+    TypeInfo(TAddLoyaltyCardData), _TAddLoyaltyCardData,
     TypeInfo(TAdjustWalletApiData), _TAdjustWalletApiData,
     TypeInfo(TAnniversaryCampaignConfigData), _TAnniversaryCampaignConfigData,
     TypeInfo(TBranchReferenceData), _TBranchReferenceData,
@@ -1998,6 +2025,8 @@ begin
     TypeInfo(TChangeCustomerExternalIdResponse), _TChangeCustomerExternalIdResponse,
     TypeInfo(TSendLoyaltyCardByExternalIdResponse), _TSendLoyaltyCardByExternalIdResponse,
     TypeInfo(TSendLoyaltyCardResponse), _TSendLoyaltyCardResponse,
+    TypeInfo(TAddLoyaltyCardByExternalIdResponse), _TAddLoyaltyCardByExternalIdResponse,
+    TypeInfo(TAddLoyaltyCardResponse), _TAddLoyaltyCardResponse,
     TypeInfo(TShowCustomerResponse), _TShowCustomerResponse,
     TypeInfo(TMergeCustomersResponse), _TMergeCustomersResponse,
     TypeInfo(TSubmitTransactionResponse), _TSubmitTransactionResponse,
