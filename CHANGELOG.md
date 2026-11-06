@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.8.1...v0.9.0) (2026-11-06)
+
+
+### Features
+
+* regenerate from puntjes-openapi v2.5.0 ([#30](https://github.com/PuntjesApp/puntjes-delphi/issues/30)) ([ecd0a14](https://github.com/PuntjesApp/puntjes-delphi/commit/ecd0a147b9408816402c6a27d5827928c18a73b2))
+
 ## [0.8.1](https://github.com/PuntjesApp/puntjes-delphi/compare/v0.8.0...v0.8.1) (2026-11-02)
 
 
