@@ -95,3 +95,29 @@ jobs:
           API: ${{ needs.api.result }}
           WORKFLOWS: ${{ needs.workflows.result }}
         run: test "$PLANNER" = success && test "$UNITS" = success && test "$API" = success && test "$WORKFLOWS" = success
+
+  # A regenerate PR that merges itself must not sit red unseen: this tells #alerts when its CI fails.
+  alert:
+    name: Tell Slack
+    needs: ci
+    if: ${{ always() && needs.ci.result == 'failure' && github.event_name == 'pull_request' && startsWith(github.head_ref, 'regenerate/') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Post the failure
+        env:
+          SLACK_RELEASE_WEBHOOK: ${{ secrets.SLACK_RELEASE_WEBHOOK }}
+          REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          text=":x: CI is red on a regenerate PR of ${REPO#*/}, so it will not merge or release. <${PR_URL}|Pull request> · <${RUN_URL}|Workflow run>"
+          if [ -z "${SLACK_RELEASE_WEBHOOK:-}" ]; then
+            echo "::notice::No SLACK_RELEASE_WEBHOOK secret, so Slack gets no message."
+            exit 0
+          fi
+          if ! jq -n --arg text "$text" '{text: $text}' |
+            curl -sS --fail --max-time 10 -H 'Content-Type: application/json' -d @- "$SLACK_RELEASE_WEBHOOK" > /dev/null; then
+            echo "::warning::Slack did not take the message."
+          fi

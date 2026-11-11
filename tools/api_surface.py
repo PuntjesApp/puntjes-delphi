@@ -179,11 +179,21 @@ def git(*args):
     return subprocess.run(['git', *args], check=True, capture_output=True, text=True).stdout.strip()
 
 
-if __name__ == '__main__':
+def main():
     tag = git('describe', '--tags', '--abbrev=0', '--match', 'v[0-9]*', 'HEAD')
     base = os.environ.get('BASE') or 'HEAD'
     commits = git('log', '--format=%B%x00', f'{tag}..{base}').split('\0')
     message = os.environ.get('TITLE', '') + '\n\n' + os.environ.get('BODY', '')
     is_announced = announced(message) or any(announced(commit) for commit in commits)
     current = {path.stem: path.read_text() for path in sorted(Path('src').glob('*.pas'))}
-    sys.exit(check(units_at(tag), current, is_announced, tag, print, lambda text: print(text, file=sys.stderr)))
+    return check(units_at(tag), current, is_announced, tag, print, lambda text: print(text, file=sys.stderr))
+
+
+if __name__ == '__main__':
+    # Exit 0: no break, or an announced one. Exit 1: an unannounced break. Exit 2: the check itself failed, which says
+    # nothing about a break (the regenerate workflow relies on this split).
+    try:
+        sys.exit(main())
+    except Exception as error:
+        print(f'The API check failed: {error!r}', file=sys.stderr)
+        sys.exit(2)
