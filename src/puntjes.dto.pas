@@ -1,6 +1,6 @@
 // DTOs for Puntjes
 // - Puntjes Loyalty API
-// - version 2.5.0
+// - version 2.6.0
 unit puntjes.dto;
 
 {$I mormot.defines.inc}
@@ -465,7 +465,7 @@ type
 
   // from #/components/schemas/CreateTransactionData
   TCreateTransactionData = packed record
-    Identifier: RawUtf8;
+    Identifier: variant;
     IdempotencyKey: RawUtf8;
     TotalAmount: integer;
     Description: variant;
@@ -1127,7 +1127,7 @@ type
   // from #/components/schemas/TransactionData
   TTransactionData = packed record
     Id: integer;
-    CustomerId: integer;
+    CustomerId: variant;
     IdempotencyKey: RawUtf8;
     TotalAmount: integer;
     Description: variant;
@@ -1699,7 +1699,7 @@ const
     'idempotency_key:variant max_redemptions_per_customer:variant';
   _TCreateTransactionItemData = 'name:RawUtf8 quantity:integer unit_price:integer ' +
     'sku:variant category:variant';
-  _TCreateTransactionData = 'identifier:RawUtf8 idempotency_key:RawUtf8 total_amount:integer ' +
+  _TCreateTransactionData = 'identifier:variant idempotency_key:RawUtf8 total_amount:integer ' +
     'description:variant external_reference:variant branch:variant items:array of TCreateTransactionItemData';
   _TCustomerStatusData = 'value:RawUtf8 label:RawUtf8';
   _TCustomerIdentifierData = 'id:integer type:RawUtf8 value:RawUtf8 is_active:boolean ' +
@@ -1812,7 +1812,7 @@ const
     'customer_group_ids:TIntegerDynArray type:TTransactionCampaignConfigDataType';
   _TTransactionItemData = 'id:integer name:RawUtf8 sku:variant quantity:integer ' +
     'unit_price:integer line_total:integer category:variant';
-  _TTransactionData = 'id:integer customer_id:integer idempotency_key:RawUtf8 ' +
+  _TTransactionData = 'id:integer customer_id:variant idempotency_key:RawUtf8 ' +
     'total_amount:integer description:variant external_reference:variant branch:variant ' +
     'created_at:RawUtf8 points_earned:integer rules_applied:array of TEarnResultData ' +
     'items:array of TTransactionItemData';

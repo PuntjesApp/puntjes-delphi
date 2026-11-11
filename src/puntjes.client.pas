@@ -1,6 +1,6 @@
 // Client unit for Puntjes
 // - Puntjes Loyalty API
-// - version 2.5.0
+// - version 2.6.0
 unit puntjes.client;
 
 {$I mormot.defines.inc}
