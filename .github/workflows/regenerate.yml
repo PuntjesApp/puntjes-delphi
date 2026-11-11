@@ -126,7 +126,7 @@ jobs:
           git fetch --quiet origin "$BRANCH"
           git checkout --quiet --force FETCH_HEAD
           status=0
-          TITLE= BODY= BASE=HEAD python3 tools/api_surface.py || status=$?
+          env TITLE='' BODY='' BASE=HEAD python3 tools/api_surface.py || status=$?
           case "$status" in
             0) echo "breaking=false" >> "$GITHUB_OUTPUT" ;;
             1) echo "::notice::The regenerated units break the last release, so the PR is feat!: and waits for a person."
