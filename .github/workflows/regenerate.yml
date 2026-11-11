@@ -43,6 +43,7 @@ jobs:
         with:
           token: ${{ steps.app.outputs.token }}
           persist-credentials: false
+          fetch-depth: 0 # the API check finds the last release tag
       - name: Plan
         id: plan
         env:
@@ -113,6 +114,26 @@ jobs:
           done
           echo "::error::main moved during each of the 3 attempts."
           exit 1
+      # The spec level says how far the API moved, not whether the generated Pascal still fits the last release: a field
+      # that turns nullable is a minor for the API and a break for this SDK. CI runs the same comparison, so a PR opened
+      # as feat: with a break stays red for ever. Ask the same question here and open it as feat!: instead.
+      - name: Find out whether the regenerated units break the last release
+        id: compat
+        if: steps.state.outputs.stage == 'fresh' || steps.state.outputs.stage == 'resume'
+        env:
+          BRANCH: ${{ steps.plan.outputs.branch }}
+        run: |
+          git fetch --quiet origin "$BRANCH"
+          git checkout --quiet --force FETCH_HEAD
+          status=0
+          env TITLE='' BODY='' BASE=HEAD python3 tools/api_surface.py || status=$?
+          case "$status" in
+            0) echo "breaking=false" >> "$GITHUB_OUTPUT" ;;
+            1) echo "::notice::The regenerated units break the last release, so the PR is feat!: and waits for a person."
+               echo "breaking=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::The API check itself failed (exit $status)."
+               exit 1 ;;
+          esac
       - name: Open the PR
         if: steps.state.outputs.stage == 'fresh' || steps.state.outputs.stage == 'resume'
         env:
@@ -121,7 +142,12 @@ jobs:
           BRANCH: ${{ steps.plan.outputs.branch }}
           TYPE: ${{ steps.plan.outputs.commit_type }}
           AUTO_MERGE: ${{ steps.plan.outputs.auto_merge }}
+          BREAKING: ${{ steps.compat.outputs.breaking }}
         run: |
+          if [ "$BREAKING" = true ]; then
+            TYPE='feat!'
+            AUTO_MERGE=false
+          fi
           set -- --repo "$GITHUB_REPOSITORY" --base main --head "$BRANCH" --title "${TYPE}: regenerate from puntjes-openapi ${TAG}" \
             --body "This client was regenerated from the published API spec ${TAG}. Never edit src by hand."
           if [ "$AUTO_MERGE" != true ]; then
