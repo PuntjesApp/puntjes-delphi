@@ -163,7 +163,8 @@ def check(old_units, new_units, is_announced, base, out, err):
         return 0
     err('\n'.join(report + [
         'A caller that uses them no longer compiles. Retitle the PR to "feat!: ..." (or add a "BREAKING CHANGE:" '
-        'line to its body), then say in the body what a caller must change. Auto-merge stays on after a retitle.',
+        'line to its body), then say in the body what a caller must change. If auto-merge is on, turn it off and on again after the retitle: '
+        'the squash commit keeps the title it had when auto-merge was enabled, and release-please reads that title.',
     ]))
     return 1
 
